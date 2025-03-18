@@ -31,8 +31,8 @@
     });
 </script>
 
-<link href="{{ asset('front/options/optionswitch.css') }}" rel="stylesheet">
-<script src="{{ asset('front/options/optionswitcher.js') }}"></script>
+{{-- <link href="{{ asset('front/options/optionswitch.css') }}" rel="stylesheet">
+<script src="{{ asset('front/options/optionswitcher.js') }}"></script> --}}
 
 
 <!-- Slick Slider JS -->
