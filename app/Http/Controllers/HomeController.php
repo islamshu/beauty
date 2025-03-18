@@ -24,6 +24,18 @@ class HomeController extends Controller
     public function packge_order(){
         return view('dashboard.orders.packges')->with('orders',Order::orderby('id','desc')->get());
     }
+    public function pacgkeorders($id){
+        $order = Order::find($id);
+        $order->status = 1;
+        $order->save();
+        return view('dashboard.orders.packge_order')->with('order',$order);
+    }
+    public function pacgkeorders_delete($id){
+        $order = Order::find($id);
+        $order->delete();
+        return redirect()->back()->with('toastr_success','تم حذف الطلب بنجاح!');
+    }
+    
     public function service_order(){
         return view('dashboard.orders.services')->with('orders',Appointment::orderby('id','desc')->get());
     }

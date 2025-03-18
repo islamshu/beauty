@@ -56,6 +56,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::resource('products', ProductController::class);
     Route::get('service_order', [HomeController::class, 'service_order'])->name('service_order');
     Route::get('packge_order',  [HomeController::class, 'packge_order'])->name('packge_order');
+    Route::get('pacgkeorders/{id}',  [HomeController::class, 'pacgkeorders'])->name('pacgkeorders.show');
+    Route::delete('pacgkeorders_delete/{id}',  [HomeController::class, 'pacgkeorders_delete'])->name('pacgkeorders.delete');
+
+    
     Route::get('course_order',  [HomeController::class, 'course_order'])->name('course_order');
     Route::get('contact_order',  [HomeController::class, 'contact_order'])->name('contact_order');
     Route::get('contact_show/{id}',  [HomeController::class, 'contact_order_edit'])->name('contact_order_edit');
