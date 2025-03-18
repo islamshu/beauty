@@ -10,8 +10,8 @@
     <meta name="keywords"
         content="admin template, modern admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
-    <title>{{ get_general_value('website_name') }}
-    </title>
+    <title>{{ get_general_value('website_name') }} - @yield('title')</title>
+
     <link rel="apple-touch-icon" href="{{ asset('uploads/' . get_general_value('website_icon')) }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('uploads/' . get_general_value('website_icon')) }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -70,7 +70,7 @@
         </style>
     @endif
     {{-- <link rel="stylesheet" type="text/css" href="{{ asset('backend/app-assets/vendors/css/forms/selects/selectivity-full.min.css') }}"> --}}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/app-assets/vendors/css/forms/tags/tagging.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

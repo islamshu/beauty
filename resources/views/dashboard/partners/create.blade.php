@@ -5,68 +5,113 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-6 col-12 mb-2">
-                <h3 class="content-header-title">{{ __('إضافة شريك جديد ') }}</h3>
+                <h3 class="content-header-title">{{ __('إضافة كورس جديد') }}</h3>
                 <div class="row breadcrumbs-top">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('الرئيسية') }}</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('galleries.index') }}">{{ __('شركائنا') }}</a></li>
-                            <li class="breadcrumb-item active">{{ __('إضافة شريك جديد') }}</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('الرئيسية') }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('courses.index') }}">{{ __('الكورسات') }}</a></li>
+                            <li class="breadcrumb-item active">{{ __('إضافة كورس') }}</li>
                         </ol>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="content-body">
             <section>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">{{ __('إضافة شريك جديد') }}</h4>
-                            </div>
-                            <div class="card-content">
-                                @include('dashboard.inc.alerts')
-                                <div class="card-body">
-                                    <form action="{{ route('partners.store') }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        
-                                        <div class="form-group col-8">
-                                            <label for="image">{{ __('الصورة') }}</label>
-                                            <input type="file" name="image" id="image" class="form-control" accept="image/*" onchange="previewImage(event)" required>
-                                            <div style="margin-top: 10px;">
-                                                <img id="preview" src="" alt="{{ __('معاينة الصورة') }}" style="max-width: 300px; display: none; border: 1px solid #ccc; padding: 5px;">
-                                            </div>
+                <div class="card">
+                    <div class="card-body">
+                        @include('dashboard.inc.alerts')
+
+                        <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            
+                            <div class="row">
+                                <!-- صورة الكورس -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="image">{{ __('الصورة') }}</label>
+                                        <input type="file" class="form-control image" id="image" name="image" accept="image/*">
+                                        <div class="mt-2">
+                                            <img src="" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
                                         </div>
-                                        <button type="submit" class="btn btn-success">{{ __('حفظ') }}</button>
-                                    </form>
+                                        @error('image')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- عنوان الكورس -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="title">{{ __('عنوان الكورس') }} <span class="required">*</span></label>
+                                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" required>
+                                        @error('title')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="row">
+                                <!-- سعر الكورس -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="price">{{ __('السعر') }} <span class="required">*</span></label>
+                                        <input type="number" name="price" id="price" class="form-control" value="{{ old('price') }}" required>
+                                        @error('price')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- اختيار الفئة -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category_id">{{ __('الفئة') }} <span class="required">*</span></label>
+                                        <select name="category_id" id="category_id" class="form-control" required>
+                                            <option value="" disabled selected>{{ __('اختر الفئة') }}</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_id')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- الوصف -->
+                            <div class="form-group">
+                                <label for="editor">الوصف <span class="required">*</span></label>
+                                <textarea name="description" id="editor" class="form-control" required>{{ old('description') }}</textarea>
+                                <small id="editor-error" class="text-danger" style="display: none;">هذا الحقل مطلوب!</small>
+                            </div>
+
+                            <!-- زر الحفظ -->
+                            <button type="submit" class="btn btn-success">{{ __('حفظ الكورس') }}</button>
+                        </form>
                     </div>
                 </div>
             </section>
         </div>
     </div>
 </div>
+@endsection
 
 @section('script')
 <script>
-    function previewImage(event) {
-        const preview = document.getElementById('preview');
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = '';
-            preview.style.display = 'none';
-        }
-    }
+    $(document).ready(function () {
+        // عرض معاينة للصورة المختارة
+        $('#image').change(function () {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('.image-preview').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
+    });
 </script>
-@endsection
 @endsection

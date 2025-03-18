@@ -1,4 +1,5 @@
 @extends('layouts.master')
+@section('title','اضافة سلايدر')
 
 @section('content')
 <div class="app-content content">

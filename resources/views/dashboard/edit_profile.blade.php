@@ -1,4 +1,6 @@
 @extends('layouts.master')
+@section('title','تعديل الملف الشخصي')
+
 @section('content')
     <div class="app-content content">
         <div class="content-wrapper">

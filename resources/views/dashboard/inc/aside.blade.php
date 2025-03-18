@@ -28,6 +28,14 @@
                                 class="dropdown-item " href="{{ route('aboutus.index') }}"
                                 >{{ __('من نحن') }}</a>                      
                         </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('galleries.index') }}"
+                                >{{ __('قائمة الصور') }}</a>                      
+                        </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('partners.index') }}"
+                                >{{ __('شركائنا') }}</a>                      
+                        </li>
                   
                        
                        
@@ -88,6 +96,16 @@
                 </li>
                 <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
                         href="#" data-toggle="dropdown"><i
+                            class="la la-book"></i><span>{{ __('الدورات') }}</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('courses.index') }}"
+                                >{{ __('الدورات') }}</a>
+                        </li> 
+                    </ul>
+                </li>
+                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
+                        href="#" data-toggle="dropdown"><i
                             class="la la-user-plus"></i><span>{{ __('العملاء') }}</span></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown " data-menu=""><a
@@ -101,6 +119,51 @@
                        
                     </ul>
                 </li>
+                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
+                        href="#" data-toggle="dropdown"><i
+                            class="la la-calendar"></i><span>{{ __('الحجوزات') }}</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('reservations.index') }}"
+                                >{{ __('الحجوزات') }}</a>
+                        </li> 
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('reservations.create') }}"
+                                >{{ __('حجز جديد') }}</a>
+                        </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('calender') }}"
+                                >{{ __('التقويم') }}</a>
+                        </li> 
+                    </ul>
+                </li>
+                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
+                        href="#" data-toggle="dropdown"><i
+                            class="la la-reorder"></i><span>{{ __('الطلبات') }}</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('course_order') }}"
+                                >{{ __('طلبات الدورات') }}</a>
+                        </li> 
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('packge_order') }}"
+                                >{{ __('طلبات الباقات') }}</a>
+                        </li> 
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('service_order') }}"
+                                >{{ __('طلبات الخدمات') }}</a>
+                        </li>  
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('contact_order') }}"
+                                >{{ __('طلبات التواصل') }}</a>
+                        </li>  
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('orders.index') }}"
+                                >{{ __('طلبات المنتجات') }}</a>
+                        </li> 
+                    </ul>
+                </li>
+              
               
               {{--  <li class=" nav-item" ><a class=" nav-link"
                         href="{{route('edit_section')}}" ><i

@@ -1,4 +1,5 @@
 @extends('layouts.master')
+@section('title','تعديل العميل')
 
 @section('content')
 <div class="app-content content">
