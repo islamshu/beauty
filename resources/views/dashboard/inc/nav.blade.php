@@ -214,7 +214,7 @@
                                         alt="avatar" ><i></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="{{route('edit_profile')}}" ><i
-                                        class="ft-user"></i> {{ __('Edit profile') }}</a>
+                                        class="ft-user"></i> {{ __('تعديل الملف الشخصي') }}</a>
                                 <div class="dropdown-divider"></div><a class="dropdown-item" href="{{ route('logout') }}"><i
                                         class="ft-power"></i> {{ __('تسجيل خروج') }}</a>
                             </div>
