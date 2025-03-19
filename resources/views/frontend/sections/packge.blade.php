@@ -20,8 +20,8 @@
                         </div>
                         <div class="priceInfo">
                             <ul class="list-unstyled">
-                                @foreach(explode("\n", $package->description) as $feature)
-                                    <li>{!! $feature !!}</li>
+                                @foreach(( $package->services) as $feature)
+                                    <li>{!! $feature->title !!}</li>
                                 @endforeach
                             </ul>
                             <button class="btn btn-primary first-btn openModalBtn" style="padding: 10%; border-radius: 5%"

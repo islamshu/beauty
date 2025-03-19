@@ -125,15 +125,24 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="number_of_visits">الخدمات   <span class="required">*</span></label>
+                                        <select name="services[]" class="form-control select2" multiple   required id="">
+                                            @foreach ($services as $item)
+                                                <option value="{{$item->id}}">{{$item->title}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('service')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
+                          
                         
                             <!-- Description -->
-                            <div class="form-group">
-                                <label for="editor">الوصف <span class="required">*</span></label>
-                                <textarea name="description" id="editor" class="form-control" required>{{ old('description') }}</textarea>
-                                <small id="editor-error" class="text-danger" style="display: none;">هذا الحقل مطلوب!</small>
-                            </div>
-                            
+
                         
                             <button type="submit" class="btn btn-success">{{ __('حفظ') }}</button>
                         </form>
@@ -168,6 +177,15 @@
                 $('#number_of_users').removeAttr('required').val('');
             }
         }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "اختر الخدمات",
+            allowClear: true,
+            width: '100%' // Ensure it fits inside the form
+        });
     });
 </script>
 @endsection

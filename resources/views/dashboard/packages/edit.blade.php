@@ -120,16 +120,26 @@
                                                value="{{ old('number_of_visits', $package->number_of_visits) }}" required>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="number_of_visits">الخدمات   <span class="required">*</span></label>
+                                    <select name="services[]" class="form-control select2" multiple required id="services">
+                                        @foreach ($services as $item)
+                                            <option value="{{ $item->id }}" 
+                                                @if(in_array($item->id, $package->services->pluck('id')->toArray())) selected @endif>
+                                                {{ $item->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('service')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
                             </div>
 
                             <!-- Description -->
-                            <div class="form-group">
-                                <label for="editor">الوصف <span class="required">*</span></label>
-                                <textarea name="description" id="editor" class="form-control" required>{{ old('description', $package->description) }}</textarea>
-                                <small id="editor-error" class="text-danger" style="display: none;">هذا الحقل مطلوب!</small>
-
-                            </div>
-
+                         
                             <button type="submit" class="btn btn-success">{{ __('تحديث') }}</button>
                         </form>
 
@@ -160,6 +170,14 @@
                 $('#number_of_users').removeAttr('required').val('');
             }
         }
+    });
+</script><script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "اختر الخدمات",
+            allowClear: true,
+            width: '100%' // Ensure it fits inside the form
+        });
     });
 </script>
 @endsection

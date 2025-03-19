@@ -16,4 +16,8 @@ class Service extends Model
     {
         return $this->belongsToMany(Reservation::class, 'reservation_service', 'service_id', 'reservation_id');
     }
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class, 'package_service');
+    }
 }
