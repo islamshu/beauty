@@ -29,4 +29,12 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function relatedProducts()
+{
+    return $this->hasMany(Product::class, 'category_id', 'category_id')
+                ->where('status',1)
+                ->where('id', '!=', $this->id) // استثناء المنتج الحالي
+                ->inRandomOrder() // ترتيب عشوائي
+                ->limit(4); // عدد المنتجات المراد عرضها
+}
 }

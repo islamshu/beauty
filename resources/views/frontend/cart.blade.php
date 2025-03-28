@@ -53,14 +53,14 @@
                                             @foreach ($cart as $id => $item)
                                                 <tr>
                                                     <td>
-                                                        <a href="#" class="cartImage">
+                                                        <a href="{{ route('product.details', $id) }}" class="cartImage">
                                                             <img src="{{ asset('uploads/' . $item['image']) }}"
                                                                 style="max-width: 70%; height: 50%; margin-top: 15%;"
                                                                 alt="صورة المنتج">
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a class="text-wrap" href="#">{{ $item['name'] }}</a> <br>
+                                                        <a class="text-wrap" href="{{ route('product.details', $id) }}">{{ $item['name'] }}</a> <br>
                                                         <div class="quantity-control">
                                                             <button class="btn btn-sm btn-quantity minus"
                                                                 data-id="{{ $id }}">-</button>

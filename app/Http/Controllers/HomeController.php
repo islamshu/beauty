@@ -57,6 +57,9 @@ class HomeController extends Controller
         return redirect()->back()->with('toastr_success', 'تم الحذف بنجاح.');
 
     }
+    public function single_products($id){
+        return view('frontend.single_products')->with('product',Product::find($id));
+    }
     
     public function store_contact(Request $request)
     {
@@ -93,6 +96,20 @@ class HomeController extends Controller
 
         return view('frontend.products', compact('products'));
     }
+    public function services(Request $request)
+    {
+        $query = Service::query()->where('status',1);
+
+        // البحث في حالة وجود كلمة بحث
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('title', 'like', "%{$search}%");
+        }
+        $services = $query->orderBy('id', 'desc')->paginate(12);
+
+        return view('frontend.services', compact('services'));
+    }
+    
     public function single_course($id)
     {
         return view('frontend.course')->with('course', Course::find($id));
@@ -102,14 +119,14 @@ class HomeController extends Controller
         $sliders = Slider::where('status', 1)->get();
         $abouts = Aboutus::first();
         $categories = Category::has('services')->get();
-        $services = Service::where('status', 1)->get();
+        $services = Service::where('status', 1)->take(8)->get();
         $first_service = Service::first();
         $courses = Course::where('status', 1)->get();
         $packages = Package::where('status', 1)->get();
         $galleries = Gallery::orderby('id', 'desc')->get();
         $categoriesgal = Category::has('gallery')->with('gallery')->get();
         $partenrs = Partner::get();
-        $products = Product::orderBy('id', 'desc')->take(5)->get();
+        $products = Product::orderBy('id', 'desc')->take(12)->get();
         return view('frontend.index', compact('sliders', 'abouts', 'categories', 'services', 'first_service', 'courses', 'packages', 'galleries', 'categoriesgal', 'partenrs', 'products'));
     }
     public function purchase(Request $request)

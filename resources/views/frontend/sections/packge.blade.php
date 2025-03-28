@@ -4,37 +4,201 @@
         <div class="secotionTitle">
             <h2><span>الباقات </span>المذهلة</h2>
         </div>
+        <style>
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Tajawal', sans-serif;
+            }
 
-        <div class="row">
-            @foreach($packages as $package)
-                <div class="col-md-6 col-lg-4">
-                    <div class="priceTableWrapper">
-                        <div class="priceImage">
-                            <img src="{{ asset('uploads/'.$package->image) }}" data-src="{{ asset('uploads/'.$package->image) }}" alt="Image Price" class="img-responsive lazyestload">
-                            <div class="maskImage">
-                                <h3>{{ $package->name }}</h3>
-                            </div>
-                            <div class="priceTag">
-                                <h4>${{ $package->price }}</h4>
-                            </div>
-                        </div>
-                        <div class="priceInfo">
-                            <ul class="list-unstyled">
-                                @foreach(( $package->services) as $feature)
-                                    <li>{!! $feature->title !!}</li>
-                                @endforeach
-                            </ul>
-                            <button class="btn btn-primary first-btn openModalBtn" style="padding: 10%; border-radius: 5%"
-                                data-id="{{ $package->id }}"
-                                data-name="{{ $package->name }}"
-                                data-toggle="modal"
-                                data-target="#PriceModal">
-                              طلب اشتراك
-                            </button>
+            .package-card {
+                background: #d1b7a1;
+                border-radius: 10px;
+                overflow: hidden;
+                text-align: center;
+                padding: 15px;
+                position: relative;
+                transition: transform 0.3s ease-in-out;
+                height: 100%;
+                /* لجعل كل البطاقات بنفس الارتفاع */
+                display: flex;
+                flex-direction: column;
+            }
+
+            .package-card:hover {
+                transform: scale(1.05);
+            }
+
+            .package-card img {
+                width: 100%;
+                height: 200px;
+                /* ارتفاع ثابت لجميع الصور */
+                border-radius: 5px;
+                object-fit: cover;
+                /* للحفاظ على تناسق الصورة */
+                margin-bottom: 15px;
+            }
+
+            .package-title {
+                font-size: 22px;
+                font-weight: bold;
+                color: #fff;
+                background: #e83e8c;
+                padding: 8px;
+                border-radius: 5px;
+                margin-top: 10px;
+                margin-bottom: 15px;
+            }
+
+            .package-details {
+                text-align: center;
+                padding: 10px;
+                flex-grow: 1;
+                /* لملء المساحة المتبقية */
+            }
+
+            .package-details ul {
+                padding: 0;
+                margin-bottom: 20px;
+            }
+
+            .package-details li {
+                font-size: 18px;
+                /* حجم خط أكبر */
+                font-weight: 500;
+                /* سماكة الخط */
+                color: #333;
+                /* لون داكن لتحسين الوضوح */
+                padding: 8px 0;
+                /* تباعد بين العناصر */
+                list-style-type: none;
+                /* إزالة النقاط */
+                border-bottom: 1px dashed #e83e8c;
+                /* خط فاصل جميل */
+            }
+
+            .package-price {
+                background: #e83e8c;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: auto;
+                /* لدفع السعر إلى الأسفل */
+            }
+
+            .offer-banner {
+                position: absolute;
+                top: 20px;
+                left: 50%;
+                /* وضع البانر في منتصف العرض */
+                transform: translateX(-50%);
+                /* تعديل المركز بدقة */
+                background: #e83e8c;
+                color: white;
+                padding: 5px 15px;
+                font-size: 14px;
+                border-radius: 5px;
+                z-index: 1;
+                white-space: nowrap;
+                /* لمنع التفاف النص */
+            }
+
+            .subscribe-btn {
+                background-color: #6c757d;
+                /* لون أساسي */
+                color: white;
+                border: none;
+                padding: 10px 25px;
+                font-size: 18px;
+                border-radius: 5px;
+                margin-top: 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: bold;
+            }
+
+            .subscribe-btn:hover {
+                background-color: #5a6268;
+                /* لون عند التحويم */
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            /* لون مختلف لكل زر حسب الباقة */
+            .package-card:nth-child(1) .subscribe-btn {
+                background-color: #e83e8c;
+                /* وردي */
+            }
+
+            .package-card:nth-child(2) .subscribe-btn {
+                background-color: #20c997;
+                /* أخضر */
+            }
+
+            .package-card:nth-child(3) .subscribe-btn {
+                background-color: #6f42c1;
+                /* بنفسجي */
+            }
+            .visits-container {
+        background-color: #f8f1e9; /* لون خلفية مختلف */
+        border-radius: 8px;
+        padding: 12px;
+        margin: 15px 0;
+        border: 1px dashed #e83e8c; /* حد منقط */
+    }
+    
+    .visits-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #6c757d;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+    
+    .visits-count {
+        font-size: 24px;
+        font-weight: bold;
+        color: #e83e8c;
+        text-align: center;
+        display: block;
+    }
+    
+    .visits-note {
+        font-size: 12px;
+        color: #6c757d;
+        text-align: center;
+        margin-top: 5px;
+        font-style: italic;
+    }
+        </style>
+
+        <div class="container py-5">
+            <div class="row">
+                @foreach ($packages as $item)
+                    <div class="col-md-4 mb-4">
+                        <div class="package-card wow fadeInUp" data-wow-delay="0.2s">
+                            @if ($item->number_of_users_type == 'limited')
+                                <span class="offer-banner">عرض خاص فقط لـ {{ $item->number_of_users }} مشتركة</span>
+                            @endif
+                            <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid">
+                            <div class="package-title">{{ $item->name }}</div>
+                            <div class="package-details">
+                                <ul>
+                                    @foreach ($item->services as $service)
+                                        <li>{{ $service->title }}</li>
+                                    @endforeach
+                                </ul>
+                                <div class="visits-container">
+                                    <div class="visits-title">عدد الزيارات المتاحة</div>
+                                    <span class="visits-count">{{$item->number_of_visits}}</span>
+                                </div>
+                                <div class="package-price">1200 شيكل لمدة 2 شهور فقط</div>
+                                <button class="subscribe-btn" onclick="openSubscriptionModal('{{$item->id}}', '{{$item->name}}')">طلب اشتراك</button>                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     </div>
 </section>
@@ -79,3 +243,14 @@
         </div>
     </div>
 </div>
+<script>
+    function openSubscriptionModal(packageId, packageName) {
+    // تعبئة بيانات الباقة في المودال
+    $('#package-id').val(packageId);
+    $('#package-title').text(packageName);
+    
+    // فتح المودال
+    $('#PriceModal').modal('show');
+}
+
+</script>

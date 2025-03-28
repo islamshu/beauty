@@ -29,7 +29,9 @@ Route::post('/purchase-package', [HomeController::class, 'purchase'])->name('pac
 Route::post('/enroll', [HomeController::class, 'enroll'])->name('course.enroll');
 Route::get('/course/{course}', [HomeController::class, 'single_course'])->name('single_course');
 Route::get('products', [HomeController::class, 'products'])->name('products');
-Route::get('product.details/{id}', [HomeController::class, 'single_products'])->name('product.details');
+Route::get('services', [HomeController::class, 'services'])->name('services');
+
+ 
 Route::get('product.details/{id}', [HomeController::class, 'single_products'])->name('product.details');
 Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
 Route::get('/order-success', function () {

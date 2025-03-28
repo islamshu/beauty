@@ -33,7 +33,36 @@
 
 {{-- <link href="{{ asset('front/options/optionswitch.css') }}" rel="stylesheet">
 <script src="{{ asset('front/options/optionswitcher.js') }}"></script> --}}
-
+<script>
+    // هذا الكود سيتعامل مع حالة #courses تلقائياً
+    document.addEventListener('DOMContentLoaded', function() {
+        // التحقق من الهاش عند تحميل الصفحة
+        if(window.location.hash === '#courses') {
+            activateCoursesNav();
+        }
+    
+        // الاستماع لتغيرات الهاش
+        window.addEventListener('hashchange', function() {
+            if(window.location.hash === '#courses') {
+                activateCoursesNav();
+            }
+        });
+    
+        function activateCoursesNav() {
+            const navItem = document.getElementById('courses-nav-item');
+            const navLink = navItem.querySelector('.nav-link');
+            
+            // إزالة التنشيط من جميع العناصر
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // تفعيل العنصر الحالي
+            navItem.classList.add('active');
+            navLink.classList.add('active');
+        }
+    });
+    </script>
 
 <!-- Slick Slider JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>

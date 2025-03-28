@@ -27,24 +27,23 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item @if(request()->is('/')) active @endif">
                         <a class="nav-link" href="/">الرئيسية <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" href="{{route('products')}}">المنتجات <span class="sr-only">(current)</span></a>
-                    </li>
-                    @if(Route::currentRouteName() != 'home')
+                    <li class="nav-item @if(request()->routeIs('products')) active @endif">
+                        <a class="nav-link" href="{{ route('products') }}">المنتجات <span class="sr-only">(current)</span></a>
+                    </li>     
+                    <li class="nav-item @if(request()->routeIs('services')) active @endif">
+                        <a class="nav-link" href="{{ route('services') }}">الخدمات <span class="sr-only">(current)</span></a>
+                    </li>                     
+                     <li id="courses-nav-item" class="nav-item @if(request()->routeIs('home') && request()->hasHeader('X-Requested-With') && request()->header('X-Requested-With') === 'XMLHttpRequest' || (request()->is('/') && isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], '#courses'))) active @endif">
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('home')}}#courses">الدورات <span class="sr-only">(current)</span></a>
+                        @if(Route::currentRouteName() != 'home')
+                            <a class="nav-link" href="{{ route('home') }}#courses">الدورات <span class="sr-only">(current)</span></a>
+                        @else
+                            <a class="nav-link" href="#courses">الدورات <span class="sr-only">(current)</span></a>
+                        @endif
                     </li>
-                    @else
-                    <li class="nav-item ">
-                        <a class="nav-link" href="#courses">الدورات <span class="sr-only">(current)</span></a>
-                    </li>
-                    @endif
-
-                    
                 </ul>
             </div>
 

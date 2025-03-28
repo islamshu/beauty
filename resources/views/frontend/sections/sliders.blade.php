@@ -1,36 +1,144 @@
-<!-- MAIN SLIDER -->
-        <section class="main-slider" data-loop="true" data-autoplay="true" data-interval="7000">
-            <div class="inner">
-
-               
-
-                <!-- Slide Two -->
-                @if (count($sliders) == 1)
-                    @php
-                        $sliders = array_merge($sliders->toArray(), $sliders->toArray());
-                    @endphp
-                @endif
-                @foreach ($sliders as $item)
-                    
-                <div class="slide slideResize slide2" style="background-image: url({{asset('uploads/'.$item['image'])}});">
-                    <div class="container">
-                        <div class="slide-inner2 common-inner">
-                            <span class="h1 from-bottom">{{$item['first_title']}}</span><br>
-                            <span class="h4 from-bottom">{{$item['secand_title']}}</span><br>
-                            @if ($item['button_text'] != null)
-                                <a href="{{$item['button_link']}}" class="btn btn-primary first-btn waves-effect waves-light scale-up">{{$item['button_text']}}</a>
-                                
-                            @endif
-                            
-                        </div>
+<div id="imageSlider" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators" style="bottom: 0px; !important">
+        @foreach ($sliders as $key => $item)
+            <li data-target="#imageSlider" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
+        @endforeach
+    </ol>
+    
+    <!-- Slides -->
+    <div class="carousel-inner">
+        @foreach ($sliders as $key => $item)   
+            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                <div class="carousel-image-container">
+                    <img src="{{ asset('uploads/'.$item->image) }}" alt="{{ $item->first_title ?? 'Slide' }}" class="carousel-image">
+                </div>
+                <div class="carousel-caption">
+                    <div class="caption-content">
+                        <h3>{{ $item->first_title ?? 'Slide Title' }}</h3>
+                        <p>{{ $item->secand_title ?? 'Slide description' }}</p>
+                        @if($item->button_link)
+                            <a href="{{ $item->button_link }}" class="btn btn-primary">
+                                {{ $item->button_text ?? 'Learn More' }}
+                            </a>
+                        @endif
                     </div>
                 </div>
-                @endforeach
-                
-
-              
-
-               
-
             </div>
-        </section>
+        @endforeach
+    </div>
+    
+    <!-- Controls -->
+    <a class="carousel-control-prev" href="#imageSlider" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#imageSlider" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<style>
+    /* Base Carousel Styles */
+    .carousel {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .carousel-item {
+        position: relative;
+        height: 60vh; /* Default height for larger screens */
+        min-height: 300px; /* Minimum height */
+    }
+    
+    /* Image Container */
+    .carousel-image-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    /* Caption Styling */
+    .carousel-caption {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .caption-content {
+        background: rgba(198, 194, 194, 0.7);
+        backdrop-filter: blur(5px);
+        border-radius: 10px;
+        padding: 25px;
+        max-width: 800px;
+        width: 90%;
+        color: #333;
+    }
+    
+    .carousel-caption h3 {
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+    
+    .carousel-caption p {
+        font-size: clamp(1rem, 1.8vw, 1.3rem);
+        margin-bottom: 20px;
+    }
+    
+    .carousel-caption .btn {
+        font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+        padding: 8px 20px;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .carousel-item {
+            height: 50vh;
+        }
+        
+        .caption-content {
+            padding: 20px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .carousel-item {
+            height: 45vh;
+        }
+        
+        .caption-content {
+            width: 95%;
+            padding: 15px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .carousel-item {
+            height: 40vh;
+        }
+        
+        .caption-content {
+            padding: 15px 10px;
+            width: 98%;
+        }
+    }
+</style>

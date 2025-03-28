@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="container-fluid clearfix homeGallery">
+    <div class="container-fluid clearfix homeGallery mt-5">
         <div class="row">
             <div class="col-xs-12">
                 <div class="filter-container isotopeFilters">
@@ -28,13 +28,12 @@
             <div class="col-sm-3 isotopeSelector {{$item->category->name}}">
                 <div class="card">
                     <div class="card-img">
-                        <img class="img-full lazyestload" data-src="{{asset('uploads/'.$item->image)}}" 
+                        <a href="{{asset('uploads/'.$item->image)}}" data-fancybox="images">
+
+                        <img class="img-full lazyestload" width="500" data-src="{{asset('uploads/'.$item->image)}}" 
                              src="{{asset('uploads/'.$item->image)}}" alt="صورة من المعرض">
-                        <div class="overlay-content">
-                            <a href="{{asset('uploads/'.$item->image)}}" data-fancybox="images">
-                                <h5><i class="fa fa-plus" aria-hidden="true"></i> <br> </h5>
                             </a>
-                        </div>
+                       
                     </div>
                 </div>
             </div>

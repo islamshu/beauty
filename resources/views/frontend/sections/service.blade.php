@@ -2,74 +2,59 @@
 <section class="clearfix varietySection">
     <div class="container">
         <div class="secotionTitle">
-            <h2><span>اكتشف</span> الخدمات</h2>
+            <h2><span>الخدمات </span>المميزة</h2>
         </div>
+    
+    
+    <div class="container mt-5">
         <div class="row">
-            <div class="col-12">
-                <div class="tabbable tabTop">
-                    <ul class="nav nav-tabs">
-                        @foreach($categories as $category)
-                            <li>
-                                <a href="#{{ strtolower($category->name) }}" data-toggle="tab" class="{{ $loop->first ? 'active' : '' }}">
-                                    <span>{{ $category->name }}</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                    <div class="tab-content">
-                        @foreach($categories as $category)
-                            <div class="tab-pane {{ $loop->first ? 'active' : '' }}" id="{{ strtolower($category->name) }}">
-                                <div class="tabbable tabs-left">
-                                    <div class="row">
-                                        <div class="col-md-5 col-lg-4">
-                                            <ul class="nav nav-tabs">
-                                                @foreach($category->services as $service)
-                                                    <li>
-                                                        <a href="javascript:void(0)" 
-                                                           data-service-id="{{ $service->id }}" 
-                                                           class="service-tab {{ $loop->first ? 'active' : '' }}">
-                                                            {{ $service->title }} <span>${{ $service->price }}</span>
-                                                        </a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-7 col-lg-8">
-                                            <div class="tab-content">
-                                                <div id="varietyContent">
-                                                    @if($loop->first && $category->services->isNotEmpty())
-                                                        @php
-                                                            $firstService = $category->services->first();
-                                                        @endphp
-                                                        <img src="{{ asset('uploads/'.$firstService->image) }}" alt="{{ $firstService->title }}" class="img-responsive lazyestload">
-                                                        <h3>{{ $firstService->title }}</h3>
-                                                        <h4>${{ $firstService->price }} لكل شخص</h4>
-                                                        <p>{{ $firstService->description }}</p>
-                                                        <a href="javascript:void(0)" style="padding: 10px;border-radius: 5%;" 
-                                                           class="btn btn-primary first-btn open-appointment-modal" 
-                                                           data-toggle="modal" 
-                                                           data-target="#appoinmentModal"
-                                                           data-dss="aa"
-                                                           data-service-title="{{ $firstService->title }}"
-                                                           data-service-price="{{ $firstService->price }}">
-                                                           احجز موعدًا
-                                                        </a>
-                                                    @else
-                                                        <p>يرجى اختيار خدمة لعرض التفاصيل.</p>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+            @foreach ($services as $item)
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card-container" onclick="openWhatsApp('{{ $item->title }}')">
+                    <div class="card">
+                        <!-- Front Face -->
+                        <div class="card-face front">
+                            <img class="lazyestload" src="{{ asset('uploads/' . $item->image) }}" data-src="{{asset('uploads/' . $item->image) }}" alt="Service Image">
+                            <div class="overlay">{{ $item->title }}</div>
+                        </div>
+                        <!-- Back Face -->
+                        <div class="card-face back">
+                            <p>{!! $item->description !!}</p>
+                        </div>
                     </div>
                 </div>
             </div>
+            @endforeach
+        </div>
+        
+        <div class="more-services">
+            <a href="{{route('services')}}" class="more-services-btn">المزيد من الخدمات</a>
         </div>
     </div>
 </section>
+
+<script>
+    function openWhatsApp(serviceName) {
+        const phoneNumber =`{{ get_general_value('whatsapp_number')}}`;
+        const message = `مرحباً، أنا مهتم بخدمة ${serviceName}، هل يمكنكم تقديم المزيد من المعلومات؟`;
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
+    }
+    
+    // Optional: Separate click handler for the "View More" button
+    document.querySelectorAll('.view-more-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent triggering the card click
+            const card = this.closest('.card-container');
+            const serviceTitle = card.querySelector('.overlay').textContent;
+            openWhatsApp(serviceTitle);
+        });
+    });
+    
+
+</script>
+
 
 <!-- نافذة الحجز -->
 <div id="appoinmentModal" class="modal fade modalCommon" role="dialog" tabindex="-1">
