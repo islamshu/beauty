@@ -30,6 +30,7 @@ Route::post('/enroll', [HomeController::class, 'enroll'])->name('course.enroll')
 Route::get('/course/{course}', [HomeController::class, 'single_course'])->name('single_course');
 Route::get('products', [HomeController::class, 'products'])->name('products');
 Route::get('services', [HomeController::class, 'services'])->name('services');
+Route::get('contact-us', [HomeController::class, 'contact_us'])->name('contact-us');
 
  
 Route::get('product.details/{id}', [HomeController::class, 'single_products'])->name('product.details');

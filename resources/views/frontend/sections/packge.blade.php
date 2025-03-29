@@ -140,37 +140,56 @@
                 background-color: #6f42c1;
                 /* بنفسجي */
             }
+
             .visits-container {
-        background-color: #f8f1e9; /* لون خلفية مختلف */
-        border-radius: 8px;
-        padding: 12px;
-        margin: 15px 0;
-        border: 1px dashed #e83e8c; /* حد منقط */
-    }
-    
-    .visits-title {
-        font-size: 16px;
-        font-weight: bold;
-        color: #6c757d;
-        margin-bottom: 8px;
-        text-align: center;
-    }
-    
-    .visits-count {
-        font-size: 24px;
-        font-weight: bold;
-        color: #e83e8c;
-        text-align: center;
-        display: block;
-    }
-    
-    .visits-note {
-        font-size: 12px;
-        color: #6c757d;
-        text-align: center;
-        margin-top: 5px;
-        font-style: italic;
-    }
+                background-color: #f8f1e9;
+                /* لون خلفية مختلف */
+                border-radius: 8px;
+                padding: 12px;
+                margin: 15px 0;
+                border: 1px dashed #e83e8c;
+                /* حد منقط */
+            }
+
+            .visits-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #6c757d;
+                margin-bottom: 8px;
+                text-align: center;
+            }
+
+            .visits-count {
+                font-size: 24px;
+                font-weight: bold;
+                color: #e83e8c;
+                text-align: center;
+                display: block;
+            }
+
+            .visits-note {
+                font-size: 12px;
+                color: #6c757d;
+                text-align: center;
+                margin-top: 5px;
+                font-style: italic;
+            }
+
+            .package-note-container {
+                display: none;
+                margin-bottom: 20px;
+            }
+
+            .package-note {
+                border: 2px solid #f8d7da;
+                padding: 15px;
+                color: #721c24;
+                background-color: #f8d7da;
+                border-radius: 5px;
+                font-weight: bold;
+                text-align: center;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
         </style>
 
         <div class="container py-5">
@@ -181,7 +200,8 @@
                             @if ($item->number_of_users_type == 'limited')
                                 <span class="offer-banner">عرض خاص فقط لـ {{ $item->number_of_users }} مشتركة</span>
                             @endif
-                            <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->name }}" class="img-fluid">
+                            <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->name }}"
+                                class="img-fluid">
                             <div class="package-title">{{ $item->name }}</div>
                             <div class="package-details">
                                 <ul>
@@ -191,10 +211,13 @@
                                 </ul>
                                 <div class="visits-container">
                                     <div class="visits-title">عدد الزيارات المتاحة</div>
-                                    <span class="visits-count">{{$item->number_of_visits}}</span>
+                                    <span class="visits-count">{{ $item->number_of_visits }}</span>
                                 </div>
                                 <div class="package-price">1200 شيكل لمدة 2 شهور فقط</div>
-                                <button class="subscribe-btn" onclick="openSubscriptionModal('{{$item->id}}', '{{$item->name}}')">طلب اشتراك</button>                            </div>
+                                <button class="subscribe-btn"
+                                    onclick="openSubscriptionModal('{{ $item->id }}', '{{ $item->name }}','{{ $item->note }}')">طلب
+                                    اشتراك</button>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -211,46 +234,72 @@
                 <h4 class="modal-title appointment-modal-title">شراء الباقة: <span id="package-title"></span></h4>
             </div>
             <div class="modal-body">
-                <form id="PriceingForm">
-                    @csrf
-                    <input type="hidden" name="package_id" id="package-id">
+                <div class="modal-body" style="padding:0px">
 
-                    <div class="form-group">
-                        <label>الاسم الكامل</label>
-                        <input type="text" name="full_name" class="form-control" placeholder="الاسم الكامل" required>
-                        <span class="text-danger error-full_name"></span>
+                    <div id="package-note-container" class="package-note-container">
+                        <p id="package-note" class="package-note"></p>
                     </div>
-                    <div class="form-group">
-                        <label>رقم الهوية</label>
-                        <input type="text" name="id_number" class="form-control" placeholder="رقم الهوية" required>
-                        <span class="text-danger error-id_number"></span>
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="text" name="phone" class="form-control" placeholder="رقم الهاتف" required>
-                        <span class="text-danger error-phone"></span>
-                    </div>
-                    <div class="form-group">
-                        <label>العنوان</label>
-                        <textarea class="form-control" name="address" placeholder="عنوانك" required></textarea>
-                        <span class="text-danger error-address"></span>
-                    </div>
-                    <div class="form-group text-center">
-                        <button type="button" id="send_button_price" class="btn btn-primary">إرسال الطلب</button>
-                    </div>
-                </form>
+                    <form id="PriceingForm">
+                        @csrf
+                        <input type="hidden" name="package_id" id="package-id">
+
+                        <div class="row">
+                            <!-- الصف الأول - حقلين بجانب بعض -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>الاسم الكامل</label>
+                                    <input type="text" name="full_name" class="form-control"
+                                        placeholder="الاسم الكامل" required>
+                                    <span class="text-danger error-full_name"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>رقم الهاتف</label>
+                                    <input type="text" name="phone" class="form-control" placeholder="رقم الهاتف"
+                                        required>
+                                    <span class="text-danger error-phone"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- الصف الثاني - حقل العنوان كامل العرض -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>العنوان</label>
+                                    <textarea class="form-control" name="address" placeholder="عنوانك" required></textarea>
+                                    <span class="text-danger error-address"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- زر الإرسال -->
+                        <div class="form-group text-center">
+                            <button type="button" id="send_button_price" class="btn btn-primary">إرسال الطلب</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function openSubscriptionModal(packageId, packageName) {
-    // تعبئة بيانات الباقة في المودال
-    $('#package-id').val(packageId);
-    $('#package-title').text(packageName);
-    
-    // فتح المودال
-    $('#PriceModal').modal('show');
-}
+    function openSubscriptionModal(packageId, packageName, note) {
+        // تعبئة بيانات الباقة في المودال
+        $('#package-id').val(packageId);
+        $('#package-title').text(packageName);
+        const noteContainer = $('#package-note-container');
+        const noteElement = $('#package-note');
 
+        if (note && note.trim() !== '') {
+            noteElement.text(note);
+            noteContainer.show(); // إظهار الحاوية إذا كانت هناك ملاحظات
+        } else {
+            noteContainer.hide(); // إخفاء الحاوية إذا لم تكن هناك ملاحظات
+        }
+        // فتح المودال
+        $('#PriceModal').modal('show');
+    }
 </script>

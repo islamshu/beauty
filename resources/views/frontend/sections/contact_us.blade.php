@@ -1,5 +1,7 @@
+@extends('layouts.frontend')
+@section('content')
 <section class="clearfix contactSection ">
-    <div class="secotionTitle">
+    <div class="secotionTitle" style="margin-bottom: 3% ; text-align: center;">
         <h2><span>خليك </span>على تواصل</h2>
     </div>
     <div class="container">
@@ -50,3 +52,5 @@
         </div>
     </div>
 </section>
+
+@endsection

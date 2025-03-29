@@ -61,47 +61,78 @@
     @yield('scripts')
     <script>
         $(document).ready(function() {
-            $("#submitBtn").click(function() {
-                let formData = {
-                    "_token": "{{ csrf_token() }}",
-                    "contact-form-name": $("#name").val(),
-                    "contact-form-email": $("#email").val(),
-                    "contact-form-mobile": $("#mobile").val(),
-                    "contact-form-message": $("#message").val(),
-                };
+    $("#submitBtn").click(function() {
+        // تعطيل الزر وإضافة مؤشر تحميل
+        let $btn = $(this);
+        $btn.prop('disabled', true);
+        $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...');
+        
+        // مسح رسائل الخطأ السابقة
+        $('.error-message').remove();
+        $('.form-control').removeClass('is-invalid');
 
-                $.ajax({
-                    url: "{{ route('contact.store') }}", // Adjust your route
-                    method: "POST",
-                    data: formData,
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: "success",
-                                title: "تم بنجاح!",
-                                text: response.message,
-                                confirmButtonText: "حسنًا"
-                            });
-                            $("#angelContactForm")[0].reset(); // Reset form fields
-                        }
-                    },
-                    error: function(xhr) {
-                        let errors = xhr.responseJSON.errors;
-                        let firstErrorMessage = Object.values(errors)[0][
-                            0
-                        ]; // Get the first error message
+        let formData = {
+            "_token": "{{ csrf_token() }}",
+            "contact-form-name": $("#name").val(),
+            "contact-form-email": $("#email").val(),
+            "contact-form-mobile": $("#mobile").val(),
+            "contact-form-message": $("#message").val(),
+        };
 
-                        Swal.fire({
-                            icon: "error",
-                            title: "خطأ!",
-                            text: firstErrorMessage, // Show only the first error
-                            confirmButtonText: "حسنًا"
-                        });
-                    }
+        $.ajax({
+            url: "{{ route('contact.store') }}",
+            method: "POST",
+            data: formData,
+            dataType: "json",
+            success: function(response) {
+                Swal.fire({
+                    icon: "success",
+                    title: "تم بنجاح!",
+                    text: response.message,
+                    confirmButtonText: "حسنًا",
+                    timer: 3000
                 });
-            });
+                $("#angelContactForm")[0].reset();
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorMessages = [];
+                    
+                    // جمع جميع رسائل الخطأ
+                    $.each(errors, function(field, messages) {
+                        errorMessages = errorMessages.concat(messages);
+                        
+                        // عرض الأخطاء تحت الحقول (اختياري)
+                        let $field = $(`#${field}`);
+                        $field.addClass('is-invalid');
+                        $field.after(`<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`);
+                    });
+                    
+                    // عرض جميع الأخطاء في SweetAlert
+                    Swal.fire({
+                        icon: "error",
+                        title: "خطأ في الإرسال",
+                        html: errorMessages.join('<br>'),
+                        confirmButtonText: "حسنًا"
+                    });
+                    
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "خطأ!",
+                        text: "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً",
+                        confirmButtonText: "حسنًا"
+                    });
+                }
+            },
+            complete: function() {
+                $btn.prop('disabled', false);
+                $btn.html('إرسال الرسالة');
+            }
         });
+    });
+});
     </script>
     <script>
         $("#checkoutForm").submit(function(event) {

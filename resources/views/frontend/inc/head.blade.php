@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&amp;family=Montserrat:wght@400;700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap"
         rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <!-- PLUGINS CSS STYLE -->
     {{-- <link href="{{ asset('front/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"> --}}
@@ -37,7 +37,7 @@
     {{-- green_color
     <link href="{{ asset('front/css/color-option1.css') }}" rel="stylesheet" id="option_color"> --}}
     {{-- pink color
-    <link href="{{ asset('front/css/color-option2.css') }}" rel="stylesheet" id="option_color"> --}} 
+    <link href="{{ asset('front/css/color-option2.css') }}" rel="stylesheet" id="option_color"> --}}
 
 
     <!-- jQuery -->
@@ -60,13 +60,28 @@
   <![endif]-->
 
     <style>
-         html {
+        html {
             scroll-behavior: smooth;
         }
+
         body {
             font-family: 'Tajawal', sans-serif;
         }
-        
+
+        .spinner-border {
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .error-message {
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        #submitBtn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
 
         /* تخصيص الخط على العناصر الأخرى */
         span,

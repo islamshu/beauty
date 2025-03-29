@@ -13,7 +13,6 @@
     @include('frontend.sections.product')
     @include('frontend.sections.partner')
 
-    @include('frontend.sections.contact_us')
 @endsection
 @section('scripts')
     <!-- تضمين مكتبة SweetAlert -->
@@ -195,6 +194,7 @@
 
             // إرسال بيانات شراء الباقة
             $('#send_button_price').click(function() {
+                
                 var formData = $('#PriceingForm').serialize();
                 $.ajax({
                     url: "{{ route('package.purchase') }}",

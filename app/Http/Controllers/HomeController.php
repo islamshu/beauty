@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
-
+    public function contact_us(){
+        return view('frontend.sections.contact_us');
+    }
     public function packge_order(){
         return view('dashboard.orders.packges')->with('orders',Order::orderby('id','desc')->get());
     }
@@ -63,24 +65,62 @@ class HomeController extends Controller
     
     public function store_contact(Request $request)
     {
-        // Validate the form data
-        $validatedData = $request->validate([
+        // قواعد التحقق مع رسائل مخصصة بالعربية
+        $rules = [
             'contact-form-name' => 'required|string|max:255',
             'contact-form-email' => 'required|email|max:255',
             'contact-form-mobile' => 'required|string|max:20',
             'contact-form-message' => 'required|string',
-        ]);
-
-        // Store the data in the database
-        Contact::create([
-            'name' => $validatedData['contact-form-name'],
-            'email' => $validatedData['contact-form-email'],
-            'phone' => $validatedData['contact-form-mobile'],
-            'message' => $validatedData['contact-form-message'],
-        ]);
-
-        // Return a success response
-        return response()->json(['success' => true, 'message' => 'تم إرسال طلبك بنجاح!']);
+        ];
+    
+        // رسائل الخطأ المخصصة بالعربية
+        $customMessages = [
+            'required' => 'حقل :attribute مطلوب.',
+            'string' => 'حقل :attribute يجب أن يكون نصاً.',
+            'email' => 'حقل :attribute يجب أن يكون بريداً إلكترونياً صحيحاً.',
+            'max' => 'حقل :attribute يجب ألا يتجاوز :max حرف.',
+            
+            // رسائل محددة للحقول
+            'contact-form-name.required' => 'الاسم الكامل مطلوب.',
+            'contact-form-email.required' => 'البريد الإلكتروني مطلوب.',
+            'contact-form-email.email' => 'يجب إدخال بريد إلكتروني صحيح.',
+            'contact-form-mobile.required' => 'رقم الجوال مطلوب.',
+            'contact-form-message.required' => 'الرسالة مطلوبة.',
+        ];
+    
+        // أسماء الحقول المعربة
+        $attributes = [
+            'contact-form-name' => 'الاسم الكامل',
+            'contact-form-email' => 'البريد الإلكتروني',
+            'contact-form-mobile' => 'رقم الجوال',
+            'contact-form-message' => 'الرسالة',
+        ];
+    
+        // تنفيذ التحقق مع الرسائل المخصصة
+        $validatedData = $request->validate($rules, $customMessages, $attributes);
+    
+        try {
+            // تخزين البيانات في قاعدة البيانات
+            Contact::create([
+                'name' => $validatedData['contact-form-name'],
+                'email' => $validatedData['contact-form-email'],
+                'phone' => $validatedData['contact-form-mobile'],
+                'message' => $validatedData['contact-form-message'],
+            ]);
+    
+            // إرجاع رسالة نجاح
+            return response()->json([
+                'success' => true,
+                'message' => 'تم إرسال رسالتك بنجاح، شكراً لتواصلك معنا!'
+            ]);
+    
+        } catch (\Exception $e) {
+            // في حالة حدوث خطأ غير متوقع
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء محاولة إرسال الرسالة. يرجى المحاولة مرة أخرى لاحقاً.'
+            ], 500);
+        }
     }
     public function products(Request $request)
     {

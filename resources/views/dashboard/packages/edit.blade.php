@@ -137,6 +137,18 @@
                                 </div>
                             </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="note">ملاحظات  <span class="required">*</span></label>
+                                       <textarea name="note" class="form-control" id="note" cols="3" rows="3">{{$package->note}}</textarea>
+                                        @error('note')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
+                                </div>
+                              
+                            </div>
 
                             <!-- Description -->
                          

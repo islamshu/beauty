@@ -26,7 +26,8 @@ class PackageController extends Controller
             'number_of_users_type' => 'required',
             'number_of_visits' => 'required|integer|min:1',
             'services' => 'required|array',
-            'services.*' => 'exists:services,id'
+            'services.*' => 'exists:services,id',
+            'note'=> 'nullable|string|max:1000',
         ]);
         if($request->number_of_users_type == 'limited'){
             $request->validate([
@@ -61,7 +62,8 @@ class PackageController extends Controller
             'number_of_users_type' => 'required',
             'number_of_visits' => 'required|integer|min:1',
             'services' => 'required|array',
-            'services.*' => 'exists:services,id'
+            'services.*' => 'exists:services,id',
+            'note'=> 'nullable|string|max:1000',
         ]);
         if($request->number_of_users_type == 'limited'){
             $request->validate([
