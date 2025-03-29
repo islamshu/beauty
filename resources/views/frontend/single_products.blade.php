@@ -17,7 +17,7 @@
                 <div class="col-md-6">
                     <div class="singleProductInfo">
                         <h2>{{ $product->title }}</h2>
-                        <h3>{{ $product->price_after_discount }} شيكل <del>{{ $product->price_before_discount }} شيكل</del>
+                        <h3>{{ $product->price_after_discount }} ₪ <del>{{ $product->price_before_discount }} ₪</del>
                         </h3>
                         <p>{!! $product->small_description !!}</p>
 

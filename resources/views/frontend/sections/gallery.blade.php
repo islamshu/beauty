@@ -1,43 +1,102 @@
-<!-- قسم معرض الصور -->
-<section>
-    <div class="clearfix homeGalleryTitle">
-        <div class="container">
-            <div class="secotionTitle">
-                <h2><span>استكشف </span>معرض الصور</h2>
-            </div>
+<section class="gallery-section py-5">
+    <div class="container">
+        <!-- العنوان -->
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary">
+                <span class="text-secondary">استكشف</span> معرض الصور
+            </h2>
         </div>
-    </div>
 
-    <div class="container-fluid clearfix homeGallery mt-5">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="filter-container isotopeFilters">
-                    <ul class="list-inline filter">
-                        <li class="active"><a href="#" data-filter="*">جميع الصور</a></li>
-                        {{-- التصنيفات --}}
-                        @foreach ($categoriesgal as $item)
-                        <li><a href="#" data-filter=".{{$item->name}}">{{$item->name}}</a></li>
-                        @endforeach
-                    </ul>
+        <!-- أزرار التصنيفات -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-wrap justify-content-center gap-2 filter-buttons">
+                    <button class="btn btn-outline-primary active" data-filter="*">الكل</button>
+                    @foreach ($categoriesgal->take(8) as $item)
+                    <button class="btn btn-outline-primary" data-filter=".{{str_replace(' ', '-', $item->name)}}">
+                        {{$item->name}}
+                    </button>
+                    @endforeach
                 </div>
             </div>
         </div>
 
-        <div class="row isotopeContainer" id="container">
+        <!-- الصور -->
+        <div class="row grid" data-isotope='{ "itemSelector": ".grid-item", "layoutMode": "masonry" }'>
             @foreach ($galleries as $item)
-            <div class="col-sm-3 isotopeSelector {{$item->category->name}}">
-                <div class="card">
-                    <div class="card-img">
-                        <a href="{{asset('uploads/'.$item->image)}}" data-fancybox="images">
-
-                        <img class="img-full lazyestload" width="500" data-src="{{asset('uploads/'.$item->image)}}" 
-                             src="{{asset('uploads/'.$item->image)}}" alt="صورة من المعرض">
-                            </a>
-                       
-                    </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 grid-item {{str_replace(' ', '-', $item->category->name)}}">
+                <div class="card h-100 shadow-sm overflow-hidden">
+                    <a href="{{asset('uploads/'.$item->image)}}" data-fancybox="gallery">
+                        <img 
+                            src="{{asset('uploads/'.$item->image)}}" 
+                            alt="{{$item->alt_text ?? 'صورة المعرض'}}" 
+                            class="img-fluid card-img-top" 
+                            loading="lazy"
+                            style="height: 250px; object-fit: cover;"
+                        >
+                    </a>
                 </div>
             </div>
             @endforeach
         </div>
     </div>
 </section>
+<style>
+    .filter-buttons .btn {
+        transition: all 0.3s ease;
+        min-width: 120px;
+        background: #e83e8c;
+    }
+    
+    .filter-buttons .btn.active {
+        background: rgb(151, 10, 151) !important;
+        color: white !important;
+        transform: scale(1.05);
+    }
+    
+    .card {
+        transition: transform 0.3s;
+        border: none;
+        border-radius: 12px;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-img {
+        overflow: hidden;
+        border-radius: 12px 12px 0 0;
+    }
+</style>
+<script>
+$(document).ready(function() {
+    // تهيئة Isotope
+    const $grid = $('.grid').isotope({
+        itemSelector: '.grid-item',
+        layoutMode: 'masonry',
+        percentPosition: true
+    });
+
+    // تصفية الصور عند النقر على الأزرار
+    $('.filter-buttons').on('click', 'button', function() {
+        const filterValue = $(this).attr('data-filter');
+        
+        $('.filter-buttons button').removeClass('active');
+        $(this).addClass('active');
+        
+        $grid.isotope({ filter: filterValue });
+    });
+
+    // تهيئة Fancybox
+    $('[data-fancybox="gallery"]').fancybox({
+        buttons: [
+            "zoom",
+            "share",
+            "slideShow",
+            "fullScreen",
+            "close"
+        ]
+    });
+});
+</script>

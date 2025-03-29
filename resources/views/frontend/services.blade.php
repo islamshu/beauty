@@ -2,135 +2,133 @@
 
 @section('style')
 <style>
-    /* نفس ستايل كروت المنتجات مع تعديلات بسيطة */
-    .serviceSingle {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        transform-style: preserve-3d;
-    }
-    
-    /* Flip Animation (عند الضغط) */
-    .serviceSingle.flipped {
-        transform: rotateY(180deg);
-    }
-    
-    .serviceImage {
-        position: relative;
-        overflow: hidden;
-        height: 200px;
-    }
-    
-    .serviceImage img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s;
-    }
-    
-    .serviceMask {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .serviceSingle:not(.flipped):hover .serviceMask {
-        opacity: 1;
-    }
-    
-    .serviceOption {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        gap: 10px;
-    }
-    
-    .serviceOption li {
-        display: inline-block;
-    }
-    
-    .serviceOption a {
-        color: #fff;
-        font-size: 18px;
-    }
-    
-    /* الوجه الأمامي */
-    .serviceFront {
-        backface-visibility: hidden;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-    
-    /* الوجه الخلفي */
-    .serviceBack {
-        backface-visibility: hidden;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #e83e8c;
-        color: white;
-        transform: rotateY(180deg);
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .serviceCaption {
-        padding: 15px;
-        text-align: center;
-    }
-    
-    .serviceCaption h3 {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-    
-    .whatsapp-btn {
-        background-color: #25D366;
-        color: white;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 15px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    /* البحث والتنسيقات العامة */
-    .search-section {
-        margin-bottom: 30px;
-    }
-    
-    .pagination-container {
-        margin-top: 30px;
-    }
+/* Flip Card Container */
+.flip-card {
+    background-color: transparent;
+    width: 100%;
+    height: 300px;
+    perspective: 1000px; /* تعطي تأثير العمق */
+}
+
+/* Inner Flip Card */
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+/* عند التحويم تتحول البطاقة */
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* وجه البطاقة الأمامي والخلفي */
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* الوجه الأمامي */
+.flip-card-front {
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flip-card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* الوجه الخلفي */
+.flip-card-back {
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transform: rotateY(180deg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flip-card-back p {
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* زر الحجز */
+.book-service-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    background-color: #ffc107;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.book-service-btn:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+}
+
+/* شريط البحث */
+.search-section {
+    margin-bottom: 30px;
+}
+
+/* زر عرض المزيد */
+.more-services {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.more-services-btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.more-services-btn:hover {
+    background-color: #0056b3;
+}
 </style>
 @endsection
 
 @section('content')
-<section class="container-fluid clearfix">
+<section class="container-fluid varietySection">
     <div class="container">
+        <div class="secotionTitle">
+            <h2><span>الخدمات </span>المميزة</h2>
+        </div>
+
         <!-- شريط البحث -->
         <div class="row search-section">
             <div class="col-md-6 offset-md-3">
@@ -147,60 +145,56 @@
             </div>
         </div>
 
-        <!-- الخدمات -->
-            <div class="row"id="servicesContainer">
-                @foreach ($services as $item)
-                <div class="col-md-3 col-sm-6 mb-4">
-                    <div class="card-container" onclick="openWhatsApp('{{ $item->title }}')">
-                        <div class="card">
+        <!-- قائمة الخدمات -->
+        <div class="row" id="servicesContainer">
+            @foreach ($services as $item)
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card-container">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
                             <!-- Front Face -->
-                            <div class="card-face front">
-                                <img  class="lazyestload" data-src="{{asset('uploads/' . $item->image) }}" src="{{ asset('uploads/' . $item->image) }}" alt="Service Image">
+                            <div class="flip-card-front">
+                                <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->title }}">
                                 <div class="overlay">{{ $item->title }}</div>
                             </div>
                             <!-- Back Face -->
-                            <div class="card-face back">
-                                <p>{!! $item->description !!}</p>
+                            <div class="flip-card-back">
+                                <p>{!! Str::limit($item->description, 100) !!}</p>
+                                <button class="book-service-btn" onclick="openWhatsApp('{{ $item->title }}')">
+                                    احجز الخدمة
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
             </div>
+            @endforeach
+        </div>
+
+        <!-- زر عرض المزيد -->
+        <div class="more-services">
+            <a href="{{route('services')}}" class="more-services-btn">المزيد من الخدمات</a>
+        </div>
 
         <!-- الترقيم -->
-        <div class="pagination-container productPagination" 
-    @if($services->isEmpty()) 
-        style="display:none;" 
-    @endif>
-    <nav aria-label="Page navigation">
-        <div class="d-flex justify-content-center mt-4">
+        <div class="pagination-container d-flex justify-content-center mt-4">
             {{ $services->links('pagination::bootstrap-5') }}
         </div>
-    </nav>
-</div>
     </div>
 </section>
 @endsection
 
 @section('scripts')
 <script>
-    // Flip Card Function
-    function toggleFlip(card) {
-        card.classList.toggle('flipped');
-    }
-    
-    // WhatsApp Function
-    function openWhatsApp(event, serviceTitle) {
-        event.stopPropagation(); // لمنع flip عند الضغط على الزر
-        const phoneNumber = "+970592722789";
-        const message = `مرحباً، أنا مهتم بالخدمة: ${serviceTitle}`;
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-    }
-    
-    // البحث (مثل صفحة المنتجات)
- // البحث (مثل صفحة المنتجات)
+// WhatsApp Function
+function openWhatsApp(serviceName) {
+    const phoneNumber = `{{ get_general_value('whatsapp_number') }}`;
+    const message = `مرحباً، أنا مهتم بخدمة ~${serviceName}~، هل يمكنكم تقديم المزيد من المعلومات؟`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// البحث الحي عبر Ajax
 $(document).ready(function() {
     $('#serviceInput').on('input', function() {
         let searchQuery = $(this).val();
@@ -212,7 +206,7 @@ $(document).ready(function() {
                 const servicesContainer = $(response).find('#servicesContainer').html();
                 $('#servicesContainer').html(servicesContainer);
 
-                // Check if there are any services and hide pagination if empty
+                // إظهار أو إخفاء الترقيم حسب النتائج
                 if (servicesContainer.trim() === '') {
                     $('.pagination-container').hide();
                 } else {
@@ -229,6 +223,5 @@ $(document).ready(function() {
         e.preventDefault();
     });
 });
-
 </script>
 @endsection

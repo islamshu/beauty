@@ -72,7 +72,7 @@
                                                     <td>
                                                         <span class="price"
                                                             id="price-{{ $id }}">{{ $item['price'] * $item['quantity'] }}
-                                                            $</span>
+                                                            ₪</span>
                                                     </td>
                                                     <td>
                                                         <form action="{{ route('cart.remove', $id) }}" method="POST">
@@ -94,7 +94,7 @@
                     <div class="col-lg-4">
                         <div class="panel panel-default cartInfo">
                             <div class="panel-heading patternbg">الإجمالي <span class="pull-right"
-                                    id="total">{{ $total }} $</span></div>
+                                    id="total">{{ $total }} ₪</span></div>
                             <button type="button" class="btn first-btn mt-1" style="background-color: #d63384;width: 100%;" data-bs-toggle="modal"
                                 data-bs-target="#checkoutModal">
                                 إتمام الطلب

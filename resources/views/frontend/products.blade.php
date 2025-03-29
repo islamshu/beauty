@@ -125,7 +125,7 @@
                         @endif
                         
                         <!-- السعر بعد الخصم -->
-                        <h2>${{ $product->price_after_discount }}</h2>
+                        <h2>₪{{ $product->price_after_discount }}</h2>
                     </div>
                 </div>
             </div>

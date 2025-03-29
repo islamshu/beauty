@@ -24,7 +24,7 @@
 
     <link href="{{ asset('front/plugins/isotope/isotope.min.css') }}" rel='stylesheet'>
     <link href="{{ asset('front/plugins/datepicker/datepicker.min.css') }}" rel='stylesheet'>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
 
     <!-- CUSTOM CSS -->
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">

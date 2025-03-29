@@ -37,7 +37,7 @@
                             <h2 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 <a href="{{ route('product.details', $product->id) }}">{{ $product->title }}</a>
                             </h2>
-                            <h2 class="price">${{ $product->price_after_discount }}</h2>
+                            <h2 class="price"><small>₪</small> {{ $product->price_after_discount }}</h2>
                         </div>
                     </div>
                 </div>
