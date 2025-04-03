@@ -55,7 +55,7 @@
     .flip-card {
         background-color: transparent;
         width: 100%;
-        height: 300px;
+        height: 100px;
         perspective: 1000px; /* تعطي تأثير العمق */
     }
 

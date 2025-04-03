@@ -44,6 +44,9 @@
                             <a class="nav-link" href="#courses">الدورات <span class="sr-only">(current)</span></a>
                         @endif
                     </li>
+                    <li class="nav-item @if(request()->routeIs('contact-us')) active @endif">
+                        <a class="nav-link" href="{{ route('contact-us') }}">تواصل معنا <span class="sr-only">(current)</span></a>
+                    </li>     
                 </ul>
             </div>
 

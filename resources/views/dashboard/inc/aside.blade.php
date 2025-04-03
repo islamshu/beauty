@@ -21,6 +21,11 @@
                          
                         </li>
                         <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('social_media') }}"
+                                >{{ __('الإعدادات بيانات السوشل ميديا ') }}</a>
+                         
+                        </li>
+                        <li class="dropdown " data-menu=""><a
                                 class="dropdown-item " href="{{ route('sliders.index') }}"
                                 >{{ __('السلاديرات') }}</a>                      
                         </li>
@@ -94,15 +99,10 @@
                        
                     </ul>
                 </li>
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
+                <li class="= nav-item" data-menu="dropdown"><a class=" nav-link"
+                        href="{{ route('courses.index') }}" ><i
                             class="la la-book"></i><span>{{ __('الدورات') }}</span></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('courses.index') }}"
-                                >{{ __('الدورات') }}</a>
-                        </li> 
-                    </ul>
+                   
                 </li>
                 <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
                         href="#" data-toggle="dropdown"><i
@@ -110,8 +110,18 @@
                     <ul class="dropdown-menu">
                         <li class="dropdown " data-menu=""><a
                                 class="dropdown-item " href="{{ route('clients.index') }}"
-                                >{{ __('العملاء') }}</a>
+                                >{{ __('جميع العملاء') }}</a>
                         </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('clients.active') }}"
+                                >{{ __('العملاء الفعالين') }}</a>
+                        </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('clients.notactive') }}"
+                                >{{ __('العملاء الغير فعالة') }}</a>
+                        </li>
+
+                        
                         
                        
                        
@@ -137,32 +147,38 @@
                         </li> 
                     </ul>
                 </li>
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-reorder"></i><span>{{ __('الطلبات') }}</span></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('course_order') }}"
-                                >{{ __('طلبات الدورات') }}</a>
-                        </li> 
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('packge_order') }}"
-                                >{{ __('طلبات الباقات') }}</a>
-                        </li> 
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('service_order') }}"
-                                >{{ __('طلبات الخدمات') }}</a>
-                        </li>  
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('contact_order') }}"
-                                >{{ __('طلبات التواصل') }}</a>
-                        </li>  
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('orders.index') }}"
-                                >{{ __('طلبات المنتجات') }}</a>
-                        </li> 
-                    </ul>
-                </li>
+                @php
+                $totalPendingOrders = App\Models\Order::where('status', 0)->count();
+                $totalPendingContacts = App\Models\Contact::where('show', 0)->count();
+                $totalPendingRequests = $totalPendingOrders + $totalPendingContacts;
+                @endphp
+                <li class="dropdown nav-item" data-menu="dropdown">
+                        <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                            <i class="la la-reorder"></i>
+                            <span>{{ __('الطلبات') }}</span>
+                            <span class="badge badge-danger badge-pill ml-1">
+                                {{ $totalPendingRequests }}
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown" data-menu="">
+                                <a class="dropdown-item" href="{{ route('packge_order') }}">
+                                    <i class="fas fa-box-open"></i> {{ __('طلبات الباقات') }}
+                                    <span class="badge badge-danger badge-pill float-right">
+                                        {{ App\Models\Order::where('status', 0)->count() }}
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="dropdown" data-menu="">
+                                <a class="dropdown-item" href="{{ route('contact_order') }}">
+                                    <i class="fas fa-envelope"></i> {{ __('طلبات التواصل') }}
+                                    <span class="badge badge-danger badge-pill float-right">
+                                        {{ App\Models\Contact::where('show', 0)->count() }}
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
               
               
               {{--  <li class=" nav-item" ><a class=" nav-link"

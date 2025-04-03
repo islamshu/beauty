@@ -2,7 +2,7 @@
 <script src="{{ asset('front/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 <script src="{{ asset('front/plugins/selectbox/jquery.selectbox-0.1.3.min.js') }}"></script>
-<script src="{{asset('front/plugins/owl-carousel/owl.carousel.min.js')}}"></script>
+<script src="{{ asset('front/plugins/owl-carousel/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('front/plugins/isotope/isotope.min.js') }}"></script>
 <script src="{{ asset('front/plugins/fancybox/jquery.fancybox.min.js') }}"></script>
 
@@ -38,32 +38,32 @@
     // هذا الكود سيتعامل مع حالة #courses تلقائياً
     document.addEventListener('DOMContentLoaded', function() {
         // التحقق من الهاش عند تحميل الصفحة
-        if(window.location.hash === '#courses') {
+        if (window.location.hash === '#courses') {
             activateCoursesNav();
         }
-    
+
         // الاستماع لتغيرات الهاش
         window.addEventListener('hashchange', function() {
-            if(window.location.hash === '#courses') {
+            if (window.location.hash === '#courses') {
                 activateCoursesNav();
             }
         });
-    
+
         function activateCoursesNav() {
             const navItem = document.getElementById('courses-nav-item');
             const navLink = navItem.querySelector('.nav-link');
-            
+
             // إزالة التنشيط من جميع العناصر
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            
+
             // تفعيل العنصر الحالي
             navItem.classList.add('active');
             navLink.classList.add('active');
         }
     });
-    </script>
+</script>
 
 <!-- Slick Slider JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
@@ -90,25 +90,25 @@
     };
 </script>
 <script>
-        $(document).ready(function(){
-            $(".owl-carousel").owlCarousel({
-                loop:true,
-                margin:10,
-                nav:true,
-                responsive:{
-                    0:{
-                        items:1
-                    },
-                    600:{
-                        items:3
-                    },
-                    1000:{
-                        items:5
-                    }
+    $(document).ready(function() {
+        $(".owl-carousel").owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 5
                 }
-            });
+            }
         });
-        
+    });
+
     $(document).ready(function() {
         $("#owl-demo").owlCarousel({
             navigation: false,
@@ -144,8 +144,14 @@
     });
 </script>
 <script>
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+</script>
+<script>
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
 
             const targetId = this.getAttribute('href').substring(1);
@@ -163,5 +169,70 @@
             }
         });
     });
+    $('#send_button_price').click(function() {
+    let $btn = $(this);
+    $btn.prop('disabled', true);
+    $btn.html(
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...'
+    );
+
+    var formData = $('#PriceingForm').serialize();
+    $.ajax({
+        url: "{{ route('package.purchase') }}",
+        type: "POST",
+        data: formData,
+        success: function(response) {
+            Swal.fire({
+                icon: "success",
+                title: "تم إرسال الطلب بنجاح!",
+                text: "سيتم التواصل معك قريبًا لإكمال العملية.",
+                confirmButtonText: "حسنًا"
+            });
+            // Reset the form correctly
+            $('#PriceingForm')[0].reset();
+            $btn.html('إرسال الطلب');
+            $btn.prop('disabled', false);
+
+            $('#PriceModal').modal('hide');
+        },
+        error: function(xhr) {
+
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                let errorMessages = [];
+
+                // جمع جميع رسائل الخطأ
+                $.each(errors, function(field, messages) {
+                    errorMessages = errorMessages.concat(messages);
+
+                    // عرض الأخطاء تحت الحقول (اختياري)
+                    let $field = $(`#${field}`);
+                    $field.addClass('is-invalid');
+                    $field.after(
+                        `<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`
+                    );
+                });
+
+                // عرض جميع الأخطاء في SweetAlert
+                Swal.fire({
+                    icon: "error",
+                    title: "خطأ في الإرسال",
+                    html: errorMessages.join('<br>'),
+                    confirmButtonText: "حسنًا"
+                });
+                $btn.prop('disabled', false);
+                $btn.html('إرسال الطلب');
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "خطأ!",
+                    text: "حدث خطأ غير متوقع، يرجى المحاولة لاحقًا",
+                    confirmButtonText: "حسنًا"
+                });
+            }
+        }
+    });
+});
+
 </script>
 @yield('scripts')

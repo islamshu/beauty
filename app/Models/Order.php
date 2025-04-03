@@ -12,4 +12,13 @@ class Order extends Model
     {
         return $this->belongsTo(Package::class);
     }
+    /**
+     * Get the user that owns the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'phone','phone');
+    }
 }

@@ -12,7 +12,6 @@
     {{-- @include('frontend.sections.review') --}}
     @include('frontend.sections.product')
     @include('frontend.sections.partner')
-
 @endsection
 @section('scripts')
     <!-- تضمين مكتبة SweetAlert -->
@@ -193,33 +192,7 @@
             });
 
             // إرسال بيانات شراء الباقة
-            $('#send_button_price').click(function() {
-                
-                var formData = $('#PriceingForm').serialize();
-                $.ajax({
-                    url: "{{ route('package.purchase') }}",
-                    type: "POST",
-                    data: formData,
-                    success: function(response) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "تم إرسال الطلب بنجاح!",
-                            text: "سيتم التواصل معك قريبًا لإكمال العملية.",
-                            confirmButtonText: "حسنًا"
-                        });
-
-                        $('#PriceModal').modal('hide');
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "خطأ!",
-                            text: "حدث خطأ أثناء الإرسال، يرجى المحاولة مرة أخرى.",
-                            confirmButtonText: "حسنًا"
-                        });
-                    }
-                });
-            });
+           
 
         });
     </script>

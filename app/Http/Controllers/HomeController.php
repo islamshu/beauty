@@ -24,7 +24,7 @@ class HomeController extends Controller
         return view('frontend.sections.contact_us');
     }
     public function packge_order(){
-        return view('dashboard.orders.packges')->with('orders',Order::orderby('id','desc')->get());
+        return view('dashboard.orders.packges')->with('orders',Order::with('client')->orderby('id','desc')->get());
     }
     public function pacgkeorders($id){
         $order = Order::find($id);
@@ -174,7 +174,6 @@ class HomeController extends Controller
         $request->validate([
             'package_id' => 'required|exists:packages,id',
             'full_name' => 'required|string|max:255',
-            'id_number' => 'required|string|max:20',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
         ]);
@@ -182,7 +181,7 @@ class HomeController extends Controller
         Order::create([
             'package_id' => $request->package_id,
             'full_name' => $request->full_name,
-            'id_number' => $request->id_number,
+            // 'id_number' => $request->id_number,
             'phone' => $request->phone,
             'address' => $request->address,
         ]);

@@ -56,7 +56,7 @@
                                 <!-- الرسالة -->
                                 <div class="form-group">
                                     <label for="message">{{ __('رسالتك') }}</label>
-                                    <textarea name="message" id="message" class="form-control">{{$contact->message}}</textarea>
+                                    <textarea name="message" disabled id="message" class="form-control">{{$contact->message}}</textarea>
                                 </div>
 
                                 <!-- زر الإرسال (بدون وظيفة إرسال) -->

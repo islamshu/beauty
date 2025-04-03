@@ -19,6 +19,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\VisitController;
 use App\Livewire\CategoryComponent;
 use Illuminate\Support\Facades\Route;
 
@@ -61,8 +63,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::get('packge_order',  [HomeController::class, 'packge_order'])->name('packge_order');
     Route::get('pacgkeorders/{id}',  [HomeController::class, 'pacgkeorders'])->name('pacgkeorders.show');
     Route::delete('pacgkeorders_delete/{id}',  [HomeController::class, 'pacgkeorders_delete'])->name('pacgkeorders.delete');
-
-    
+    Route::post('/clients/store-from-order', [ClientController::class, 'storeFromOrder'])->name('clients.storeFromOrder');
+    Route::get('/orders/{order}/get-order-data', [ClientController::class, 'getOrderData'])->name('orders.get-data');
     Route::get('course_order',  [HomeController::class, 'course_order'])->name('course_order');
     Route::get('contact_order',  [HomeController::class, 'contact_order'])->name('contact_order');
     Route::get('contact_show/{id}',  [HomeController::class, 'contact_order_edit'])->name('contact_order_edit');
@@ -94,5 +96,14 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::post('/dashboard/events', [ReservationController::class, 'store'])->name('events.store');
     Route::get('/dashboard/events/{id}', [ReservationController::class, 'destroy'])->name('events.destroy');
     Route::resource('reservations', EventController::class);
+    Route::get('/packages/{package}/calculate-end-date', [ClientController::class, 'calculateEndDate'])
+     ->name('packages.calculate-end-date');
+    Route::get('active_clients', [ClientController::class, 'getActiveClients'])->name('clients.active');
+    Route::get('notactive_clients', [ClientController::class, 'getNotActiveSubscribers'])->name('clients.notactive');
+
+     Route::post('/subscriptions', [ClientController::class, 'store_sub'])->name('subscriptions.store');
+    Route::post('/visits', [VisitController::class, 'store'])->name('visits.store');
     Route::get('update_status_reservation', [EventController::class, 'updateStatus'])->name('update_status_reservation');
+    Route::get('social-media', [SocialMediaController::class, 'index'])->name('social_media');
+    Route::post('social-media/save', [SocialMediaController::class, 'save'])->name('save_social_media');
 });
