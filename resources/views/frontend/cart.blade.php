@@ -218,7 +218,7 @@
                     total += parseFloat($(this).text().replace(/[^0-9.]/g, ''));
                 });
 
-                $('#total').text(total.toFixed(2) + ' $');
+                $('#total').text(total.toFixed(2) + ' ₪');
             }
         });
     </script>
