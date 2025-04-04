@@ -51,7 +51,6 @@
                                     <table class="table">
                                         <tbody>
                                             @foreach ($cart as $id => $item)
-                                            {{dd($cart)}}
                                                 <tr>
                                                     <td>
                                                         <a href="{{ route('product.details', $id) }}" class="cartImage">
