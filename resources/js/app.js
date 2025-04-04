@@ -39,3 +39,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();
 });
+// دالة لاستعلام الإشعارات

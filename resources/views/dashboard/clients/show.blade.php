@@ -125,7 +125,6 @@
                                                                 <th width="20%">{{ __('تاريخ الزيارة') }}</th>
                                                                 <th width="20%">{{ __('المشرف') }}</th>
                                                                 <th width="45%">{{ __('ملاحظات') }}</th>
-                                                                <th width="10%">{{ __('الإجراءات') }}</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -135,13 +134,7 @@
                                                                     <td>{{ $visit->visit_date }}</td>
                                                                     <td>{{ $visit->supervisor->name }}</td>
                                                                     <td>{{ $visit->notes ?? __('لا يوجد') }}</td>
-                                                                    <td>
-                                                                        <a href="" 
-                                                                            class="btn btn-sm btn-warning" 
-                                                                            title="{{ __('تعديل') }}">
-                                                                            <i class="ft-edit"></i>
-                                                                        </a>
-                                                                    </td>
+                                                                  
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>

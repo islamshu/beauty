@@ -15,6 +15,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ProductController;
@@ -62,6 +63,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::get('service_order', [HomeController::class, 'service_order'])->name('service_order');
     Route::get('packge_order',  [HomeController::class, 'packge_order'])->name('packge_order');
     Route::get('pacgkeorders/{id}',  [HomeController::class, 'pacgkeorders'])->name('pacgkeorders.show');
+    Route::get('show_notofication/{id}',[NotificationController::class, 'show'])->name('show_notofication');
     Route::delete('pacgkeorders_delete/{id}',  [HomeController::class, 'pacgkeorders_delete'])->name('pacgkeorders.delete');
     Route::post('/clients/store-from-order', [ClientController::class, 'storeFromOrder'])->name('clients.storeFromOrder');
     Route::get('/orders/{order}/get-order-data', [ClientController::class, 'getOrderData'])->name('orders.get-data');
@@ -100,6 +102,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
      ->name('packages.calculate-end-date');
     Route::get('active_clients', [ClientController::class, 'getActiveClients'])->name('clients.active');
     Route::get('notactive_clients', [ClientController::class, 'getNotActiveSubscribers'])->name('clients.notactive');
+    Route::get('/notifications', [NotificationController::class, 'getNotifications']);
 
      Route::post('/subscriptions', [ClientController::class, 'store_sub'])->name('subscriptions.store');
     Route::post('/visits', [VisitController::class, 'store'])->name('visits.store');

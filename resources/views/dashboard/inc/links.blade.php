@@ -174,6 +174,61 @@
 </script>
 
 @yield('script')
+<script>
+    function fetchNotifications() {
+    fetch('/dashboard/notifications')
+        .then(response => response.json()) // تحويل الاستجابة إلى JSON
+        .then(data => {
+            if (data.length > 0) {
+                updateNotificationsDropdown(data);
+                updateNotificationBadge(data.length);
+            }
+        })
+        .catch(error => console.error('Error fetching notifications:', error));
+}
+
+// تحديث إشعارات الـ Dropdown في الواجهة
+function updateNotificationsDropdown(notifications) {
+    const notificationList = document.querySelector('.media-list');
+    notificationList.innerHTML = ''; // مسح الإشعارات القديمة
+
+    notifications.forEach(notification => {
+        const notificationItem = document.createElement('a');
+        notificationItem.href = `/dashboard/show_notofication/`+notification.id; // رابط الإشعار
+
+        notificationItem.innerHTML = `
+            <div class="media">
+                <div class="media-left align-self-center">
+                    <i class="ft-bell icon-bg-circle bg-cyan"></i> <!-- أيقونة الإشعار -->
+                </div>
+                <div class="media-body">
+                    <h6 class="media-heading">${notification.data.title}</h6>
+                    <p class="notification-text font-small-3 text-muted">${notification.data.body}</p>
+                    <small>
+                        <time class="media-meta text-muted">${notification.created_at}</time>
+                    </small>
+                </div>
+            </div>
+        `;
+
+        notificationList.appendChild(notificationItem);
+    });
+}
+
+// تحديث العدادات
+function updateNotificationBadge(count) {
+    const badge = document.querySelector('.badge-danger');
+    if (badge) {
+        badge.textContent = count;
+    }
+}
+
+// استعلام كل 30 ثانية
+setInterval(fetchNotifications, 30000);
+
+// استعلام فوري عند تحميل الصفحة
+fetchNotifications();
+</script>
 <!-- END PAGE LEVEL JS-->
 </body>
 

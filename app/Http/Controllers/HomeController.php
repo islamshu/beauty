@@ -15,6 +15,8 @@ use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Slider;
+use App\Models\User;
+use App\Notifications\PurchaseNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,6 +32,11 @@ class HomeController extends Controller
         $order = Order::find($id);
         $order->status = 1;
         $order->save();
+        $notifications = auth()->user()->notifications;
+
+        // جلب أول إشعار غير مقروء وتحديثه إلى مقروء
+        
+    
         return view('dashboard.orders.packge_order')->with('order',$order);
     }
     public function pacgkeorders_delete($id){
@@ -178,14 +185,18 @@ class HomeController extends Controller
             'address' => 'required|string',
         ]);
 
-        Order::create([
+        $order =Order::create([
             'package_id' => $request->package_id,
             'full_name' => $request->full_name,
             // 'id_number' => $request->id_number,
             'phone' => $request->phone,
             'address' => $request->address,
         ]);
-
+        $admins = User::role('admin')->get(); // جلب جميع المستخدمين الذين لديهم دور "إداري"
+    
+        foreach ($admins as $admin) {
+            $admin->notify(new PurchaseNotification($order)); // إرسال الإشعار للمستخدم
+        }
         return response()->json(['success' => true]);
     }
     public function enroll(Request $request)
