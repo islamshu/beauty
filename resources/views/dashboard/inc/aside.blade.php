@@ -177,6 +177,14 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="dropdown" data-menu="">
+                                <a class="dropdown-item" href="{{ route('orders.index') }}">
+                                    <i class="fas fa-envelope"></i> {{ __('طلبات المتجر') }}
+                                    <span class="badge badge-danger badge-pill float-right">
+                                        {{ App\Models\Order::count() }}
+                                    </span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
               
