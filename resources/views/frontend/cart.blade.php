@@ -60,7 +60,9 @@
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <a class="text-wrap" href="{{ route('product.details', $id) }}">{{ $item['name'] }}</a> <br>
+                                                        <a class="text-wrap"
+                                                            href="{{ route('product.details', $id) }}">{{ $item['name'] }}</a>
+                                                        <br>
                                                         <div class="quantity-control">
                                                             <button class="btn btn-sm btn-quantity minus"
                                                                 data-id="{{ $id }}">-</button>
@@ -95,8 +97,8 @@
                         <div class="panel panel-default cartInfo">
                             <div class="panel-heading patternbg">الإجمالي <span class="pull-right"
                                     id="total">{{ $total }} ₪</span></div>
-                            <button type="button" class="btn first-btn mt-1" style="background-color: #d63384;width: 100%;" data-bs-toggle="modal"
-                                data-bs-target="#checkoutModal">
+                            <button type="button" class="btn first-btn mt-1" style="background-color: #d63384;width: 100%;"
+                                data-bs-toggle="modal" data-bs-target="#checkoutModal">
                                 إتمام الطلب
                             </button>
                         </div>
@@ -135,7 +137,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="customer_address" class="form-label">العنوان </label>
-                            <input type="text" class="form-control" id="customer_address" name="customer_address" required>
+                            <input type="text" class="form-control" id="customer_address" name="customer_address"
+                                required>
                         </div>
                         <button style="width: 100%" class="btn btn-primary cart-btn " style="padding: 20px"
                             data-toggle="modal" data-target="#cartModal">
@@ -146,7 +149,7 @@
             </div>
         </div>
     </div>
-  
+
 
 @endsection
 @section('scripts')
@@ -169,6 +172,7 @@
             });
 
             // تحديث الكمية باستخدام AJAX
+            // تحديث الكمية باستخدام AJAX
             function updateQuantity(id, action) {
                 let quantityElement = $(`button[data-id="${id}"]`).siblings('.quantity');
                 let priceElement = $(`#price-${id}`);
@@ -181,7 +185,8 @@
                 }
 
                 $.ajax({
-                    url: "{{ route('cart.update', '') }}/" + id,
+                    url: "{{ route('cart.update', ':id') }}".replace(':id',
+                    id), // Ensure the correct id is passed
                     method: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
@@ -193,7 +198,7 @@
 
                             // تحديث سعر المنتج بناءً على الكمية الجديدة
                             let newPrice = pricePerUnit * newQuantity;
-                            priceElement.text(newPrice.toFixed(2) + ' $');
+                            priceElement.text(newPrice.toFixed(2) + ' ₪');
 
                             // تحديث إجمالي السعر للسلة بالكامل
                             updateTotalPrice();
@@ -204,6 +209,7 @@
                     }
                 });
             }
+
 
             // تحديث الإجمالي العام لكل المنتجات
             function updateTotalPrice() {
@@ -216,5 +222,4 @@
             }
         });
     </script>
-    
 @endsection
