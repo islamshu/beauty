@@ -213,7 +213,7 @@
                                     <div class="visits-title">عدد الزيارات المتاحة</div>
                                     <span class="visits-count">{{ $item->number_of_visits }}</span>
                                 </div>
-                                <div class="package-price">1200 شيكل لمدة 2 شهور فقط</div>
+                                <div class="package-price">{{$item->price}} شيكل لمدة {{format_package_duration($item->id)}} فقط</div>
                                 <button class="subscribe-btn"
                                     onclick="openSubscriptionModal('{{ $item->id }}', '{{ $item->name }}','{{ $item->note }}')">طلب
                                     اشتراك</button>

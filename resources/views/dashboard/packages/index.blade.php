@@ -26,6 +26,8 @@
                                         <th>{{ __('الصورة') }}</th>
                                         <th>{{ __('اسم الباقة') }}</th>
                                         <th>{{ __('سعر الباقة') }}</th>
+                                        <th>{{ __('المدة') }}</th>
+
                                         <th>{{ __('الحالة') }}</th>
                                         <th>{{ __('الإجراءات') }}</th>
                                     </tr>
@@ -39,6 +41,8 @@
 
                                             <td>{{ $package->name }}</td>
                                             <td>{{ $package->price }}</td>
+                                            <td>{{format_package_duration($package->id) }}</td>
+
                                             <td>
 
                                                 <input type="checkbox" data-id="{{ $package->id }}" name="status" class="js-switch allssee"
