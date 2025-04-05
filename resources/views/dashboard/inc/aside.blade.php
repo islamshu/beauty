@@ -150,6 +150,7 @@
                 @php
                 $totalPendingOrders = App\Models\Order::where('status', 0)->count();
                 $totalPendingContacts = App\Models\Contact::where('show', 0)->count();
+                $totalcourst = App\Models\Enrollment::where('status', 0)->count();
                 $totalPendingRequests = $totalPendingOrders + $totalPendingContacts;
                 @endphp
                 <li class="dropdown nav-item" data-menu="dropdown">
@@ -182,6 +183,14 @@
                                     <i class="fas fa-envelope"></i> {{ __('طلبات المتجر') }}
                                     <span class="badge badge-danger badge-pill float-right">
                                         {{ App\Models\Order::count() }}
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="dropdown" data-menu="">
+                                <a class="dropdown-item" href="{{ route('courses_order') }}">
+                                    <i class="fas fa-envelope"></i> {{ __('طلبات الدورات') }}
+                                    <span class="badge badge-danger badge-pill float-right">
+                                        {{ App\Models\Enrollment::count() }}
                                     </span>
                                 </a>
                             </li>
