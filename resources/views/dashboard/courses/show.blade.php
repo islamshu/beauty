@@ -1,18 +1,18 @@
 @extends('layouts.master')
-@section('title','انشاء دورة')
+@section('title','مشاهدة الدورة')
 
 @section('content')
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-6 col-12 mb-2">
-                <h3 class="content-header-title">{{ __('إضافة كورس جديد') }}</h3>
+                <h3 class="content-header-title">{{ __('تعديل الكورس') }}</h3>
                 <div class="row breadcrumbs-top">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('الرئيسية') }}</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('courses.index') }}">{{ __('الكورسات') }}</a></li>
-                            <li class="breadcrumb-item active">{{ __('إضافة كورس') }}</li>
+                            <li class="breadcrumb-item active">{{ __('تعديل الكورس') }}</li>
                         </ol>
                     </div>
                 </div>
@@ -25,17 +25,21 @@
                     <div class="card-body">
                         @include('dashboard.inc.alerts')
 
-                        <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
+                        <form method="POST" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
                             
                             <div class="row">
                                 <!-- صورة الكورس -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="image">{{ __('الصورة') }}</label>
-                                        <input type="file" class="form-control image" id="image" name="image" accept="image/*">
                                         <div class="mt-2">
-                                            <img src="" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                                            @if ($course->image)
+                                                <img src="{{ asset('uploads/' . $course->image) }}" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                                            @else
+                                                <img src="" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                                            @endif
                                         </div>
                                         @error('image')
                                         <small class="text-danger">{{ $message }}</small>
@@ -46,8 +50,8 @@
                                 <!-- عنوان الكورس -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="title">{{ __('عنوان الكورس') }} <span class="required">*</span></label>
-                                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" required>
+                                        <label for="title">{{ __('عنوان الكورس') }} </label>
+                                        <input type="text" disabled name="title" id="title" class="form-control" value="{{ $course->title }}" required>
                                         @error('title')
                                         <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -59,27 +63,26 @@
                                 <!-- سعر الكورس -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="price">{{ __('السعر') }} <span class="required">*</span></label>
-                                        <input type="number" name="price" id="price" class="form-control" value="{{ old('price') }}" required>
+                                        <label for="price">{{ __('السعر') }} </label>
+                                        <input type="number" disabled name="price" id="price" class="form-control" value="{{ $course->price }}" required>
                                         @error('price')
                                         <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <label for="show_price">عرض السعر</label>
-                                        <input type="checkbox" name="show_price" id="show_price" value="1" checked>
+                                        <input type="checkbox" disabled name="show_price" id="show_price" value="1" {{ $course->show_price ? 'checked' : '' }}>
                                     </div>
                                 </div>
-                               
 
                                 <!-- اختيار الفئة -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="category_id">{{ __('الفئة') }} <span class="required">*</span></label>
-                                        <select name="category_id" id="category_id" class="form-control" required>
-                                            <option value="" disabled selected>{{ __('اختر الفئة') }}</option>
+                                        <label for="category_id">{{ __('الفئة') }} </label>
+                                        <select disabled name="category_id" id="category_id" class="form-control" required>
+                                            <option value="" disabled>{{ __('اختر الفئة') }}</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ $course->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('category_id')
@@ -91,13 +94,11 @@
 
                             <!-- الوصف -->
                             <div class="form-group">
-                                <label for="editor">الوصف <span class="required">*</span></label>
-                                <textarea name="description" id="editor" class="form-control" required>{{ old('description') }}</textarea>
-                                <small id="editor-error" class="text-danger" style="display: none;">هذا الحقل مطلوب!</small>
+                                <label for="editor">الوصف </label>
+                                <textarea disabled name="description" rows="3" cols="3" class="form-control" required>{!!$course->description!!}</textarea>
                             </div>
 
-                            <!-- زر الحفظ -->
-                            <button type="submit" class="btn btn-success">{{ __('حفظ الكورس') }}</button>
+                            <!-- زر التحديث -->
                         </form>
                     </div>
                 </div>

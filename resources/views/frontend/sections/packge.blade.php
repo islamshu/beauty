@@ -210,10 +210,13 @@
                                     @endforeach
                                 </ul>
                                 <div class="visits-container">
-                                    <div class="visits-title">عدد الزيارات المتاحة</div>
-                                    <span class="visits-count">{{ $item->number_of_visits }}</span>
+                                    <div class="visits-title">تشمل عدد الزيارات : <span
+                                            style="    font-size: 23px;
+    color: #e83e8c;">
+                                            {{ $item->number_of_visits }} زيارات</Span></div>
                                 </div>
-                                <div class="package-price">{{$item->price}} شيكل لمدة {{format_package_duration($item->id)}} فقط</div>
+                                <div class="package-price">{{ $item->price }} شيكل لمدة
+                                    {{ format_package_duration($item->id) }} فقط</div>
                                 <button class="subscribe-btn"
                                     onclick="openSubscriptionModal('{{ $item->id }}', '{{ $item->name }}','{{ $item->note }}')">طلب
                                     اشتراك</button>

@@ -20,11 +20,14 @@
 
     <link href="{{ asset('front/plugins/selectbox/select_option1.css') }}" rel='stylesheet'>
     <link href="{{ asset('front/plugins/owl-carousel/owl.carousel.min.css') }}" rel='stylesheet' media='screen'>
-    <link href="{{ asset('front/plugins/fancybox/jquery.fancybox.min.css') }}" rel='stylesheet'>
 
     <link href="{{ asset('front/plugins/isotope/isotope.min.css') }}" rel='stylesheet'>
     <link href="{{ asset('front/plugins/datepicker/datepicker.min.css') }}" rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+<!-- Fancybox CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.css" />
+
+<!-- Fancybox JS -->
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.umd.js"></script>
 
     <!-- CUSTOM CSS -->
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">

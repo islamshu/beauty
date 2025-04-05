@@ -30,27 +30,30 @@ class CourseController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id',
-        ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-
-            $data['image'] = $request->image->store('images/courses');
-        }
-
-        Course::create($data);
-
-        return redirect()->route('courses.index')->with('toastr_success', 'تم اضافة الدورة بنجاح!');
-    }
+     public function store(Request $request)
+     {
+         $request->validate([
+             'title' => 'required|string|max:255',
+             'description' => 'nullable|string',
+             'price' => 'required|numeric',
+             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+             'category_id' => 'required|exists:categories,id',
+             'show_price' => 'sometimes|boolean' // Add validation for the new field
+         ]);
+     
+         $data = $request->all();
+         
+         // Set show_price value (default to true if not provided)
+         $data['show_price'] = $request->has('show_price');
+     
+         if ($request->hasFile('image')) {
+             $data['image'] = $request->image->store('images/courses');
+         }
+     
+         Course::create($data);
+     
+         return redirect()->route('courses.index')->with('toastr_success', 'تم اضافة الدورة بنجاح!');
+     }
 
 
     /**
@@ -66,6 +69,12 @@ class CourseController extends Controller
         $categories = Category::all();
         return view('dashboard.courses.edit', compact('course', 'categories'));
     }
+
+    public function show(Course $course)
+    {
+        $categories = Category::all();
+        return view('dashboard.courses.show', compact('course', 'categories'));
+    }
     public function updateStatus(Request $request)
     {
         $course = Course::find($request->course_id);
@@ -79,27 +88,35 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'category_id' => 'required|exists:categories,id',
+            'show_price' => 'sometimes|boolean'
         ]);
-
-        $data = $request->all();
-
+    
+        // Handle image upload and deletion
         if ($request->hasFile('image')) {
-            if ($course->image && file_exists(public_path('uploads/' . $course->image))) {
-                unlink(public_path('uploads/' . $course->image));
+            // Delete old image if exists
+            if ($course->image) {
+                $imagePath = public_path('uploads/' . $course->image);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-
-            $data['image'] = $request->image->store('images/courses');
+            // Store new image
+            $validated['image'] = $request->image->store('images/courses');
         }
-
-        $course->update($data);
-
-        return redirect()->route('courses.index')->with('toastr_success', 'تم تعديل الدورة بنجاح.');
+    
+        // Ensure show_price is properly set (false when not checked)
+        $validated['show_price'] = $request->has('show_price');
+    
+        $course->update($validated);
+    
+        return redirect()->route('courses.index')
+            ->with('toastr_success', 'تم تعديل الدورة بنجاح.');
     }
 
     /**

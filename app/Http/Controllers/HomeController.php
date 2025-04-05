@@ -16,60 +16,98 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\Slider;
 use App\Models\User;
-use App\Notifications\PurchaseNotification;
+use App\Notifications\CourceNotification;
+use App\Notifications\PackgeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
-    public function contact_us(){
+    public function contact_us()
+    {
         return view('frontend.sections.contact_us');
     }
-    public function packge_order(){
-        return view('dashboard.orders.packges')->with('orders',Order::with('client')->orderby('id','desc')->get());
+    public function packge_order()
+    {
+        return view('dashboard.orders.packges')->with('orders', Order::with('client')->orderby('id', 'desc')->get());
     }
-    public function pacgkeorders($id){
+    public function cource_order(Enrollment $order)
+    {
+        return view('dashboard.orders.course_show', compact('order'));
+    }    public function pacgkeorders($id)
+    {
         $order = Order::find($id);
         $order->status = 1;
         $order->save();
         $notifications = auth()->user()->notifications;
 
         // جلب أول إشعار غير مقروء وتحديثه إلى مقروء
-        
-    
-        return view('dashboard.orders.packge_order')->with('order',$order);
+
+
+        return view('dashboard.orders.packge_order')->with('order', $order);
     }
-    public function pacgkeorders_delete($id){
+    public function pacgkeorders_delete($id)
+    {
         $order = Order::find($id);
         $order->delete();
-        return redirect()->back()->with('toastr_success','تم حذف الطلب بنجاح!');
+        return redirect()->back()->with('toastr_success', 'تم حذف الطلب بنجاح!');
+    }
+    public function cource_order_delete($id)
+    {
+        $order = Enrollment::find($id);
+        $order->delete();
+        return redirect()->route('courses_order')->with('toastr_success', 'تم حذف الطلب بنجاح!');
+    }
+
+    
+    public function updateStatus_course_order(Request $request, $orderId)
+    {
+        $order = Enrollment::find($orderId);
+        
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+    
+        // Update the status of the order
+        $order->status = $request->status;
+        $order->save();
+        
+        // Return a JSON response indicating success
+        return response()->json(['success' => true, 'message' => 'تم تحديث الحالة بنجاح']);
     }
     
-    public function service_order(){
-        return view('dashboard.orders.services')->with('orders',Appointment::orderby('id','desc')->get());
+
+
+    public function service_order()
+    {
+        return view('dashboard.orders.services')->with('orders', Appointment::orderby('id', 'desc')->get());
     }
-    public function course_order(){
-        return view('dashboard.orders.courses')->with('orders',Enrollment::orderby('id','desc')->get());
+    public function course_order()
+    {
+        return view('dashboard.orders.courses')->with('orders', Enrollment::orderby('id', 'desc')->get());
     }
-    public function contact_order(){
-        return view('dashboard.orders.contact')->with('contacts',Contact::orderby('id','desc')->get());
+    public function contact_order()
+    {
+        return view('dashboard.orders.contact')->with('contacts', Contact::orderby('id', 'desc')->get());
     }
-    public function contact_order_edit($id){
+    public function contact_order_edit($id)
+    {
         $contact = Contact::find($id);
         $contact->show = 1;
         $contact->save();
-        return view('dashboard.orders.contact_show')->with('contact',$contact);
+        return view('dashboard.orders.contact_show')->with('contact', $contact);
     }
-    public function contact_order_delete($id){
+    public function contact_order_delete($id)
+    {
         $contact = Contact::find($id);
         $contact->delete();
         return redirect()->back()->with('toastr_success', 'تم الحذف بنجاح.');
+    }
+    public function single_products($id)
+    {
+        return view('frontend.single_products')->with('product', Product::find($id));
+    }
 
-    }
-    public function single_products($id){
-        return view('frontend.single_products')->with('product',Product::find($id));
-    }
-    
     public function store_contact(Request $request)
     {
         // قواعد التحقق مع رسائل مخصصة بالعربية
@@ -79,14 +117,14 @@ class HomeController extends Controller
             'contact-form-mobile' => 'required|string|max:20',
             'contact-form-message' => 'required|string',
         ];
-    
+
         // رسائل الخطأ المخصصة بالعربية
         $customMessages = [
             'required' => 'حقل :attribute مطلوب.',
             'string' => 'حقل :attribute يجب أن يكون نصاً.',
             'email' => 'حقل :attribute يجب أن يكون بريداً إلكترونياً صحيحاً.',
             'max' => 'حقل :attribute يجب ألا يتجاوز :max حرف.',
-            
+
             // رسائل محددة للحقول
             'contact-form-name.required' => 'الاسم الكامل مطلوب.',
             'contact-form-email.required' => 'البريد الإلكتروني مطلوب.',
@@ -94,7 +132,7 @@ class HomeController extends Controller
             'contact-form-mobile.required' => 'رقم الجوال مطلوب.',
             'contact-form-message.required' => 'الرسالة مطلوبة.',
         ];
-    
+
         // أسماء الحقول المعربة
         $attributes = [
             'contact-form-name' => 'الاسم الكامل',
@@ -102,10 +140,10 @@ class HomeController extends Controller
             'contact-form-mobile' => 'رقم الجوال',
             'contact-form-message' => 'الرسالة',
         ];
-    
+
         // تنفيذ التحقق مع الرسائل المخصصة
         $validatedData = $request->validate($rules, $customMessages, $attributes);
-    
+
         try {
             // تخزين البيانات في قاعدة البيانات
             Contact::create([
@@ -114,13 +152,12 @@ class HomeController extends Controller
                 'phone' => $validatedData['contact-form-mobile'],
                 'message' => $validatedData['contact-form-message'],
             ]);
-    
+
             // إرجاع رسالة نجاح
             return response()->json([
                 'success' => true,
                 'message' => 'تم إرسال رسالتك بنجاح، شكراً لتواصلك معنا!'
             ]);
-    
         } catch (\Exception $e) {
             // في حالة حدوث خطأ غير متوقع
             return response()->json([
@@ -145,7 +182,7 @@ class HomeController extends Controller
     }
     public function services(Request $request)
     {
-        $query = Service::query()->where('status',1);
+        $query = Service::query()->where('status', 1);
 
         // البحث في حالة وجود كلمة بحث
         if ($request->has('search')) {
@@ -156,7 +193,7 @@ class HomeController extends Controller
 
         return view('frontend.services', compact('services'));
     }
-    
+
     public function single_course($id)
     {
         return view('frontend.course')->with('course', Course::find($id));
@@ -173,7 +210,7 @@ class HomeController extends Controller
         $galleries = Gallery::orderby('id', 'desc')->get();
         $categoriesgal = Category::has('gallery')->with('gallery')->get();
         $partenrs = Partner::get();
-        $products = Product::orderBy('id', 'desc')->take(12)->get();
+        $products = Product::orderBy('id', 'desc')->take(1)->get();
         return view('frontend.index', compact('sliders', 'abouts', 'categories', 'services', 'first_service', 'courses', 'packages', 'galleries', 'categoriesgal', 'partenrs', 'products'));
     }
     public function purchase(Request $request)
@@ -185,7 +222,7 @@ class HomeController extends Controller
             'address' => 'required|string',
         ]);
 
-        $order =Order::create([
+        $order = Order::create([
             'package_id' => $request->package_id,
             'full_name' => $request->full_name,
             // 'id_number' => $request->id_number,
@@ -193,31 +230,47 @@ class HomeController extends Controller
             'address' => $request->address,
         ]);
         $admins = User::role('admin')->get(); // جلب جميع المستخدمين الذين لديهم دور "إداري"
-    
+
         foreach ($admins as $admin) {
-            $admin->notify(new PurchaseNotification($order)); // إرسال الإشعار للمستخدم
+            $admin->notify(new PackgeNotification($order)); // إرسال الإشعار للمستخدم
         }
         return response()->json(['success' => true]);
     }
     public function enroll(Request $request)
     {
         // التحقق من صحة البيانات
-        $request->validate([
+        $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:15',
+            'experience' => 'nullable|string|in:beginner,intermediate,advanced',
+            'goal' => 'nullable|string|max:500',
             'address' => 'required|string|max:500',
+            'whatsapp' => 'nullable|string|max:15',
         ]);
 
-        // حفظ الاشتراك
-        Enrollment::create([
-            'course_id' => $request->course_id,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
+        // حفظ الاشتراك مع جميع البيانات
+      $cource=  Enrollment::create($validated);
+        $admins = User::role('admin')->get(); // جلب جميع المستخدمين الذين لديهم دور "إداري"
 
-        return response()->json(['status' => 'success', 'message' => 'تم الاشتراك بنجاح!']);
+        foreach ($admins as $admin) {
+            $admin->notify(new CourceNotification($cource)); // إرسال الإشعار للمستخدم
+        }
+        $this->sendWhatsAppNotification($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم التسجيل بنجاح! سوف نتصل بك قريباً لتأكيد الحجز.'
+        ]);
+    }
+    private function sendWhatsAppNotification($data)
+    {
+        $phone = get_general_value('whatsapp_number');
+        $message = "مرحباً {$data['name']}، شكراً لتسجيلك في دورتنا. سنتواصل معك قريباً!";
+
+        $url = "https://wa.me/{$phone}?text=" . urlencode($message);
+
+        return redirect()->away($url);
     }
     public function appointmentstore(Request $request)
     {

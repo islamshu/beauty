@@ -70,6 +70,10 @@
                                         <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+                                    <div class="form-group">
+                                        <label for="show_price">عرض السعر</label>
+                                        <input type="checkbox" name="show_price" id="show_price" value="1" {{ $course->show_price ? 'checked' : '' }}>
+                                    </div>
                                 </div>
 
                                 <!-- اختيار الفئة -->

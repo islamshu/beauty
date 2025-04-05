@@ -54,6 +54,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::get('/', [DashbaordController::class, 'dashboard'])->name('dashboard');
     Route::get('logout', [DashbaordController::class, 'logout'])->name('logout');
     Route::resource('users', UserController::class);
+
     Route::resource('packages', PackageController::class);
     Route::get('update_status_package', [PackageController::class, 'update_status_package'])->name('update_status_package');
     Route::resource('sliders', SliderController::class);
@@ -62,12 +63,20 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::resource('products', ProductController::class);
     Route::get('service_order', [HomeController::class, 'service_order'])->name('service_order');
     Route::get('packge_order',  [HomeController::class, 'packge_order'])->name('packge_order');
+
+    Route::get('/cource_order/{order}', [HomeController::class, 'cource_order'])->name('cource_order');
+
     Route::get('pacgkeorders/{id}',  [HomeController::class, 'pacgkeorders'])->name('pacgkeorders.show');
     Route::get('show_notofication/{id}',[NotificationController::class, 'show'])->name('show_notofication');
     Route::delete('pacgkeorders_delete/{id}',  [HomeController::class, 'pacgkeorders_delete'])->name('pacgkeorders.delete');
+    Route::delete('cource_order_delete/{id}',  [HomeController::class, 'cource_order_delete'])->name('cource_order.delete');
+
     Route::post('/clients/store-from-order', [ClientController::class, 'storeFromOrder'])->name('clients.storeFromOrder');
     Route::get('/orders/{order}/get-order-data', [ClientController::class, 'getOrderData'])->name('orders.get-data');
-    Route::get('course_order',  [HomeController::class, 'course_order'])->name('course_order');
+    Route::get('course_order',  [HomeController::class, 'course_order'])->name('courses_order');
+
+    Route::get('/change_order_cource_status/{order}', [HomeController::class, 'updateStatus_course_order'])
+     ->name('updateStatus_course_order');
     Route::get('contact_order',  [HomeController::class, 'contact_order'])->name('contact_order');
     Route::get('contact_show/{id}',  [HomeController::class, 'contact_order_edit'])->name('contact_order_edit');
     Route::delete('contact_delete/{id}',  [HomeController::class, 'contact_order_delete'])->name('contact_order_delete');

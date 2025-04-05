@@ -26,7 +26,7 @@
             @foreach ($galleries as $item)
             <div class="col-lg-3 col-md-4 col-sm-6 grid-item {{str_replace(' ', '-', $item->category->name)}}">
                 <div class="card h-100 shadow-sm overflow-hidden">
-                    <a href="{{asset('uploads/'.$item->image)}}" data-fancybox="gallery">
+                    <a href="{{asset('uploads/'.$item->image)}}" data-fancybox="gallery" data-caption="{{$item->alt_text ?? 'صورة المعرض'}}">
                         <img 
                             src="{{asset('uploads/'.$item->image)}}" 
                             alt="{{$item->alt_text ?? 'صورة المعرض'}}" 
@@ -41,16 +41,17 @@
         </div>
     </div>
 </section>
+
 <style>
     .filter-buttons .btn {
         transition: all 0.3s ease;
         min-width: 120px;
         background: #e83e8c;
+        color: white;
     }
     
     .filter-buttons .btn.active {
         background: rgb(151, 10, 151) !important;
-        color: white !important;
         transform: scale(1.05);
     }
     
@@ -68,7 +69,16 @@
         overflow: hidden;
         border-radius: 12px 12px 0 0;
     }
+    
+    .card img {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover img {
+        transform: scale(1.05);
+    }
 </style>
+
 <script>
 $(document).ready(function() {
     // تهيئة Isotope
@@ -96,7 +106,10 @@ $(document).ready(function() {
             "slideShow",
             "fullScreen",
             "close"
-        ]
+        ],
+        // لتفعيل التمرير بين الصور
+        loop: true,
+        protect: true
     });
 });
 </script>
