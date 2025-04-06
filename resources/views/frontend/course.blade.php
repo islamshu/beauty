@@ -16,15 +16,17 @@
                         <i class="fas fa-scissors"></i> سجل الآن
                     </button>
                     <style>
-                        #whatsappInquiryBtn:hover{
+                        #whatsappInquiryBtn:hover {
                             background-color: #25D366 !important;
                             color: white !important;
                             transform: translateY(-2px) !important;
                             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
                         }
                     </style>
-                    <button id="whatsappInquiryBtn" data-course-title="{{$course->title}}" class="btn btn-success my-3" style="background-color: #128C7E">
-                     <span style="padding-left: 2px;padding-right: 2px">   <i class="fab fa-whatsapp"></i> استفسر الآن عن الدورة</span>
+                    <button id="whatsappInquiryBtn" data-course-title="{{ $course->title }}" class="btn btn-success my-3"
+                        style="background-color: #128C7E">
+                        <span style="padding-left: 2px;padding-right: 2px"> <i class="fab fa-whatsapp"></i> استفسر الآن عن
+                            الدورة</span>
                     </button>
                 </div>
             </div>
@@ -148,7 +150,7 @@
                         @endif
                     </div>
 
-                    <form id="enrollForm" data-course-title="{{$course->title}}">
+                    <form id="enrollForm" data-course-title="{{ $course->title }}">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -221,6 +223,18 @@
         </div>
     </div>
 @endsection
+@section('scripts')
+    <script>
+        document.getElementById('whatsappInquiryBtn').addEventListener('click', function() {
+            let courseTitle = $(this).data('course-title');
+            let whatsappNum = '{{ get_general_value('whatsapp_number') }}';
+            let message = `أريد الاستفسار عن دورة ${courseTitle}`;
+
+            window.open(`https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`, '_blank');
+        });
+    </script>
+@endsection
+
 
 @section('styles')
     <style>

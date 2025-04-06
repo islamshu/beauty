@@ -3620,7 +3620,7 @@ textarea.form-control {
         float: right;
         height: 350px;
         padding: 120px 0 0 0;
-        background-color: #fff
+        /* background-color: #fff */
     }
 }
 
@@ -3704,7 +3704,7 @@ textarea.form-control {
 @media (min-width:320px) {
     .aboutInfo {
         padding: 50px 30px;
-        background-color: #fff;
+        /* background-color: #fff; */
         margin: 0 -30px
     }
 }

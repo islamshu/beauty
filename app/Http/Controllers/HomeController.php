@@ -181,18 +181,23 @@ class HomeController extends Controller
         return view('frontend.products', compact('products'));
     }
     public function services(Request $request)
-    {
-        $query = Service::query()->where('status', 1);
+{
+    $query = Service::query()->where('status', 1);
 
-        // البحث في حالة وجود كلمة بحث
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where('title', 'like', "%{$search}%");
-        }
-        $services = $query->orderBy('id', 'desc')->paginate(12);
-
-        return view('frontend.services', compact('services'));
+    if ($request->has('search')) {
+        $search = $request->input('search');
+        $query->where('title', 'like', "%{$search}%");
     }
+
+    $services = $query->orderBy('id', 'desc')->paginate(12);
+
+    if ($request->ajax()) {
+        return view('frontend.partials._services', compact('services'))->render();
+    }
+
+    return view('frontend.services', compact('services'));
+}
+
 
     public function single_course($id)
     {
@@ -209,9 +214,9 @@ class HomeController extends Controller
         $packages = Package::where('status', 1)->get();
         $galleries = Gallery::orderby('id', 'desc')->get();
         $categoriesgal = Category::has('gallery')->with('gallery')->get();
-        $partenrs = Partner::get();
+        $partners = Partner::get();
         $products = Product::orderBy('id', 'desc')->take(1)->get();
-        return view('frontend.index', compact('sliders', 'abouts', 'categories', 'services', 'first_service', 'courses', 'packages', 'galleries', 'categoriesgal', 'partenrs', 'products'));
+        return view('frontend.index', compact('sliders', 'abouts', 'categories', 'services', 'first_service', 'courses', 'packages', 'galleries', 'categoriesgal', 'partners', 'products'));
     }
     public function purchase(Request $request)
     {

@@ -6,7 +6,7 @@
 <script src="{{ asset('front/plugins/isotope/isotope.min.js') }}"></script>
 
 
-<script src="{{ asset('front/plugins/isotope/isotope-triger.min.js') }}"></script>
+{{-- <script src="{{ asset('front/plugins/isotope/isotope-triger.min.js') }}"></script> --}}
 <script src="{{ asset('front/plugins/datepicker/bootstrap-datepicker.min.js') }}"></script>
 
 <script src="{{ asset('front/plugins/lazyestload/lazyestload.js') }}"></script>
@@ -22,6 +22,7 @@
 
 <script src="{{ asset('front/js/custom.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@yield('scripts')
 
 <script>
     //paste this code under head tag or in a seperate js file.
@@ -285,14 +286,6 @@
         }
     });
 });
-document.getElementById('whatsappInquiryBtn').addEventListener('click', function() {
-    let courseTitle = $(this).data('course-title');
-    let whatsappNum = '{{ get_general_value("whatsapp_number") }}';
-    let message = `أريد الاستفسار عن دورة ${courseTitle}`;
-    
-    window.open(`https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`, '_blank');
-});
-    
+
 </script>
-@yield('scripts')
 

@@ -83,54 +83,120 @@
     <div class="container">
         <!-- حقل البحث -->
         <div class="row mb-4">
-            <div class="col-md-6 offset-md-3">
+            <div class="col-md-8 offset-md-2">
                 <form id="searchForm">
                     <div class="input-group">
-                        <input type="text" id="searchInput" class="form-control" placeholder="ابحث عن منتج..." aria-label="Search">
+                        <input type="text" id="searchInput" class="form-control search-input" placeholder="ابحث عن خدمة..." aria-label="Search">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary search-btn" style="background-color: #e83e8c !important">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
                     </div>
                 </form>
+                <div class="text-center my-4" id="loadingSpinner" style="display: none;">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">looding </span>
+                    </div>
+                </div>
+                
             </div>
         </div>
+        
+        <style>
+            /* Search Bar Container */
+            .search-section {
+                margin-bottom: 30px;
+            }
+        
+            /* Search Input */
+            .search-input {
+                padding: 15px;
+                font-size: 16px;
+                border-radius: 25px;
+                border: 1px solid #ccc;
+                transition: all 0.3s ease;
+                background-color: #f8f9fa;
+            }
+        
+            .search-input:focus {
+                outline: none;
+                border-color: #007bff;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+        
+            /* Search Button */
+            .search-btn {
+                background-color: #007bff;
+                border-radius: 25px;
+                border: none;
+                padding: 14px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+        
+            .search-btn i {
+                font-size: 18px;
+            }
+        
+            .search-btn:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+        
+            /* Responsive styling for search bar */
+            @media (max-width: 768px) {
+                .search-section .col-md-6 {
+                    max-width: 100%;
+                    padding: 0;
+                }
+        
+                .search-input {
+                    font-size: 14px;
+                }
+        
+                .search-btn {
+                    padding: 12px 18px;
+                    font-size: 14px;
+                }
+            }
+        </style>
 
         <!-- عرض المنتجات -->
         <div class="row" id="productsContainer">
-            @foreach ($products as $product)
-            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                <div class="produtSingle">
-                    <div class="produtImage">
-                        <img src="{{ asset('uploads/' . $product->image) }}" data-src="{{ asset('uploads/' . $product->image) }}" alt="{{ $product->title }}" class="img-responsive lazyestload">
-                        <div class="productMask">
-                            <ul class="list-inline productOption">
-                               
-                                <li>
-                                    <a href="{{ route('cart.add', $product->id) }}">
-                                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                
-                            </ul>
+            @if ($products->count())
+                @foreach ($products as $product)
+                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4 product-item animate__animated animate__fadeIn">
+                        <div class="produtSingle">
+                            <div class="produtImage">
+                                <img src="{{ asset('uploads/' . $product->image) }}" alt="{{ $product->title }}" class="img-fluid">
+                                <div class="productMask">
+                                    <ul class="list-inline productOption">
+                                        <li>
+                                            <a href="{{ route('cart.add', $product->id) }}">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="productCaption">
+                                <h2 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <a href="{{ route('product.details', $product->id) }}">{{ $product->title }}</a>
+                                </h2>
+                                <h2 class="price"><small>₪</small> {{ $product->price_after_discount }}</h2>
+                            </div>
                         </div>
                     </div>
-                    <div class="productCaption">
-                        <h2><a href="{{ route('product.details', $product->id) }}">{{ $product->title }}</a></h2>
-                        
-                        <!-- السعر قبل الخصم -->
-                        @if ($product->price_before_discount > $product->price_after_discount)
-                            <del class="text-muted" style="text-decoration: line-through;">${{ $product->price_before_discount }}</del>
-                        @endif
-                        
-                        <!-- السعر بعد الخصم -->
-                        <h2>₪{{ $product->price_after_discount }}</h2>
-                    </div>
+                @endforeach
+            @else
+                <div class="col-12 text-center py-5 animate__animated animate__fadeIn">
+                    <h4 class="text-muted">لا توجد نتائج مطابقة لبحثك.</h4>
                 </div>
-            </div>
-        @endforeach
+            @endif
         </div>
+        
 
         <!-- الترقيم -->
         <div class="paginationCommon productPagination">
@@ -146,27 +212,37 @@
 @endsection
 
 @section('scripts')
+<!-- مكتبة animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <script>
-    
     $(document).ready(function () {
-        // البحث في الوقت الفعلي
-        $('#searchInput').on('input', function () {
-            let searchQuery = $(this).val();
+        const $searchInput = $('#searchInput');
+        const $productsContainer = $('#productsContainer');
+        const $spinner = $('#loadingSpinner');
 
+        function fetchProducts(query) {
+            $spinner.show(); // أظهر السبينر
             $.ajax({
                 url: "{{ route('products') }}",
                 method: "GET",
-                data: {
-                    search: searchQuery,
-                },
+                data: { search: query },
                 success: function (response) {
-                    $('#productsContainer').html($(response).find('#productsContainer').html());
+                    const newContent = $(response).find('#productsContainer').html();
+                    $productsContainer.html(newContent);
+                    $spinner.hide(); // أخفِ السبينر
                 },
                 error: function () {
+                    $spinner.hide();
                     alert('حدث خطأ أثناء البحث.');
                 }
             });
+        }
+
+        // البحث المباشر
+        $searchInput.on('input', function () {
+            let query = $(this).val();
+            fetchProducts(query);
         });
 
         // منع إعادة تحميل الصفحة عند إرسال النموذج

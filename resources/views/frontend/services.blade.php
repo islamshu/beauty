@@ -123,62 +123,93 @@
 @endsection
 
 @section('content')
-<section class="container-fluid varietySection">
+<section class="container-fluid varietySection mb-5">
     <div class="container">
-        <div class="secotionTitle">
+        <div class="secotionTitle mb-5">
             <h2><span>الخدمات </span>المميزة</h2>
         </div>
 
         <!-- شريط البحث -->
-        <div class="row search-section">
-            <div class="col-md-6 offset-md-3">
-                <form id="searchForm">
-                    <div class="input-group">
-                        <input type="text" id="serviceInput" class="form-control" placeholder="ابحث عن خدمة..." aria-label="Search">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- قائمة الخدمات -->
-        <div class="row" id="servicesContainer">
-            @foreach ($services as $item)
-            <div class="col-md-3 col-sm-6 mb-4">
-                <div class="card-container">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <!-- Front Face -->
-                            <div class="flip-card-front">
-                                <img src="{{ asset('uploads/' . $item->image) }}" alt="{{ $item->title }}">
-                                <div class="overlay">{{ $item->title }}</div>
-                            </div>
-                            <!-- Back Face -->
-                            <div class="flip-card-back">
-                                <p>{!! Str::limit($item->description, 100) !!}</p>
-                                <button class="book-service-btn" onclick="openWhatsApp('{{ $item->title }}')">
-                                    احجز الخدمة
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+<div class="row search-section">
+    <div class="col-md-6 offset-md-3">
+        <form id="searchForm">
+            <div class="input-group">
+                <input type="text" id="serviceInput" class="form-control search-input" placeholder="ابحث عن خدمة..." aria-label="Search">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary search-btn" style="background-color: #e83e8c !important">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
-            @endforeach
-        </div>
+        </form>
+    </div>
+</div>
 
-        <!-- زر عرض المزيد -->
-        <div class="more-services">
-            <a href="{{route('services')}}" class="more-services-btn">المزيد من الخدمات</a>
-        </div>
+<!-- Add CSS -->
+<style>
+    /* Search Bar Container */
+    .search-section {
+        margin-bottom: 30px;
+    }
 
-        <!-- الترقيم -->
-        <div class="pagination-container d-flex justify-content-center mt-4">
-            {{ $services->links('pagination::bootstrap-5') }}
+    /* Search Input */
+    .search-input {
+        padding: 15px;
+        font-size: 16px;
+        border-radius: 25px;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    /* Search Button */
+    .search-btn {
+        background-color: #007bff;
+        border-radius: 25px;
+        border: none;
+        padding: 14px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .search-btn i {
+        font-size: 18px;
+    }
+
+    .search-btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    /* Responsive styling for search bar */
+    @media (max-width: 768px) {
+        .search-section .col-md-6 {
+            max-width: 100%;
+            padding: 0;
+        }
+
+        .search-input {
+            font-size: 14px;
+        }
+
+        .search-btn {
+            padding: 12px 18px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+
+        <!-- قائمة الخدمات -->
+        <div id="ajaxContainer">
+            @include('frontend.partials._services')
         </div>
     </div>
 </section>
@@ -195,33 +226,41 @@ function openWhatsApp(serviceName) {
 }
 
 // البحث الحي عبر Ajax
-$(document).ready(function() {
-    $('#serviceInput').on('input', function() {
-        let searchQuery = $(this).val();
-        $.ajax({
-            url: "{{ route('services') }}",
-            method: "GET",
-            data: { search: searchQuery },
-            success: function(response) {
-                const servicesContainer = $(response).find('#servicesContainer').html();
-                $('#servicesContainer').html(servicesContainer);
+$(document).ready(function () {
+    function fetchServices(url = null) {
+    let searchQuery = $('#serviceInput').val();
+    let fetchUrl = url ?? "{{ route('services') }}";
 
-                // إظهار أو إخفاء الترقيم حسب النتائج
-                if (servicesContainer.trim() === '') {
-                    $('.pagination-container').hide();
-                } else {
-                    $('.pagination-container').show();
-                }
-            },
-            error: function() {
-                alert('حدث خطأ أثناء البحث.');
-            }
-        });
+    $.ajax({
+        url: fetchUrl,
+        method: "GET",
+        data: { search: searchQuery },
+        success: function (response) {
+            $('#ajaxContainer').html(response); // فقط استبدل النتائج
+        },
+        error: function () {
+            alert('حدث خطأ أثناء تحميل البيانات.');
+        }
+    });
+}
+
+
+    // عند الكتابة في البحث
+    $('#serviceInput').on('input', function () {
+        fetchServices();
     });
 
-    $('#searchForm').on('submit', function(e) {
+    // عند التنقل في الصفحات
+    $(document).on('click', '.pagination a', function (e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        fetchServices(url);
+    });
+
+    $('#searchForm').on('submit', function (e) {
         e.preventDefault();
     });
 });
+
 </script>
 @endsection

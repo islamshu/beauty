@@ -85,6 +85,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
+            top: 80%;
             width: 40px;
             height: 40px;
             background: #e83e8c;

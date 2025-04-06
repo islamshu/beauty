@@ -27,7 +27,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.css" />
 
 <!-- Fancybox JS -->
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.umd.js"></script>
 
     <!-- CUSTOM CSS -->
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">
