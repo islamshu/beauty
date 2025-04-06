@@ -215,7 +215,7 @@ class HomeController extends Controller
         $galleries = Gallery::orderby('id', 'desc')->get();
         $categoriesgal = Category::has('gallery')->with('gallery')->get();
         $partners = Partner::get();
-        $products = Product::orderBy('id', 'desc')->take(1)->get();
+        $products = Product::orderBy('id', 'desc')->take(12)->get();
         return view('frontend.index', compact('sliders', 'abouts', 'categories', 'services', 'first_service', 'courses', 'packages', 'galleries', 'categoriesgal', 'partners', 'products'));
     }
     public function purchase(Request $request)
