@@ -131,14 +131,4 @@
         }
     }
     
-    @media (max-width: 576px) {
-        .carousel-item {
-            height: 40vh;
-        }
-        
-        .caption-content {
-            padding: 15px 10px;
-            width: 98%;
-        }
-    }
 </style>

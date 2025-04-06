@@ -15,7 +15,6 @@
 @endsection
 @section('scripts')
     <!-- تضمين مكتبة SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.umd.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -193,8 +192,9 @@
             });
 
             // إرسال بيانات شراء الباقة
-           
+
 
         });
     </script>
+   
 @endsection

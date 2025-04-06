@@ -23,10 +23,10 @@
 
     <link href="{{ asset('front/plugins/isotope/isotope.min.css') }}" rel='stylesheet'>
     <link href="{{ asset('front/plugins/datepicker/datepicker.min.css') }}" rel='stylesheet'>
-<!-- Fancybox CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.css" />
+    <!-- Fancybox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.css" />
 
-<!-- Fancybox JS -->
+    <!-- Fancybox JS -->
 
     <!-- CUSTOM CSS -->
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">
@@ -210,6 +210,17 @@
             /* إضافة ثلاث نقاط في النهاية إذا كان النص يتجاوز */
             white-space: normal;
             /* السماح بتفريغ النص إلى أسطر متعددة */
+        }
+
+        @media (max-width: 576px) {
+            .carousel-item {
+                height: 70vh !important;
+            }
+
+            .caption-content {
+                padding: 15px 10px;
+                width: 98%;
+            }
         }
     </style>
 

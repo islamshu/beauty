@@ -288,4 +288,26 @@
 });
 
 </script>
+<!-- رابط CSS لـ Fancybox -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 
+<!-- رابط JS لـ Fancybox -->
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('[data-fancybox="gallery"]').fancybox({
+            buttons: [
+                "zoom",
+                "share",
+                "slideShow",
+                "fullScreen",
+                "close"
+            ],
+            // لتفعيل التمرير بين الصور
+            loop: true,
+            protect: true
+        });
+    });
+</script>

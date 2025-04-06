@@ -99,17 +99,6 @@ $(document).ready(function() {
     });
 
     // تهيئة Fancybox
-    $('[data-fancybox="gallery"]').fancybox({
-        buttons: [
-            "zoom",
-            "share",
-            "slideShow",
-            "fullScreen",
-            "close"
-        ],
-        // لتفعيل التمرير بين الصور
-        loop: true,
-        protect: true
-    });
+    
 });
 </script>
