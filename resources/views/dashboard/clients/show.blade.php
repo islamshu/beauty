@@ -95,7 +95,7 @@
                             <div class="col-md-6 text-center">
                                 @if($client->qr_code)
                                     <img src="{{ asset($client->qr_code) }}" width="150" height="150" alt="QR Code">
-                                    <p class="mt-1">{{ __('رمز العميل') }}</p>
+                                    <p class="mt-1">{{ __('رمز العميل') }} {{$client->id_number}}</p>
                                 @endif
                             </div>
                             
