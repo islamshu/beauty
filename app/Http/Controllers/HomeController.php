@@ -169,34 +169,46 @@ class HomeController extends Controller
     public function products(Request $request)
     {
         $query = Product::query();
-
-        // البحث في حالة وجود كلمة بحث
+    
+        // Search if there's a search term
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('title', 'like', "%{$search}%");
         }
-
-        $products = $query->orderBy('id', 'desc')->paginate(16);
-
+    
+        $perPage = 12; // Number of items per load
+        $page = $request->get('page', 1); // Get current page or default to 1
+        
+        $products = $query->orderBy('id', 'desc')
+                         ->paginate($perPage, ['*'], 'page', $page);
+    
+        if ($request->ajax()) {
+            return view('frontend.partials._products', compact('products'))->render();
+        }
+    
         return view('frontend.products', compact('products'));
     }
     public function services(Request $request)
-{
-    $query = Service::query()->where('status', 1);
-
-    if ($request->has('search')) {
-        $search = $request->input('search');
-        $query->where('title', 'like', "%{$search}%");
+    {
+        $query = Service::query()->where('status', 1);
+    
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('title', 'like', "%{$search}%");
+        }
+    
+        $perPage = 8; // Number of items per load
+        $page = $request->get('page', 1); // Get current page or default to 1
+        
+        $services = $query->orderBy('id', 'desc')
+                         ->paginate($perPage, ['*'], 'page', $page);
+    
+        if ($request->ajax()) {
+            return view('frontend.partials._services', compact('services'))->render();
+        }
+    
+        return view('frontend.services', compact('services'));
     }
-
-    $services = $query->orderBy('id', 'desc')->paginate(12);
-
-    if ($request->ajax()) {
-        return view('frontend.partials._services', compact('services'))->render();
-    }
-
-    return view('frontend.services', compact('services'));
-}
 
 
     public function single_course($id)

@@ -1,4 +1,4 @@
-<div class="row" id="servicesContainer">
+<div class="row" id="servicesContainer" data-last-page="{{ $services->lastPage() }}">
     @forelse ($services as $item)
         <div class="col-md-3 col-sm-6 mb-4">
             <div class="card-container">
@@ -27,6 +27,8 @@
     @endforelse
 </div>
 
-<div class="pagination-container d-flex justify-content-center mt-4">
-    {{ $services->appends(request()->query())->links('pagination::bootstrap-5') }}
-</div>
+{{-- @if($services->hasMorePages())
+    <div class="col-12 text-center mb-4">
+        <button id="loadMoreBtn" class="btn btn-primary">تحميل المزيد</button>
+    </div>
+@endif --}}
