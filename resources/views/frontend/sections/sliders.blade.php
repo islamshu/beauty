@@ -110,25 +110,8 @@
     }
     
     /* Responsive Adjustments */
-    @media (max-width: 992px) {
-        .carousel-item {
-            height: 50vh;
-        }
-        
-        .caption-content {
-            padding: 20px;
-        }
-    }
+   
     
-    @media (max-width: 768px) {
-        .carousel-item {
-            height: 45vh;
-        }
-        
-        .caption-content {
-            width: 95%;
-            padding: 15px;
-        }
-    }
+
     
 </style>
