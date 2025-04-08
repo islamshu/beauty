@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('enrollments', function (Blueprint $table) {
-            $table->string('experience')->nullable()->after('phone');
-            $table->text('goal')->nullable()->after('experience');
-            $table->string('whatsapp')->nullable()->after('phone');
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->enum('status', ['active', 'suspended', 'canceled'])->default('active');
         });
     }
 
@@ -23,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('enrollments', function (Blueprint $table) {
+        Schema::table('subscriptions', function (Blueprint $table) {
             //
         });
     }

@@ -121,19 +121,11 @@
                         <div class="media d-flex">
                             <div class="media-body text-left">
                                 @php
-                                      $activeClients = App\Models\Client::withActiveSubscription()
-                                        ->with(['activeSubscription' => function ($query) {
-                                            $query->with('package');
-                                        }])
-                                        ->orderBy('id', 'desc')->count();
-                                        $activeClients =  App\Models\Client::getActiveSubscribers();
+                                      $activeClients = App\Models\Client::has('activeSubscription')->count();
 
-                                        $inactiveClients = App\Models\Client::inactive()
-                                        ->with(['subscriptions' => function($q) {
-                                            $q->latest()->first();
-                                        }])->count();
+                                        $inactiveClients = App\Models\Client::whereDoesntHave('activeSubscription')->count();
                                 @endphp
-                                <h3 class="success">{{$activeClients->count() }}</h3>
+                                <h3 class="success">{{$activeClients }}</h3>
                                 <h6>عدد العملاء الفعالين </h6>
                             </div>
                             <div>

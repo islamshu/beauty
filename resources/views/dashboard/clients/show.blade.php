@@ -43,6 +43,53 @@
                                         <th>{{ __('العنوان') }}</th>
                                         <td>{{ $client->address }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>{{ __('حالة العميل') }}</th>
+                                        <td> @if ($client->activeSubscription)
+                                            <div class="shadow-sm border rounded px-2 py-2 text-center" style="background: #f8f9fa;">
+                                                <div class="text-muted small mb-1">
+                                                    حالة الاشتراك: 
+                                                    <span class="font-weight-bold 
+                                                        {{ $client->activeSubscription->status === 'active' ? 'text-success' : 
+                                                            ($client->activeSubscription->status === 'suspended' ? 'text-warning' : 'text-danger') }}">
+                                                        {{ __("subscription.status.{$client->activeSubscription->status}") }}
+                                                    </span>
+                                                </div>
+                                    
+                                                <div class="btn-group btn-group-sm" role="group" aria-label="Subscription Controls">
+                                                    @if($client->activeSubscription->status !== 'active')
+                                                        <form action="{{ route('subscriptions.activate', $client->activeSubscription) }}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-outline-success" title="تفعيل">
+                                                                <i class="ft-check"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                    
+                                                    
+                                    
+                                                    @if($client->activeSubscription->status !== 'canceled')
+                                                    <form action="{{ route('subscriptions.cancel', $client->activeSubscription) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من إلغاء الاشتراك؟')">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-outline-danger" title="إلغاء">
+                                                            <i class="ft-x"></i>
+                                                        </button>
+                                                    </form>
+                                                    
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="text-center">
+                                                <span class="badge badge-warning mb-2 d-block">لا يوجد اشتراك</span>
+                                                <button type="button" class="btn btn-sm btn-primary"
+                                                        data-toggle="modal" data-target="#addClientModal"
+                                                        data-client-id="{{ $client->id }}">
+                                                    <i class="ft-plus"></i> إضافة باقة
+                                                </button>
+                                            </div>
+                                        @endif</td>
+                                    </tr>
                                 </table>
                             </div>
                             <div class="col-md-6 text-center">
@@ -51,6 +98,9 @@
                                     <p class="mt-1">{{ __('رمز العميل') }}</p>
                                 @endif
                             </div>
+                            
+
+                           
                         </div>
                     </div>
                 </div>
@@ -146,8 +196,74 @@
                                                 </div>
                                             @endif
                                         </div>
+                                        <h5 class="mb-3 mt-4 border-bottom pb-2">{{ __('سجل الدفعات') }}</h5>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="font-weight-bold">{{ __('إجمالي المبلغ') }}: {{ $subscription->total_amount }} ₪</span>
+                                            <span class="mx-2">|</span>
+                                            <span class="font-weight-bold text-success">{{ __('المدفوع') }}: {{ $subscription->paid_amount }} ₪</span>
+                                            <span class="mx-2">|</span>
+                                            <span class="font-weight-bold text-danger">{{ __('المتبقي') }}: {{ $subscription->remaining_amount }} ₪</span>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary add-payment-btn" 
+                                            data-subscription-id="{{ $subscription->id }}"
+                                            data-total-amount="{{ $subscription->total_amount }}"
+                                            data-paid-amount="{{ $subscription->paid_amount }}"
+                                            data-remaining-amount="{{ $subscription->remaining_amount }}">
+                                            <i class="ft-plus"></i> {{ __('إضافة دفعة') }}
+                                        </button>
+                                    </div>
+
+                                    @if($subscription->payments->count() > 0)
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th width="10%">#</th>
+                                                        <th width="15%">{{ __('المبلغ') }}</th>
+                                                        {{-- <th width="15%">{{ __('طريقة الدفع') }}</th> --}}
+                                                        <th width="15%">{{ __('تاريخ الدفع') }}</th>
+                                                        <th width="20%">{{ __('المستلم') }}</th>
+                                                        <th width="15%">{{ __('ملاحظات') }}</th>
+                                                        <th width="10%">{{ __('إجراءات') }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($subscription->payments->sortByDesc('payment_date') as $payment)
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ $payment->amount }} ₪</td>
+                                                            {{-- <td>
+                                                                @if($payment->payment_method == 'cash')
+                                                                    <span class="badge badge-success">كاش</span>
+                                                                @else
+                                                                    <span class="badge badge-info">تقسيط</span>
+                                                                @endif
+                                                            </td> --}}
+                                                            <td>{{ $payment->payment_date }}</td>
+                                                            <td>{{ $payment->receiver->name }}</td>
+                                                            <td>{{ $payment->notes ?? '--' }}</td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-danger delete-payment-btn"
+                                                                    data-payment-id="{{ $payment->id }}"
+                                                                    data-amount="{{ $payment->amount }}">
+                                                                    <i class="ft-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <div class="alert alert-info">
+                                            {{ __('لا يوجد دفعات مسجلة لهذا الاشتراك') }}
+                                        </div>
+                                    @endif
                                     </div>
                                 </div>
+                                <!-- التحكم بحالة الاشتراك -->
+
                                 @endforeach
                             </div>
                         @else
@@ -158,6 +274,150 @@
                     </div>
                 </div>
             </section>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addPaymentModal" tabindex="-1" role="dialog" aria-labelledby="addPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPaymentModalLabel">{{ __('إضافة دفعة جديدة') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addPaymentForm" action="{{ route('subscription-payments.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="subscription_id" id="paymentSubscriptionId" value="">
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="payment_amount">{{ __('المبلغ') }} <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="payment_amount" name="amount" step="0.01" min="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment_method">{{ __('طريقة الدفع') }} <span class="text-danger">*</span></label>
+                        <select class="form-control" id="payment_method" name="payment_method" required>
+                            <option value="cash">كاش</option>
+                            <option value="installment">تقسيط</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment_date">{{ __('تاريخ الدفع') }} <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="payment_date" name="payment_date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment_notes">{{ __('ملاحظات') }}</label>
+                        <textarea class="form-control" id="payment_notes" name="notes" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6 class="font-weight-bold">{{ __('معلومات الاشتراك') }}</h6>
+                        <p class="mb-1">{{ __('إجمالي المبلغ') }}: <span id="paymentTotalAmount" class="font-weight-bold"></span> ₪</p>
+                        <p class="mb-1">{{ __('المدفوع') }}: <span id="paymentPaidAmount" class="font-weight-bold"></span> ₪</p>
+                        <p class="mb-0">{{ __('المتبقي') }}: <span id="paymentRemainingAmount" class="font-weight-bold"></span> ₪</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('إلغاء') }}</button>
+                    <button type="submit" class="btn btn-primary" id="submitPaymentBtn">
+                        <i class="ft-save"></i> {{ __('حفظ الدفعة') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal حذف دفعة -->
+<div class="modal fade" id="deletePaymentModal" tabindex="-1" role="dialog" aria-labelledby="deletePaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePaymentModalLabel">{{ __('تأكيد الحذف') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="deletePaymentForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <p>{{ __('هل أنت متأكد من حذف هذه الدفعة بقيمة') }} <span id="deletePaymentAmount" class="font-weight-bold"></span> ₪؟</p>
+                    <p class="text-danger">{{ __('لا يمكن التراجع عن هذا الإجراء') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('إلغاء') }}</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="ft-trash"></i> {{ __('حذف') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="paymentModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="paymentForm" method="POST">
+                @csrf
+                <input type="hidden" name="subscription_id" value="">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('إضافة دفعة جديدة') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>{{ __('المبلغ') }} <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="amount" step="0.01" min="0.01" required>
+                    </div>
+                    
+                    {{-- <div class="form-group">
+                        <label>{{ __('طريقة الدفع') }} <span class="text-danger">*</span></label>
+                        <select class="form-control" name="payment_method" required>
+                            <option value="cash">{{ __('كاش') }}</option>
+                            <option value="installment">{{ __('تقسيط') }}</option>
+                        </select>
+                    </div> --}}
+                    
+                    <div class="form-group">
+                        <label>{{ __('تاريخ الدفع') }} <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="payment_date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>{{ __('ملاحظات') }}</label>
+                        <textarea class="form-control" name="notes" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="payment-info alert alert-info p-2">
+                        <div class="d-flex justify-content-between">
+                            <span>{{ __('الإجمالي') }}:</span>
+                            <span class="total-amount font-weight-bold"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>{{ __('المدفوع') }}:</span>
+                            <span class="paid-amount font-weight-bold"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>{{ __('المتبقي') }}:</span>
+                            <span class="remaining-amount font-weight-bold"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('إلغاء') }}</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> {{ __('حفظ') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -218,7 +478,58 @@
 <!-- Toastr Notifications -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
+<script>
+    $(function() {
+        // فتح مودال إضافة دفعة
+        $('.add-payment-btn').click(function() {
+            const subscriptionId = $(this).data('subscription-id');
+            const totalAmount = $(this).data('total-amount');
+            const paidAmount = $(this).data('paid-amount');
+            const remainingAmount = $(this).data('remaining-amount');
+            
+            $('#paymentModal input[name="subscription_id"]').val(subscriptionId);
+            $('#paymentModal .total-amount').text(totalAmount + ' ₪');
+            $('#paymentModal .paid-amount').text(paidAmount + ' ₪');
+            $('#paymentModal .remaining-amount').text(remainingAmount + ' ₪');
+            $('#paymentModal input[name="payment_date"]').val(new Date().toISOString().split('T')[0]);
+            
+            $('#paymentModal').modal('show');
+        });
+    
+        // حذف دفعة
+        $('.delete-payment').click(function() {
+            const paymentId = $(this).data('payment-id');
+            
+            if(confirm('{{ __("هل أنت متأكد من حذف هذه الدفعة؟") }}')) {
+                $.ajax({
+                    url: '/subscription-payments/' + paymentId,
+                    type: 'DELETE',
+                    data: {_token: '{{ csrf_token() }}'},
+                    success: function() {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    
+        // إرسال نموذج الدفعة
+        $('#paymentForm').submit(function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                url: '{{ route("subscription-payments.store") }}',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function() {
+                    location.reload();
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON.message || '{{ __("حدث خطأ أثناء الحفظ") }}');
+                }
+            });
+        });
+    });
+    </script>
 <script>
 $(document).ready(function() {
     // Toastr configuration

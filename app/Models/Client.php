@@ -17,59 +17,52 @@ class Client extends Model
     {
         return $this->hasMany(Visit::class);
     }
-    // app/Models/Client.php
 
+    // الاشتراك النشط (مع مراعاة الحالة التلقائية واليدوية)
     public function activeSubscription()
     {
         return $this->hasOne(Subscription::class)
-            ->where(function ($query) {
+            ->where('status', Subscription::STATUS_ACTIVE)
+            ->where(function($query) {
                 $query->whereNull('end_at')
-                    ->orWhere('end_at', '>', now());
+                      ->orWhere('end_at', '>', now());
             })
             ->whereRaw('total_visit < package_visit');
     }
 
-    public function hasActiveSubscription()
+    // تحديث جميع حالات اشتراكات العميل
+    public function updateSubscriptionsStatus()
     {
-        return $this->activeSubscription() !== null;
+        $this->subscriptions()->each(function($subscription) {
+            $subscription->updateStatus();
+        });
+        return $this;
     }
+
+    // التحقق من أن العميل نشط
+    public function isActive()
+    {
+        return $this->activeSubscription()->exists();
+    }
+
+    // نطاقات الاستعلام
     public function scopeWithActiveSubscription($query)
     {
         return $query->whereHas('activeSubscription');
     }
 
-    // أو إذا كنت تريد دالة ثابتة
-    public static function getActiveSubscribers()
-    {
-        return static::whereHas('activeSubscription')->get();
-    }
     public function scopeInactive($query)
     {
-        return $query->where(function ($q) {
-            // لا يوجد أي اشتراكات
+        return $query->where(function($q) {
             $q->doesntHave('subscriptions')
-                ->orWhereHas('subscriptions', function ($q) {
-                    // أو الاشتراكات منتهية الصلاحية
-                    $q->where(function ($q) {
+              ->orWhereHas('subscriptions', function($q) {
+                  $q->where('status', '!=', Subscription::STATUS_ACTIVE)
+                    ->orWhere(function($q) {
                         $q->whereNotNull('end_at')
-                            ->where('end_at', '<=', now());
+                          ->where('end_at', '<=', now());
                     })
-                        // أو استنفاذ الزيارات
-                        ->orWhereRaw('total_visit >= package_visit');
-                });
-        });
-    }
-
-    // دالة مساعدة للتحقق
-    public function isInactive()
-    {
-        return $this->subscriptions()->count() === 0 ||
-            $this->subscriptions()
-            ->where(function ($q) {
-                $q->whereNotNull('end_at')
-                    ->where('end_at', '<=', now())
                     ->orWhereRaw('total_visit >= package_visit');
-            })
-            ->exists();
+              });
+        });
     }
 }

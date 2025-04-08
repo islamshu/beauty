@@ -64,6 +64,9 @@
         @endforeach
     </ol>
 </div>
+<div class="more-services">
+    <a href="{{route('products')}}" class="more-services-btn">المزيد من المنتجات</a>
+</div>
 
 <style>
     .carousel-indicators {

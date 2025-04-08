@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Order;
 use App\Models\Package;
 use App\Models\Subscription;
+use App\Models\SubscriptionPayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -23,25 +24,27 @@ class ClientController extends Controller
     }
     public function getActiveClients()
     {
-        // الطريقة الأولى باستخدام scope
-        $activeClients = Client::withActiveSubscription()
-            ->with(['activeSubscription' => function ($query) {
-                $query->with('package');
-            }])
-            ->orderBy('id', 'desc')->get();
-        $activeClients = Client::getActiveSubscribers();
-
-        return view('dashboard.clients.index')->with('clients', $activeClients)->with('packages', Package::where('status', 1)->get());
+      
+        $activeClients = Client::has('activeSubscription')
+            ->orderBy('id', 'desc')
+            ->get();
+    
+        return view('dashboard.clients.index', [
+            'clients' => $activeClients,
+            'packages' => Package::where('status', 1)->get()
+        ]);
     }
     
     public function getNotActiveSubscribers()
     {
-        $inactiveClients = Client::inactive()
-        ->with(['subscriptions' => function($q) {
-            $q->latest()->first();
-        }])->orderBy('id', 'desc')->get();
-
-        return view('dashboard.clients.index')->with('clients', $inactiveClients)->with('packages', Package::where('status', 1)->get());
+        $inactiveClients = Client::whereDoesntHave('activeSubscription')
+            ->orderBy('id', 'desc')
+            ->get();
+    
+        return view('dashboard.clients.index', [
+            'clients' => $inactiveClients,
+            'packages' => Package::where('status', 1)->get()
+        ]);
     }
     public function getOrderData(Order $order)
     {
@@ -102,6 +105,15 @@ class ClientController extends Controller
             'paid_amount' => $validated['paid_amount'],
             'added_by' => auth()->id()
         ]);
+        $payment = SubscriptionPayment::create([
+            'subscription_id' => $subscription->id,
+            'amount' => $request->paid_amount,
+            'payment_method' => 'cash',
+            'payment_date' => now(),
+            'notes' => $request->notes,
+            'received_by' => auth()->id(),
+        ]);
+
 
         return response()->json([
             'success' => true,
@@ -164,14 +176,20 @@ class ClientController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20|unique:clients,phone',
             'address' => 'nullable|string',
-            'add_subscription' => 'nullable|in:true,false,1,0,on,off',
-            'package_id' => 'required_if:add_subscription,1|exists:packages,id',
-            'start_date' => 'required_if:add_subscription,1|date',
-            'payment_method' => 'required_if:add_subscription,1|in:full,installments',
-            'package_visit' => 'required_if:add_subscription,1|integer|min:1',
-            'total_amount' => 'required_if:add_subscription,1|numeric|min:0',
-            'paid_amount' => 'required_if:add_subscription,1|numeric|min:0'
+     
         ]);
+        if ($request->boolean('add_subscription')) {
+            $subscriptionRules = [
+                'package_id' => 'required|exists:packages,id',
+                'start_date' => 'required|date',
+                'payment_method' => 'required|in:full,installments',
+                'package_visit' => 'required|integer|min:1',
+                'total_amount' => 'required|numeric|min:0',
+                'paid_amount' => 'required|numeric|min:0|lte:total_amount'
+            ];
+            
+            $validated = array_merge($validated, $request->validate($subscriptionRules));
+        }
 
         // إنشاء العميل
         $client = Client::create([
@@ -221,7 +239,17 @@ class ClientController extends Controller
                 'paid_amount' => $validated['paid_amount'],
                 'added_by' => auth()->id()
             ]);
+            $payment = SubscriptionPayment::create([
+                'subscription_id' => $subscription->id,
+                'amount' => $request->paid_amount,
+                'payment_method' => 'cash',
+                'payment_date' => now(),
+                'notes' => $request->notes,
+                'received_by' => auth()->id(),
+            ]);
+    
         }
+        
         $qrCodePath = "uploads/qrcodes/client_{$client->id}.svg";
         $clientUrl = route('clients.show', $client->id);
 
@@ -327,4 +355,25 @@ class ClientController extends Controller
         $client->delete();
         return redirect()->route('clients.index')->with('toastr_success', 'تم حذف العميل بنجاح');
     }
+    public function activate(Subscription $subscription)
+{
+    // يمكن تفعيل فقط إذا كانت الحالة التلقائية تسمح بذلك
+    if ($subscription->determineStatus() === Subscription::STATUS_ACTIVE) {
+        $subscription->activate();
+        return redirect()->back()->with('success', 'تم تفعيل الاشتراك بنجاح');
+    }
+    return redirect()->back()->with('error', 'لا يمكن تفعيل الاشتراك بسبب انتهاء الصلاحية أو اكتمال الزيارات');
+}
+
+public function suspend(Subscription $subscription)
+{
+    $subscription->suspend();
+    return redirect()->back()->with('success', 'تم تعليق الاشتراك بنجاح');
+}
+
+public function cancel(Subscription $subscription)
+{
+    $subscription->cancel();
+    return redirect()->back()->with('success', 'تم إلغاء الاشتراك بنجاح');
+}
 }

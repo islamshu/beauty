@@ -42,18 +42,52 @@
                                         <td>{{ $client->phone }}</td>
                                         <td>
                                             @if ($client->activeSubscription)
-                                            <span class="badge badge-success ml-1">نشط</span>
-                                            
-                                        @else
-                                            <span class="badge badge-warning ml-1">غير نشط</span>
-                                            <button type="button" class="btn btn-sm btn-primary"
+                                                <div class="shadow-sm border rounded px-2 py-2 text-center" style="background: #f8f9fa;">
+                                                    <div class="text-muted small mb-1">
+                                                        حالة الاشتراك: 
+                                                        <span class="font-weight-bold 
+                                                            {{ $client->activeSubscription->status === 'active' ? 'text-success' : 
+                                                                ($client->activeSubscription->status === 'suspended' ? 'text-warning' : 'text-danger') }}">
+                                                            {{ __("subscription.status.{$client->activeSubscription->status}") }}
+                                                        </span>
+                                                    </div>
+                                        
+                                                    <div class="btn-group btn-group-sm" role="group" aria-label="Subscription Controls">
+                                                        @if($client->activeSubscription->status !== 'active')
+                                                            <form action="{{ route('subscriptions.activate', $client->activeSubscription) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-outline-success" title="تفعيل">
+                                                                    <i class="ft-check"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                        
+                                                        
+                                        
+                                                        @if($client->activeSubscription->status !== 'canceled')
+                                                        <form action="{{ route('subscriptions.cancel', $client->activeSubscription) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من إلغاء الاشتراك؟')">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-outline-danger" title="إلغاء">
+                                                                <i class="ft-x"></i>
+                                                            </button>
+                                                        </form>
+                                                        
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="text-center">
+                                                    <span class="badge badge-warning mb-2 d-block">لا يوجد اشتراك</span>
+                                                    <button type="button" class="btn btn-sm btn-primary"
                                                             data-toggle="modal" data-target="#addClientModal"
-                                                            data-client-id="{{ $client->id }}"
-                                                        >
-                                                            <i class="ft-plus"></i> إضافة باقة
-                                            </button>
-                                        @endif
+                                                            data-client-id="{{ $client->id }}">
+                                                        <i class="ft-plus"></i> إضافة باقة
+                                                    </button>
+                                                </div>
+                                            @endif
                                         </td>
+                                        
+                                        
                                         <td>
                                             <a href="{{ route('clients.show', $client->id) }}" class="btn btn-info">{{ __('عرض') }}</a>
 

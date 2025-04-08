@@ -52,7 +52,6 @@
                                             </div>
                                             <br>
                                             <button type="button" class="btn btn-success save-client">حفظ</button>
-                                            <button type="button" class="btn btn-primary next-step">إضافة اشتراك</button>
                                         </div>
 
                                         <!-- الخطوة 2: إضافة اشتراك -->
