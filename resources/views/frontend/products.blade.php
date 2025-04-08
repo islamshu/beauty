@@ -183,17 +183,17 @@
                             </div>
                         </div>
                     </form>
-                    <div class="text-center my-4" id="loadingSpinner" style="display: none;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
 
             <!-- Products Container -->
             <div id="ajaxContainer">
                 @include('frontend.partials._products')
+            </div>
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>جاري تحميل المزيد من المنتجات...</p>
             </div>
         </div>
     </section>
