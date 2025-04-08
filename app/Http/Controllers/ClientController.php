@@ -22,25 +22,36 @@ class ClientController extends Controller
     {
         return view('dashboard.clients.index')->with('clients', Client::orderby('id', 'desc')->get())->with('packages', Package::where('status', 1)->get());
     }
+    public function searchById(Request $request)
+    {
+        $term = $request->get('term');
+
+        $clients = Client::where('id_number', 'like', '%' . $term . '%')
+            ->take(10)
+            ->get();
+
+        return response()->json($clients);
+    }
+
     public function getActiveClients()
     {
-      
+
         $activeClients = Client::has('activeSubscription')
             ->orderBy('id', 'desc')
             ->get();
-    
+
         return view('dashboard.clients.index', [
             'clients' => $activeClients,
             'packages' => Package::where('status', 1)->get()
         ]);
     }
-    
+
     public function getNotActiveSubscribers()
     {
         $inactiveClients = Client::whereDoesntHave('activeSubscription')
             ->orderBy('id', 'desc')
             ->get();
-    
+
         return view('dashboard.clients.index', [
             'clients' => $inactiveClients,
             'packages' => Package::where('status', 1)->get()
@@ -176,7 +187,7 @@ class ClientController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20|unique:clients,phone',
             'address' => 'nullable|string',
-     
+
         ]);
         if ($request->boolean('add_subscription')) {
             $subscriptionRules = [
@@ -187,7 +198,7 @@ class ClientController extends Controller
                 'total_amount' => 'required|numeric|min:0',
                 'paid_amount' => 'required|numeric|min:0|lte:total_amount'
             ];
-            
+
             $validated = array_merge($validated, $request->validate($subscriptionRules));
         }
 
@@ -247,9 +258,8 @@ class ClientController extends Controller
                 'notes' => $request->notes,
                 'received_by' => auth()->id(),
             ]);
-    
         }
-        
+
         $qrCodePath = "uploads/qrcodes/client_{$client->id}.svg";
         $clientUrl = route('clients.show', $client->id);
 
@@ -356,24 +366,24 @@ class ClientController extends Controller
         return redirect()->route('clients.index')->with('toastr_success', 'تم حذف العميل بنجاح');
     }
     public function activate(Subscription $subscription)
-{
-    // يمكن تفعيل فقط إذا كانت الحالة التلقائية تسمح بذلك
-    if ($subscription->determineStatus() === Subscription::STATUS_ACTIVE) {
-        $subscription->activate();
-        return redirect()->back()->with('success', 'تم تفعيل الاشتراك بنجاح');
+    {
+        // يمكن تفعيل فقط إذا كانت الحالة التلقائية تسمح بذلك
+        if ($subscription->determineStatus() === Subscription::STATUS_ACTIVE) {
+            $subscription->activate();
+            return redirect()->back()->with('success', 'تم تفعيل الاشتراك بنجاح');
+        }
+        return redirect()->back()->with('error', 'لا يمكن تفعيل الاشتراك بسبب انتهاء الصلاحية أو اكتمال الزيارات');
     }
-    return redirect()->back()->with('error', 'لا يمكن تفعيل الاشتراك بسبب انتهاء الصلاحية أو اكتمال الزيارات');
-}
 
-public function suspend(Subscription $subscription)
-{
-    $subscription->suspend();
-    return redirect()->back()->with('success', 'تم تعليق الاشتراك بنجاح');
-}
+    public function suspend(Subscription $subscription)
+    {
+        $subscription->suspend();
+        return redirect()->back()->with('success', 'تم تعليق الاشتراك بنجاح');
+    }
 
-public function cancel(Subscription $subscription)
-{
-    $subscription->cancel();
-    return redirect()->back()->with('success', 'تم إلغاء الاشتراك بنجاح');
-}
+    public function cancel(Subscription $subscription)
+    {
+        $subscription->cancel();
+        return redirect()->back()->with('success', 'تم إلغاء الاشتراك بنجاح');
+    }
 }

@@ -229,6 +229,49 @@ setInterval(fetchNotifications, 30000);
 // استعلام فوري عند تحميل الصفحة
 fetchNotifications();
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('clientSearch');
+        const resultsDiv = document.getElementById('clientResults');
+
+        // تعريف روابط Laravel باستخدام Blade
+        const searchRoute = @json(route('client.search'));
+        const clientShowRoute = @json(route('clients.show', ['client' => '__ID__'])); // placeholder __ID__
+
+        searchInput.addEventListener('keyup', function () {
+            let term = this.value.trim();
+
+            if (term.length >= 2) {
+                fetch(`${searchRoute}?term=${term}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        resultsDiv.innerHTML = '';
+                        if (data.length > 0) {
+                            data.forEach(client => {
+                                const item = document.createElement('a');
+                                item.href = clientShowRoute.replace('__ID__', client.id); // استبدال placeholder
+                                item.className = 'dropdown-item';
+                                item.innerText = `${client.name} - ${client.id_number}`;
+                                resultsDiv.appendChild(item);
+                            });
+                            resultsDiv.style.display = 'block';
+                        } else {
+                            resultsDiv.style.display = 'none';
+                        }
+                    });
+            } else {
+                resultsDiv.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+                resultsDiv.style.display = 'none';
+            }
+        });
+    });
+</script>
+
 <!-- END PAGE LEVEL JS-->
 </body>
 

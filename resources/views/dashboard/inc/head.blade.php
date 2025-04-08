@@ -49,6 +49,15 @@
             .required {
                 color: red;
             }
+            #clientResults a {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+
+    #clientResults a:hover {
+        background-color: #f0f0f0;
+    }
         </style>
     @else
         <link rel="stylesheet" type="text/css" href="{{ asset('backend/app-assets/css/vendors.css') }}">

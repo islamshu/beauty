@@ -122,11 +122,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     Route::post('social-media/save', [SocialMediaController::class, 'save'])->name('save_social_media');
 
     Route::post('/subscriptions/{subscription}/activate', [ClientController::class, 'activate'])
-    ->name('subscriptions.activate');
+        ->name('subscriptions.activate');
 
-Route::post('/subscriptions/{subscription}/suspend', [ClientController::class, 'suspend'])
-    ->name('subscriptions.suspend');
+    Route::post('/subscriptions/{subscription}/suspend', [ClientController::class, 'suspend'])
+        ->name('subscriptions.suspend');
+    Route::get('/search-client', [ClientController::class, 'searchById'])->name('client.search');
 
-Route::post('/subscriptions/{subscription}/cancel', [ClientController::class, 'cancel'])
-    ->name('subscriptions.cancel');
+    Route::post('/subscriptions/{subscription}/cancel', [ClientController::class, 'cancel'])
+        ->name('subscriptions.cancel');
 });
