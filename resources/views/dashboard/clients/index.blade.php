@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">{{ __('قائمة العملاء') }}</h4>
-                        <a href="{{ route('clients.create') }}" class="btn btn-primary">{{ __('إضافة عميل جديد') }}</a>
+                        <a href="{{ route('clients.create') }}" class="btn btn-sm btn-primary">{{ __('إضافة عميل جديد') }}</a>
                     </div>
                     <div class="card-body">
                         @include('dashboard.inc.alerts')
@@ -56,7 +56,7 @@
                                                         @if($client->activeSubscription->status !== 'active')
                                                             <form action="{{ route('subscriptions.activate', $client->activeSubscription) }}" method="POST">
                                                                 @csrf
-                                                                <button type="submit" class="btn btn-outline-success" title="تفعيل">
+                                                                <button type="submit" class="btn btn-sm btn-outline-success" title="تفعيل">
                                                                     <i class="ft-check"></i>
                                                                 </button>
                                                             </form>
@@ -67,8 +67,8 @@
                                                         @if($client->activeSubscription->status !== 'canceled')
                                                         <form action="{{ route('subscriptions.cancel', $client->activeSubscription) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من إلغاء الاشتراك؟')">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-outline-danger" title="إلغاء">
-                                                                <i class="ft-x"></i>
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="إلغاء">
+                                                                إلغاء الاشتراك
                                                             </button>
                                                         </form>
                                                         
@@ -78,7 +78,7 @@
                                             @else
                                                 <div class="text-center">
                                                     <span class="badge badge-warning mb-2 d-block">لا يوجد اشتراك</span>
-                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                    <button type="button" class="btn btn-sm btn-sm btn-primary"
                                                             data-toggle="modal" data-target="#addClientModal"
                                                             data-client-id="{{ $client->id }}">
                                                         <i class="ft-plus"></i> إضافة باقة
@@ -89,14 +89,14 @@
                                         
                                         
                                         <td>
-                                            <a href="{{ route('clients.show', $client->id) }}" class="btn btn-info">{{ __('عرض') }}</a>
+                                            <a href="{{ route('clients.show', $client->id) }}" class="btn btn-sm btn-info">{{ __('عرض') }}</a>
 
-                                            <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-warning">{{ __('تعديل') }}</a>
+                                            <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-sm btn-warning">{{ __('تعديل') }}</a>
 
                                             <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -177,8 +177,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary">حفظ</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-sm btn-primary">حفظ</button>
                 </div>
             </form>
         </div>

@@ -12,11 +12,11 @@
                 <!-- المحتوى الرئيسي -->
                 <div class="col-lg-8 col-md-12">
                     <div class="footer-content" style="padding: 30px 0; text-align: center;">
-                        <a class="footerLogo">
+                        {{-- <a class="footerLogo">
                             <img src="{{ asset('uploads/' . get_general_value('website_logo')) }}" width="250"
-                                style="filter: brightness(0) invert(1); max-width: 100%; height: auto;" 
+                                style=" max-width: 100%; height: auto;" 
                                 alt="{{ get_general_value('website_name') }}">
-                        </a>
+                        </a> --}}
                         <p style="color: #fff; font-size: 16px; line-height: 1.6; margin-top: 20px; padding: 0 15px;">
                             {{ get_general_value('description') }}
                         </p>

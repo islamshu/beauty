@@ -29,19 +29,32 @@
                             @method('PUT')
                             
                             <!-- Image Upload -->
-                            <div class="form-group">
-                                <label for="image">الصورة</label>
-                                <input type="file" class="form-control image" id="image" name="image" accept="image/*">
-                                <div class="form-group">
-                                    <img src="{{ asset('uploads/'.$slider->image) }}" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                            <div class="row">
+                                <div class="col-md-6 mt-2">
+                                    <div class="form-group">
+                                        <label for="image">الصورة</label>
+                                        <input type="file" class="form-control image" id="image" name="image" accept="image/*">
+                                        <div class="form-group">
+                                            <img src="{{ asset('uploads/'.$slider->image) }}" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                                        </div>
+                                        @error('image')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 </div>
-                                @error('image')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                <div class="col-md-6 mt-2">
+                                    <label for="button_link">الرابط    </label>
+                                    <input type="text" name="button_link" class="form-control" id="button_link" value="{{ old('button_link', $slider->button_link) }}">
+                                    @error('button_link')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                
                             </div>
                             
+                            
                             <!-- Row 1: Titles -->
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="first_title">العنوان العلوي</label>
@@ -78,7 +91,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
                             
                             <button type="submit" class="btn btn-success mt-3">{{ __('تحديث') }}</button>
                         </form>

@@ -11,19 +11,9 @@
         @foreach ($sliders as $key => $item)   
             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                 <div class="carousel-image-container">
-                    <img src="{{ asset('uploads/'.$item->image) }}" alt="{{ $item->first_title ?? 'Slide' }}" class="carousel-image">
+                    <a @if($item->button_link != null  &&  $item->button_link != '#') href="{{ $item->button_link }} @endif"><img src="{{ asset('uploads/'.$item->image) }}" alt="{{ $item->first_title ?? 'Slide' }}" class="carousel-image"></a>
                 </div>
-                <div class="carousel-caption">
-                    <div class="caption-content">
-                        <h3>{{ $item->first_title ?? 'Slide Title' }}</h3>
-                        <p>{{ $item->secand_title ?? 'Slide description' }}</p>
-                        @if($item->button_link)
-                            <a href="{{ $item->button_link }}" class="btn btn-primary">
-                                {{ $item->button_text ?? 'Learn More' }}
-                            </a>
-                        @endif
-                    </div>
-                </div>
+            
             </div>
         @endforeach
     </div>

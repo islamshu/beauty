@@ -29,19 +29,34 @@
                             @csrf
                         
                             <!-- Image Upload -->
-                            <div class="form-group">
-                                <label for="image">الصورة</label>
-                                <input type="file" class="form-control image" id="image" name="image" accept="image/*">
-                                <div class="form-group">
-                                    <img src="" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                            <div class="row">
+                                <div class="col-md-6  mt-2">
+                                    <div class="form-group">
+                                        <label for="image">الصورة</label>
+                                        <input type="file" class="form-control image" id="image" name="image" accept="image/*">
+                                        <div class="form-group">
+                                            <img src="" style="width: 100px" class="img-thumbnail image-preview" alt="الصورة">
+                                        </div>
+                                        @error('image')
+                                        <small class="text-danger">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                 </div>
-                                @error('image')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                <div class="col-md-6 mt-2">
+                                    <label for="button_link">الرابط       </label>
+                                    <input type="text" name="button_link" class="form-control" id="button_link" value="{{ old('button_link') }}">
+                             
+                                    </select>
+                                    @error('type_date')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+
+                                </div>
                             </div>
+                            
                         
                             <!-- Row 1: Name & Price -->
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="first_title">العنوان العلوي </label>
@@ -62,18 +77,18 @@
                                     </div>
                                 </div>
                             </div>
-                        
+                         --}}
                             <!-- Row 2: Number Date & Type Date -->
                             <div class="row">
-                                <div class="col-md-6 mt-2">
+                                {{-- <div class="col-md-6 mt-2">
                                     <label for="button_text">اسم الزر          </label>
                                     <input type="text" class="form-control"   name="button_text" value="{{ old('button_text') }}" id="button_text">
                                     @error('button_text')
                                     <small class="text-danger">{{ $message }}</small>
                                     @enderror
-                                </div>
+                                </div> --}}
 
-                                <div class="col-md-6 mt-2">
+                                {{-- <div class="col-md-6 mt-2">
                                     <label for="button_link">الرابط عند النقر على الزر       </label>
                                     <input type="text" name="button_link" class="form-control" id="button_link" value="{{ old('button_link') }}">
                              
@@ -82,7 +97,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                     @enderror
 
-                                </div>
+                                </div> --}}
                             </div>
                         
                             

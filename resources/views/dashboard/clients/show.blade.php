@@ -72,7 +72,7 @@
                                                     <form action="{{ route('subscriptions.cancel', $client->activeSubscription) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من إلغاء الاشتراك؟')">
                                                         @csrf
                                                         <button type="submit" class="btn btn-outline-danger" title="إلغاء">
-                                                            <i class="ft-x"></i>
+                                                            إلغاء الاشتراك
                                                         </button>
                                                     </form>
                                                     
@@ -98,9 +98,6 @@
                                     <p class="mt-1">{{ __('رمز العضوية') }} {{$client->id_number}}</p>
                                 @endif
                             </div>
-                            
-
-                           
                         </div>
                     </div>
                 </div>
@@ -146,6 +143,13 @@
                                                         data-total-visits="{{ $subscription->package_visit }}">
                                                         <i class="ft-plus"></i> {{ __('إضافة زيارة') }}
                                                     </button>
+                                                    <button class="btn btn-sm btn-primary add-payment-btn" 
+                                                    data-subscription-id="{{ $subscription->id }}"
+                                                    data-total-amount="{{ $subscription->total_amount }}"
+                                                    data-paid-amount="{{ $subscription->paid_amount }}"
+                                                    data-remaining-amount="{{  $subscription->total_amount -$subscription->paid_amount}}">
+                                                    <i class="ft-plus"></i> {{ __('إضافة دفعة') }}
+                                                </button>
                                                 @endif
                                             </div>
                                         </div>
@@ -165,105 +169,106 @@
                                                 </div>
                                             </div>
 
-                                            <h5 class="mb-3 border-bottom pb-2">{{ __('سجل الزيارات') }}</h5>
-                                            @if($subscription->visits->count() > 0)
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover">
-                                                        <thead class="bg-light">
-                                                            <tr>
-                                                                <th width="5%">#</th>
-                                                                <th width="20%">{{ __('تاريخ الزيارة') }}</th>
-                                                                <th width="20%">{{ __('المشرف') }}</th>
-                                                                <th width="45%">{{ __('ملاحظات') }}</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($subscription->visits->sortByDesc('visit_date') as $visit)
-                                                                <tr>
-                                                                    <td>{{ $loop->iteration }}</td>
-                                                                    <td>{{ $visit->visit_date }}</td>
-                                                                    <td>{{ $visit->supervisor->name }}</td>
-                                                                    <td>{{ $visit->notes ?? __('لا يوجد') }}</td>
-                                                                  
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                            <!-- New Layout for Visits and Payments Side by Side -->
+                                            <div class="row mt-4">
+                                                <!-- Visits Section -->
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-3 border-bottom pb-2">{{ __('سجل الزيارات') }}</h5>
+                                                    <div class="d-flex justify-content-between mb-3">
+                                                        <div>
+                                                            <span class="font-weight-bold">{{ __('إجمالي عدد الزيارات المقررة') }}: {{ $subscription->package_visit }} </span>
+                                                            <span class="mx-2">|</span>
+                                                            <span class="font-weight-bold text-success">{{ __('اجمالي الزيارات') }}: {{ $subscription->total_visit }}</span>
+                                                            <span class="mx-2">|</span>
+                                                            <span class="font-weight-bold text-danger">{{ __('المتبقي') }}: {{ $subscription->total_visit }}/{{ $subscription->package_visit }} </span>
+                                                        </div>
+                                                    </div>
+                                                    @if($subscription->visits->count() > 0)
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-hover">
+                                                                <thead class="bg-light">
+                                                                    <tr>
+                                                                        <th width="5%">#</th>
+                                                                        <th width="45%">{{ __('تاريخ الزيارة') }}</th>
+                                                                        <th width="20%">{{ __('المشرف') }}</th>
+                                                                        <th width="20%">{{ __('ملاحظات') }}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach ($subscription->visits->sortByDesc('visit_date') as $visit)
+                                                                        <tr>
+                                                                            <td>{{ $loop->iteration }}</td>
+                                                                            <td>{{ $visit->visit_date }}</td>
+                                                                            <td>{{ $visit->supervisor->name }}</td>
+                                                                            <td>{{ $visit->notes ?? __('لا يوجد') }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @else
+                                                        <div class="alert alert-info">
+                                                            {{ __('لا يوجد زيارات مسجلة لهذا الاشتراك') }}
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                            @else
-                                                <div class="alert alert-info">
-                                                    {{ __('لا يوجد زيارات مسجلة لهذا الاشتراك') }}
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <h5 class="mb-3 mt-4 border-bottom pb-2">{{ __('سجل الدفعات') }}</h5>
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <div>
-                                            <span class="font-weight-bold">{{ __('إجمالي المبلغ') }}: {{ $subscription->total_amount }} ₪</span>
-                                            <span class="mx-2">|</span>
-                                            <span class="font-weight-bold text-success">{{ __('المدفوع') }}: {{ $subscription->paid_amount }} ₪</span>
-                                            <span class="mx-2">|</span>
-                                            <span class="font-weight-bold text-danger">{{ __('المتبقي') }}: {{ $subscription->remaining_amount }} ₪</span>
-                                        </div>
-                                        <button class="btn btn-sm btn-primary add-payment-btn" 
-                                            data-subscription-id="{{ $subscription->id }}"
-                                            data-total-amount="{{ $subscription->total_amount }}"
-                                            data-paid-amount="{{ $subscription->paid_amount }}"
-                                            data-remaining-amount="{{ $subscription->remaining_amount }}">
-                                            <i class="ft-plus"></i> {{ __('إضافة دفعة') }}
-                                        </button>
-                                    </div>
 
-                                    @if($subscription->payments->count() > 0)
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-hover">
-                                                <thead class="bg-light">
-                                                    <tr>
-                                                        <th width="10%">#</th>
-                                                        <th width="15%">{{ __('المبلغ') }}</th>
-                                                        {{-- <th width="15%">{{ __('طريقة الدفع') }}</th> --}}
-                                                        <th width="15%">{{ __('تاريخ الدفع') }}</th>
-                                                        <th width="20%">{{ __('المستلم') }}</th>
-                                                        <th width="15%">{{ __('ملاحظات') }}</th>
-                                                        <th width="10%">{{ __('إجراءات') }}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($subscription->payments->sortByDesc('payment_date') as $payment)
-                                                        <tr>
-                                                            <td>{{ $loop->iteration }}</td>
-                                                            <td>{{ $payment->amount }} ₪</td>
-                                                            {{-- <td>
-                                                                @if($payment->payment_method == 'cash')
-                                                                    <span class="badge badge-success">كاش</span>
-                                                                @else
-                                                                    <span class="badge badge-info">تقسيط</span>
-                                                                @endif
-                                                            </td> --}}
-                                                            <td>{{ $payment->payment_date }}</td>
-                                                            <td>{{ $payment->receiver->name }}</td>
-                                                            <td>{{ $payment->notes ?? '--' }}</td>
-                                                            <td>
-                                                                <button class="btn btn-sm btn-danger delete-payment-btn"
-                                                                    data-payment-id="{{ $payment->id }}"
-                                                                    data-amount="{{ $payment->amount }}">
-                                                                    <i class="ft-trash"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                <!-- Payments Section -->
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-3 border-bottom pb-2">{{ __('سجل الدفعات') }}</h5>
+                                                    <div class="d-flex justify-content-between mb-3">
+                                                        <div>
+                                                            <span class="font-weight-bold">{{ __('إجمالي المبلغ') }}: {{ $subscription->total_amount }} ₪</span>
+                                                            <span class="mx-2">|</span>
+                                                            <span class="font-weight-bold text-success">{{ __('المدفوع') }}: {{ $subscription->paid_amount }} ₪</span>
+                                                            <span class="mx-2">|</span>
+                                                            <span class="font-weight-bold text-danger">{{ __('المتبقي') }}: {{  $subscription->total_amount -$subscription->paid_amount }} ₪</span>
+                                                        </div>
+                                                    </div>
+
+                                                    @if($subscription->payments->count() > 0)
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-hover">
+                                                                <thead class="bg-light">
+                                                                    <tr>
+                                                                        <th width="10%">#</th>
+                                                                        <th width="15%">{{ __('المبلغ') }}</th>
+                                                                        <th width="20%">{{ __('تاريخ الدفع') }}</th>
+                                                                        <th width="15%">{{ __('المستلم') }}</th>
+                                                                        <th width="15%">{{ __('ملاحظات') }}</th>
+                                                                        <th width="10%">{{ __('إجراءات') }}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach ($subscription->payments->sortByDesc('payment_date') as $payment)
+                                                                        <tr>
+                                                                            <td>{{ $loop->iteration }}</td>
+                                                                            <td>{{ $payment->amount }} ₪</td>
+                                                                            <td>{{ $payment->payment_date }}</td>
+                                                                            <td>{{ $payment->receiver->name }}</td>
+                                                                            <td>{{ $payment->notes ?? '--' }}</td>
+                                                                            <td>
+                                                                                <button class="btn btn-sm btn-danger delete-payment-btn"
+                                                                                    data-payment-id="{{ $payment->id }}"
+                                                                                    data-amount="{{ $payment->amount }}">
+                                                                                    <i class="ft-trash"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    @else
+                                                        <div class="alert alert-info">
+                                                            {{ __('لا يوجد دفعات مسجلة لهذا الاشتراك') }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
-                                    @else
-                                        <div class="alert alert-info">
-                                            {{ __('لا يوجد دفعات مسجلة لهذا الاشتراك') }}
-                                        </div>
-                                    @endif
                                     </div>
                                 </div>
-                                <!-- التحكم بحالة الاشتراك -->
-
                                 @endforeach
                             </div>
                         @else
@@ -277,6 +282,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="addPaymentModal" tabindex="-1" role="dialog" aria-labelledby="addPaymentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -471,8 +477,7 @@
             </form>
         </div>
     </div>
-</div>
-@endsection
+</div>@endsection
 
 @section('script')
 <!-- Toastr Notifications -->
@@ -529,7 +534,7 @@
             });
         });
     });
-    </script>
+</script>
 <script>
 $(document).ready(function() {
     // Toastr configuration
