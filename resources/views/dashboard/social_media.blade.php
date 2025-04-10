@@ -191,7 +191,7 @@
                                                 <h4 class="card-title">{{ __('معاينة الروابط') }}</h4>
                                                 <div class="social-media-preview">
                                                     <div class="row">
-                                                        @foreach(['facebook', 'twitter', 'instagram', 'linkedin', 'youtube', 'snapchat', 'tiktok', 'whatsapp'] as $social)
+                                                        @foreach(['facebook', 'instagram', 'snapchat', 'tiktok', 'whatsapp'] as $social)
                                                             @if(get_social_value($social))
                                                             <div class="col-md-3 col-sm-6 mb-2">
                                                                 <a href="{{ get_social_value($social) }}" target="_blank" class="btn btn-social btn-{{ $social }}">

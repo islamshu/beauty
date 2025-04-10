@@ -27,10 +27,7 @@
                 @php
                     $socialNetworks = [
                         'facebook' => ['icon' => 'facebook', 'color' => '#4267B2', 'name' => 'Facebook'],
-                        'twitter' => ['icon' => 'twitter', 'color' => '#1DA1F2', 'name' => 'Twitter'],
                         'instagram' => ['icon' => 'instagram', 'color' => '#E1306C', 'name' => 'Instagram'],
-                        'linkedin' => ['icon' => 'linkedin', 'color' => '#0077B5', 'name' => 'LinkedIn'],
-                        'youtube' => ['icon' => 'youtube', 'color' => '#FF0000', 'name' => 'YouTube'],
                         'snapchat' => ['icon' => 'snapchat', 'color' => '#FFFC00', 'name' => 'Snapchat'],
                         'tiktok' => ['icon' => 'music', 'color' => '#000000', 'name' => 'TikTok'],
                     ];
