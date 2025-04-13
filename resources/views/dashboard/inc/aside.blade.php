@@ -196,6 +196,32 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
+                        href="#" data-toggle="dropdown"><i
+                            class="la la-book"></i><span>{{ __('التقارير') }}</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('reports.subsciption') }}"
+                                >{{ __('الاشتراكات') }}</a>
+                        </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('reports.payments') }}"
+                                >{{ __('المدفوعات') }}</a>
+                        </li>
+                        <li class="dropdown " data-menu=""><a
+                                class="dropdown-item " href="{{ route('reports.visits') }}"
+                                >{{ __('الزيارات') }}</a>
+                        </li>
+                  
+                  
+                        
+                        
+                       
+                       
+                       
+                       
+                    </ul>
+                </li>
               
               
               {{--  <li class=" nav-item" ><a class=" nav-link"

@@ -19,6 +19,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\SubscriptionPaymentController;
@@ -130,4 +131,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
 
     Route::post('/subscriptions/{subscription}/cancel', [ClientController::class, 'cancel'])
         ->name('subscriptions.cancel');
+     
+    Route::get('/payments/reports', [ReportController::class, 'payments'])
+    ->name('reports.payments');
+    Route::get('/subsciption/reports', [ReportController::class, 'subscription'])
+    ->name('reports.subsciption');
+    Route::get('/visits/reports', [ReportController::class, 'visits'])
+    ->name('reports.visits');
+    Route::get('/subsciption/show/{subscription}', [ReportController::class, 'showSubscription'])
+    ->name('subscription.show');
 });
