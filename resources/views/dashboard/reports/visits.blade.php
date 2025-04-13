@@ -88,7 +88,6 @@
                                             <th>المشرف</th>
                                             <th>تاريخ الزيارة</th>
 
-                                            <th>الإجراءات</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -101,13 +100,7 @@
 
                                                 <td>{{ $visit->supervisor->name }}</td>
                                                 </td>
-                                                <td>
-                                                    <a href="{{ route('subscription.show', $visit->id) }}"
-                                                        class="btn btn-info btn-sm">
-                                                        <i class="la la-eye"></i>
-                                                    </a>
-
-                                                </td>
+                                               
                                                 <td>{{ $visit->visit_date }}</td>
                                                 </td>
                                             </tr>
