@@ -20,9 +20,17 @@ use App\Notifications\CourceNotification;
 use App\Notifications\PackgeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class HomeController extends Controller
 {
+    public function add_perm(){
+        $permissions = Permission::firstOrCreate(['name' =>'المتجر' ]);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole->syncPermissions($permissions);
+        dd('done');
+    }
     public function contact_us()
     {
         return view('frontend.sections.contact_us');
@@ -34,7 +42,8 @@ class HomeController extends Controller
     public function cource_order(Enrollment $order)
     {
         return view('dashboard.orders.course_show', compact('order'));
-    }    public function pacgkeorders($id)
+    }
+    public function pacgkeorders($id)
     {
         $order = Order::find($id);
         $order->status = 1;
@@ -59,23 +68,23 @@ class HomeController extends Controller
         return redirect()->route('courses_order')->with('toastr_success', 'تم حذف الطلب بنجاح!');
     }
 
-    
+
     public function updateStatus_course_order(Request $request, $orderId)
     {
         $order = Enrollment::find($orderId);
-        
+
         if (!$order) {
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
-    
+
         // Update the status of the order
         $order->status = $request->status;
         $order->save();
-        
+
         // Return a JSON response indicating success
         return response()->json(['success' => true, 'message' => 'تم تحديث الحالة بنجاح']);
     }
-    
+
 
 
     public function service_order()
@@ -169,44 +178,44 @@ class HomeController extends Controller
     public function products(Request $request)
     {
         $query = Product::query();
-    
+
         // Search if there's a search term
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('title', 'like', "%{$search}%");
         }
-    
+
         $perPage = 12; // Number of items per load
         $page = $request->get('page', 1); // Get current page or default to 1
-        
+
         $products = $query->orderBy('id', 'desc')
-                         ->paginate($perPage, ['*'], 'page', $page);
-    
+            ->paginate($perPage, ['*'], 'page', $page);
+
         if ($request->ajax()) {
             return view('frontend.partials._products', compact('products'))->render();
         }
-    
+
         return view('frontend.products', compact('products'));
     }
     public function services(Request $request)
     {
         $query = Service::query()->where('status', 1);
-    
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('title', 'like', "%{$search}%");
         }
-    
+
         $perPage = 8; // Number of items per load
         $page = $request->get('page', 1); // Get current page or default to 1
-        
+
         $services = $query->orderBy('id', 'desc')
-                         ->paginate($perPage, ['*'], 'page', $page);
-    
+            ->paginate($perPage, ['*'], 'page', $page);
+
         if ($request->ajax()) {
             return view('frontend.partials._services', compact('services'))->render();
         }
-    
+
         return view('frontend.services', compact('services'));
     }
 
@@ -235,22 +244,66 @@ class HomeController extends Controller
         $request->validate([
             'package_id' => 'required|exists:packages,id',
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => [
+                'required',
+                'string',
+                'max:20',
+                function ($attribute, $value, $fail) use ($request) {
+                    // التحقق من أن الرقم يبدأ برمز الدولة الصحيح
+                    $countryCode = $request->input('country_code', '+970');
+                    if (!str_starts_with($value, $countryCode)) {
+                        $fail('يجب أن يبدأ رقم الهاتف برمز الدولة ' . $countryCode);
+                    }
+
+                    // استخراج الرقم بدون رمز الدولة
+                    $number = substr($value, strlen($countryCode));
+
+                    // التحقق من أن الرقم يحتوي على أرقام فقط
+                    if (!preg_match('/^[0-9]+$/', $number)) {
+                        $fail('يجب أن يحتوي رقم الهاتف على أرقام فقط بعد رمز الدولة');
+                    }
+
+                    // تحويلات خاصة لرموز دول محددة
+                    if (in_array($countryCode, ['+970', '+972'])) {
+                        // التأكد من عدم وجود صفر في البداية
+                        if (strlen($number) > 0 && $number[0] === '0') {
+                            $fail('يجب إدخال رقم الهاتف بدون صفر في البداية لرموز الدول ' . $countryCode);
+                        }
+
+                        // التحقق من طول الرقم (عادة 9 أرقام لفلسطين)
+                        if (strlen($number) !== 9) {
+                            $fail('رقم الهاتف يجب أن يتكون من 9 أرقام لرمز الدولة ' . $countryCode);
+                        }
+                    }
+                },
+            ],
             'address' => 'required|string',
         ]);
+
+        // معالجة رقم الهاتف قبل الحفظ
+        $phone = $request->phone;
+        $countryCode = $request->input('country_code', '+970');
+
+        // إذا كان الرمز +970 أو +972 وتوجد صفر في البداية، نزيلها
+        if (in_array($countryCode, ['+970', '+972'])) {
+            $numberPart = substr($phone, strlen($countryCode));
+            if (strlen($numberPart) > 0 && $numberPart[0] === '0') {
+                $phone = $countryCode . substr($numberPart, 1);
+            }
+        }
 
         $order = Order::create([
             'package_id' => $request->package_id,
             'full_name' => $request->full_name,
-            // 'id_number' => $request->id_number,
-            'phone' => $request->phone,
+            'phone' => $phone, // الرقم بعد المعالجة
             'address' => $request->address,
         ]);
-        $admins = User::role('admin')->get(); // جلب جميع المستخدمين الذين لديهم دور "إداري"
 
+        $admins = User::role('admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new PackgeNotification($order)); // إرسال الإشعار للمستخدم
+            $admin->notify(new PackgeNotification($order));
         }
+
         return response()->json(['success' => true]);
     }
     public function enroll(Request $request)
@@ -267,7 +320,7 @@ class HomeController extends Controller
         ]);
 
         // حفظ الاشتراك مع جميع البيانات
-      $cource=  Enrollment::create($validated);
+        $cource =  Enrollment::create($validated);
         $admins = User::role('admin')->get(); // جلب جميع المستخدمين الذين لديهم دور "إداري"
 
         foreach ($admins as $admin) {

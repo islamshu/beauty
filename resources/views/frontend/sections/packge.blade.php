@@ -259,9 +259,17 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>رقم الهاتف</label>
-                                    <input type="text" name="phone" class="form-control" placeholder="رقم الهاتف"
-                                        required>
+                                    <label>رقم الواتساب</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <select class="form-control country-code-select" style="width: 100px;">
+                                                <option value="+970">+970 (فلسطين)</option>
+                                                <option value="+972">+972 (إسرائيل)</option>
+                                             
+                                            </select>
+                                        </div>
+                                        <input type="text" name="phone" class="form-control" placeholder="رقم الواتساب بدون رمز الدولة" required>
+                                    </div>
                                     <span class="text-danger error-phone"></span>
                                 </div>
                             </div>

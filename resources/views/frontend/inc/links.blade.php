@@ -172,58 +172,80 @@
     });
 
     $('#send_button_price').click(function() {
-        let $btn = $(this);
-        $btn.prop('disabled', true);
-        $btn.html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...'
-        );
+    let $btn = $(this);
+    $btn.prop('disabled', true);
+    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...');
 
-        var formData = $('#PriceingForm').serialize();
+    // تنظيف الأخطاء السابقة
+    $('.error-message').remove();
+    $('.is-invalid').removeClass('is-invalid');
+    $('.text-danger').text('');
+
+    // جمع البيانات ومعالجة رقم الهاتف
+    const countryCode = $('.country-code-select').val();
+    let phoneNumber = $('input[name="phone"]').val().trim();
+    
+    // إزالة أي أصفار في البداية إذا كان الرمز +970 أو +972
+    if ((countryCode === '+970' || countryCode === '+972') && phoneNumber.startsWith('0')) {
+        phoneNumber = phoneNumber.substring(1);
+    }
+    
+    const fullPhoneNumber = countryCode + phoneNumber;
+    
+    // إعداد بيانات النموذج
+    var formData = $('#PriceingForm').serializeArray();
+    formData.push({name: "phone", value: fullPhoneNumber});
+    formData.push({name: "country_code", value: countryCode});
+
         $.ajax({
             url: "{{ route('package.purchase') }}",
             type: "POST",
-            data: formData,
+            data: $.param(formData),
             success: function(response) {
                 Swal.fire({
                     icon: "success",
                     title: "تم إرسال الطلب بنجاح!",
-                    text: "سيتم التواصل معك قريبًا لإكمال العملية.",
+                    text: "سيتم التواصل معك قريبًا على واتساب لإكمال العملية.",
                     confirmButtonText: "حسنًا"
                 });
-                // Reset the form correctly
                 $('#PriceingForm')[0].reset();
                 $btn.html('إرسال الطلب');
                 $btn.prop('disabled', false);
-
                 $('#PriceModal').modal('hide');
             },
             error: function(xhr) {
-
                 if (xhr.status === 422) {
                     let errors = xhr.responseJSON.errors;
                     let errorMessages = [];
 
-                    // جمع جميع رسائل الخطأ
+                    // تنظيف الأخطاء القديمة (إجراء احتياطي إضافي)
+                    $('.error-message').remove();
+                    $('.is-invalid').removeClass('is-invalid');
+                    $('.text-danger').text('');
+
                     $.each(errors, function(field, messages) {
                         errorMessages = errorMessages.concat(messages);
 
-                        // عرض الأخطاء تحت الحقول (اختياري)
-                        let $field = $(`#${field}`);
-                        $field.addClass('is-invalid');
-                        $field.after(
-                            `<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`
-                        );
+                        // إضافة class الخطأ للحقل
+                        $(`[name="${field}"]`).addClass('is-invalid');
+
+                        // عرض رسالة الخطأ تحت الحقل
+                        let $errorSpan = $(`.error-${field}`);
+                        if ($errorSpan.length) {
+                            $errorSpan.text(messages.join(', '));
+                        } else {
+                            $(`[name="${field}"]`).after(
+                                `<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`
+                            );
+                        }
                     });
 
-                    // عرض جميع الأخطاء في SweetAlert
                     Swal.fire({
                         icon: "error",
                         title: "خطأ في الإرسال",
                         html: errorMessages.join('<br>'),
                         confirmButtonText: "حسنًا"
                     });
-                    $btn.prop('disabled', false);
-                    $btn.html('إرسال الطلب');
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -232,28 +254,30 @@
                         confirmButtonText: "حسنًا"
                     });
                 }
+                $btn.prop('disabled', false);
+                $btn.html('إرسال الطلب');
             }
         });
     });
     $("#enrollForm").submit(function(e) {
-    e.preventDefault();
-    let formData = $(this).serialize();
-    let courseTitle = $(this).data('course-title');
+        e.preventDefault();
+        let formData = $(this).serialize();
+        let courseTitle = $(this).data('course-title');
 
-    $(".text-danger").text("");
+        $(".text-danger").text("");
 
-    $.ajax({
-        url: "{{ route('course.enroll') }}",
-        type: "POST",
-        data: formData,
-        success: function(response) {
-            let whatsappNum = '{{ get_general_value('whatsapp_number') }}';
-            
-            // عرض رسالة النجاح مع زر متضمن
-            Swal.fire({
-                icon: 'success',
-                title: 'تم التسجيل بنجاح!',
-                html: `
+        $.ajax({
+            url: "{{ route('course.enroll') }}",
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                let whatsappNum = '{{ get_general_value('whatsapp_number') }}';
+
+                // عرض رسالة النجاح مع زر متضمن
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم التسجيل بنجاح!',
+                    html: `
                     <div class="alert alert-success mt-3">
                         <p class="mb-3">سنقوم بالتواصل معك قريباً</p>
                         <button onclick="window.open('https://wa.me/${whatsappNum}?text=${encodeURIComponent('أريد الاستفسار عن دورة ' + courseTitle)}', '_blank')"
@@ -262,31 +286,30 @@
                         </button>
                     </div>
                 `,
-                confirmButtonText: 'حسناً',
-                showCancelButton: false
-            });
+                    confirmButtonText: 'حسناً',
+                    showCancelButton: false
+                });
 
-            $("#enrollForm")[0].reset();
-            $("#enrollModal").modal('hide');
-        },
-        error: function(xhr) {
-            if (xhr.status === 422) {
-                let errors = xhr.responseJSON.errors;
-                $.each(errors, function(key, value) {
-                    $(".error-" + key).text(value[0]);
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'حدث خطأ!',
-                    text: 'يرجى المحاولة مرة أخرى أو التواصل عبر الواتساب',
-                    confirmButtonText: 'موافق'
-                });
+                $("#enrollForm")[0].reset();
+                $("#enrollModal").modal('hide');
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        $(".error-" + key).text(value[0]);
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'حدث خطأ!',
+                        text: 'يرجى المحاولة مرة أخرى أو التواصل عبر الواتساب',
+                        confirmButtonText: 'موافق'
+                    });
+                }
             }
-        }
+        });
     });
-});
-
 </script>
 <!-- رابط CSS لـ Fancybox -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
