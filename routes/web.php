@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/login', [DashbaordController::class, 'login'])->name('login');
 Route::post('/login', [DashbaordController::class, 'post_login'])->name('post_login');
+Route::get('add_perm', [HomeController::class, 'add_perm']);
 
 // Frontend routes
 Route::prefix('frontend')->group(function () {
@@ -43,7 +44,6 @@ Route::prefix('frontend')->group(function () {
     Route::get('/contact-us', [HomeController::class, 'contact_us'])->name('contact-us');
     Route::get('/product.details/{id}', [HomeController::class, 'single_products'])->name('product.details');
     Route::post('/contact', [HomeController::class, 'store_contact'])->name('contact.store');
-    Route::get('add_perm', [HomeController::class, 'add_perm']);
 
     // Cart routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
