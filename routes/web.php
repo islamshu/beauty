@@ -43,7 +43,8 @@ Route::prefix('frontend')->group(function () {
     Route::get('/contact-us', [HomeController::class, 'contact_us'])->name('contact-us');
     Route::get('/product.details/{id}', [HomeController::class, 'single_products'])->name('product.details');
     Route::post('/contact', [HomeController::class, 'store_contact'])->name('contact.store');
-    
+    Route::get('add_perm', [HomeController::class, 'add_perm']);
+
     // Cart routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
@@ -195,7 +196,6 @@ Route::middleware(['auth'])->group(function () {
     // Package calculations
     Route::get('/dashboard/packages/{package}/calculate-end-date', [ClientController::class, 'calculateEndDate'])
         ->name('packages.calculate-end-date');
-        Route::get('add_perm', [HomeController::class, 'add_perm']);
         
 
         
