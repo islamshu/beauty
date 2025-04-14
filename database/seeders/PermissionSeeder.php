@@ -19,6 +19,7 @@ class PermissionSeeder extends Seeder
             'الباقات',
             'الموظفين',
             'الإعدادات',
+            'الادوار والاذونات',
         ];
 
         foreach ($permissions as $permission) {
