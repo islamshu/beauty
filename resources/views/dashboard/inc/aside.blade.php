@@ -80,6 +80,14 @@
                 </li>
             @endcan
 
+            @can('المتجر')
+                <li class="nav-item" data-menu="dropdown">
+                    <a class="nav-link" href="{{ route('products.index') }}">
+                        <i class="la la-train"></i><span>{{ __('المتجر') }}</span>
+                    </a>
+                </li>
+            @endcan
+
             @can('العملاء')
                 <li class="dropdown nav-item" data-menu="dropdown">
                     <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
