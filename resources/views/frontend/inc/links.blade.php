@@ -172,31 +172,52 @@
     });
 
     $('#send_button_price').click(function() {
-    let $btn = $(this);
-    $btn.prop('disabled', true);
-    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...');
+        let $btn = $(this);
+        $btn.prop('disabled', true);
+        $btn.html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...'
+            );
 
-    // تنظيف الأخطاء السابقة
-    $('.error-message').remove();
-    $('.is-invalid').removeClass('is-invalid');
-    $('.text-danger').text('');
+        // تنظيف الأخطاء السابقة
+        $('.error-message').remove();
+        $('.is-invalid').removeClass('is-invalid');
+        $('.text-danger').text('');
 
-    // جمع البيانات ومعالجة رقم الهاتف
-    const countryCode = $('.country-code-select').val();
-    let phoneNumber = $('input[name="phone"]').val().trim();
-    
-    // إزالة أي أصفار في البداية إذا كان الرمز +970 أو +972
-    if ((countryCode === '+970' || countryCode === '+972') && phoneNumber.startsWith('0')) {
-        phoneNumber = phoneNumber.substring(1);
-    }
-    
-    const fullPhoneNumber = countryCode + phoneNumber;
-    
-    // إعداد بيانات النموذج
-    var formData = $('#PriceingForm').serializeArray();
-    formData.push({name: "phone", value: fullPhoneNumber});
-    formData.push({name: "country_code", value: countryCode});
+        // جمع البيانات ومعالجة رقم الهاتف
+        const countryCode = $('.country-code-select').val();
+        let phoneNumber = $('input[name="phone"]').val().trim().replace(/\D/g, ''); // إزالة جميع غير الأرقام
 
+        // معالجة الرقم حسب رمز الدولة
+        if (countryCode === '+970' || countryCode === '+972') {
+            // إزالة الصفر الأول إذا كان موجوداً
+            if (phoneNumber.startsWith('0')) {
+                phoneNumber = phoneNumber.substring(1);
+            }
+
+            // التحقق من طول الرقم
+            if (phoneNumber.length !== 9) {
+                $('.error-phone').text('رقم الهاتف الفلسطيني يجب أن يتكون من 9 أرقام (بدون الصفر الأول)');
+                $('input[name="phone"]').addClass('is-invalid');
+                $btn.prop('disabled', false);
+                $btn.html('إرسال الطلب');
+                return;
+            }
+        }
+
+        const fullPhoneNumber = countryCode + phoneNumber;
+
+        // إعداد بيانات النموذج
+        var formData = $('#PriceingForm').serializeArray();
+        formData.push({
+            name: "phone",
+            value: fullPhoneNumber
+        });
+        formData.push({
+            name: "country_code",
+            value: countryCode
+        });
+
+        // إرسال البيانات
         $.ajax({
             url: "{{ route('package.purchase') }}",
             type: "POST",

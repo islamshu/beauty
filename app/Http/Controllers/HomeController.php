@@ -251,53 +251,49 @@ class HomeController extends Controller
                 'string',
                 'max:20',
                 function ($attribute, $value, $fail) use ($request) {
-                    // التحقق من أن الرقم يبدأ برمز الدولة الصحيح
                     $countryCode = $request->input('country_code', '+970');
-                    if (!str_starts_with($value, $countryCode)) {
-                        $fail('يجب أن يبدأ رقم الهاتف برمز الدولة ' . $countryCode);
-                    }
-
-                    // استخراج الرقم بدون رمز الدولة
                     $number = substr($value, strlen($countryCode));
-
-                    // التحقق من أن الرقم يحتوي على أرقام فقط
-                    if (!preg_match('/^[0-9]+$/', $number)) {
-                        $fail('يجب أن يحتوي رقم الهاتف على أرقام فقط بعد رمز الدولة');
+                    
+                    // التحقق العام
+                    if (!preg_match('/^\+[0-9]{8,15}$/', $value)) {
+                        $fail('صيغة رقم الهاتف غير صالحة');
                     }
-
+                    
                     // تحويلات خاصة لرموز دول محددة
                     if (in_array($countryCode, ['+970', '+972'])) {
                         // التأكد من عدم وجود صفر في البداية
                         if (strlen($number) > 0 && $number[0] === '0') {
-                            $fail('يجب إدخال رقم الهاتف بدون صفر في البداية لرموز الدول ' . $countryCode);
+                            $number = substr($number, 1);
                         }
-
-                        // التحقق من طول الرقم (عادة 9 أرقام لفلسطين)
+                        
+                        // التحقق من طول الرقم
                         if (strlen($number) !== 9) {
                             $fail('رقم الهاتف يجب أن يتكون من 9 أرقام لرمز الدولة ' . $countryCode);
                         }
                     }
+                    
+                    // يمكن إضافة شروط أخرى لرموز دول أخرى هنا
                 },
             ],
             'address' => 'required|string',
         ]);
-
-        // معالجة رقم الهاتف قبل الحفظ
+    
+        // معالجة نهائية لرقم الهاتف
         $phone = $request->phone;
         $countryCode = $request->input('country_code', '+970');
-
-        // إذا كان الرمز +970 أو +972 وتوجد صفر في البداية، نزيلها
+        $numberPart = substr($phone, strlen($countryCode));
+        
         if (in_array($countryCode, ['+970', '+972'])) {
-            $numberPart = substr($phone, strlen($countryCode));
             if (strlen($numberPart) > 0 && $numberPart[0] === '0') {
-                $phone = $countryCode . substr($numberPart, 1);
+                $numberPart = substr($numberPart, 1);
             }
+            $phone = $countryCode . $numberPart;
         }
-
+    
         $order = Order::create([
             'package_id' => $request->package_id,
             'full_name' => $request->full_name,
-            'phone' => $phone, // الرقم بعد المعالجة
+            'phone' => $phone,
             'address' => $request->address,
         ]);
 

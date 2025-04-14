@@ -265,14 +265,19 @@
                                             <select class="form-control country-code-select" style="width: 100px;">
                                                 <option value="+970">+970 (فلسطين)</option>
                                                 <option value="+972">+972 (إسرائيل)</option>
-                                             
+                                                <option value="+966">+966 (السعودية)</option>
+                                                <option value="+20">+20 (مصر)</option>
                                             </select>
                                         </div>
-                                        <input type="text" name="phone" class="form-control" placeholder="رقم الواتساب بدون رمز الدولة" required>
+                                        <input type="text" name="phone" class="form-control"
+                                            placeholder="أدخل رقم الهاتف" required>
                                     </div>
+                                    <small class="form-text text-muted">لرموز فلسطين وإسرائيل، أدخل 9 أرقام (بدون الصفر
+                                        الأول)</small>
                                     <span class="text-danger error-phone"></span>
                                 </div>
                             </div>
+                            <input type="hidden" name="country_code" id="country-code-hidden">
                         </div>
 
                         <!-- الصف الثاني - حقل العنوان كامل العرض -->
@@ -313,4 +318,20 @@
         // فتح المودال
         $('#PriceModal').modal('show');
     }
+    // تحديث الحقل المخفي عند تغيير رمز الدولة
+    $('.country-code-select').change(function() {
+        $('#country-code-hidden').val($(this).val());
+
+        // تغيير النص الإرشادي حسب الدولة
+        if ($(this).val() === '+970' || $(this).val() === '+972') {
+            $('input[name="phone"]').attr('placeholder', 'أدخل 9 أرقام (بدون الصفر الأول)');
+        } else {
+            $('input[name="phone"]').attr('placeholder', 'أدخل رقم الهاتف');
+        }
+    });
+
+    // التأكد من تعيين القيمة الافتراضية عند التحميل
+    $(document).ready(function() {
+        $('#country-code-hidden').val($('.country-code-select').val());
+    });
 </script>
