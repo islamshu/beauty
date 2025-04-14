@@ -628,7 +628,7 @@
                     if (result.isConfirmed) {
                         // إرسال طلب AJAX لحذف الدفعة
                         $.ajax({
-                            url: "{{ route('subscription-payments.destroy', ['id' => '']) }}" + paymentId,
+                            url: "{{ route('subscription-payments.destroy', ['payment' => '']) }}" + paymentId,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}' // مهم لحماية الطلب
