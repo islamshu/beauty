@@ -48,7 +48,7 @@
                                             <td>
                                                 @if ($client->activeSubscription)
                                                     <div class="shadow-sm border rounded px-2 py-2 text-center"
-                                                        style="background: #f8f9fa;">
+                                                        style="background: #67656d;">
                                                         <div class="text-muted small mb-1">
                                                             حالة الاشتراك:
                                                             <span
@@ -614,7 +614,6 @@
 
                 const paymentId = $(this).data('payment-id');
                 const amount = $(this).data('amount');
-                alert(paymentId);
                 Swal.fire({
                     title: 'هل أنت متأكد؟',
                     text: `هل تريد حذف الدفعة بقيمة ${amount} ₪؟`,
@@ -628,6 +627,7 @@
                     if (result.isConfirmed) {
                         // إرسال طلب AJAX لحذف الدفعة
                         $.ajax({
+                            url: "{{ route('subscription-payments.destroy', '') }}/" + paymentId,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}' // مهم لحماية الطلب
