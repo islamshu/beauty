@@ -614,7 +614,7 @@
 
                 const paymentId = $(this).data('payment-id');
                 const amount = $(this).data('amount');
-
+                alert(paymentId);
                 Swal.fire({
                     title: 'هل أنت متأكد؟',
                     text: `هل تريد حذف الدفعة بقيمة ${amount} ₪؟`,
@@ -628,7 +628,7 @@
                     if (result.isConfirmed) {
                         // إرسال طلب AJAX لحذف الدفعة
                         $.ajax({
-                            url: "{{ route('subscription-payments.destroy', '') }}/" + paymentId,
+                            // url: "{{ route('subscription-payments.destroy', '') }}/" + paymentId,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}' // مهم لحماية الطلب
