@@ -10,7 +10,7 @@
                             class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i
                                 class="ft-menu font-large-1"></i></a></li>
                     <li class="nav-item">
-                        <a class="navbar-brand" href="{{ route('dashboard') }}">
+                        <a class="navbar-brand" target="_blank" href="/">
                             <img class="brand-logo" alt="modern admin logo"
                                 src="{{ asset('uploads/'.get_general_value('website_icon')) }}" width="40" height="40">
                             <h3 class="brand-text">{{ get_general_value('website_name') }}</h3>

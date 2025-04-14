@@ -162,7 +162,47 @@
                 </div>
             </div>
         </div>
-      
+        <div class="mt-2 col-xl-3 col-lg-6 col-12">
+            <div class="card pull-up">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex align-items-center">
+                            <!-- Icon on the right -->
+                            <div class="ml-auto">
+                                <i class="la la-server danger font-large-2"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Row -->
+                        <div class="row text-center pt-2">
+                            <!-- المستحق للدفع -->
+                            <div class="col-4 border-right">
+                                <h3 class="danger mb-0">{{ get_sum_main_paid() }}</h3>
+                                <small class="text-muted">المستحق للدفع</small>
+                            </div>
+                            
+                            <!-- المدفوعات -->
+                            <div class="col-4 border-right">
+                                <h3 class="danger mb-0">{{ get_sum_total_paid() }}</h3>
+                                <small class="text-muted">المدفوعات</small>
+                            </div>
+                            
+                            <!-- المتبقي -->
+                            <div class="col-4">
+                                <h3 class="danger mb-0">{{ get_sum_total_remaning() }}</h3>
+                                <small class="text-muted">المتبقي (الدين)</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                     
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        
     </div>
 
   

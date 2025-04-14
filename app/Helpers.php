@@ -3,6 +3,7 @@
 use App\Models\Client;
 use App\Models\GeneralInfo;
 use App\Models\Package;
+use App\Models\Subscription;
 
 function get_general_value($key)
 {
@@ -76,3 +77,43 @@ if (!function_exists('format_package_duration')) {
         }
     }
 }
+if (!function_exists('get_sum_total_paid')) {
+    function get_sum_total_paid()
+    {
+       $total_paid =Subscription::sum('paid_amount');
+       return $total_paid;
+    }
+}
+
+if (!function_exists('get_sum_total_remaning')) {
+    function get_sum_total_remaning()
+    {
+       $total_paid =Subscription::sum('paid_amount');
+       $main_paid =Subscription::sum('total_amount');
+
+       $remain = $main_paid - $total_paid;
+       return $remain;
+    }
+}
+if (!function_exists('get_sum_main_paid')) {
+    function get_sum_main_paid()
+    {
+       $main_paid =Subscription::sum('total_amount');
+
+       return $main_paid;
+    }
+}
+if (!function_exists('calculate_percentage')) {
+    function calculate_percentage($partial, $total, $precision = 0) {
+        if ($total == 0) {
+            return 0;
+        }
+        
+        $percentage = ($partial / $total) * 100;
+        
+        // تحديد عدد المنازل العشرية (افتراضيًا 0)
+        return round($percentage, $precision);
+    }
+}
+
+

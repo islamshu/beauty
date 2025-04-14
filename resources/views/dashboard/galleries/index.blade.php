@@ -86,9 +86,5 @@
 @endsection
 
 @section('script')
-<script>
-    $(document).ready(function() {
-        $('#galleriestable').DataTable();
-    });
-</script>
+
 @endsection

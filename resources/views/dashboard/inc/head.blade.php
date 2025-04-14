@@ -23,6 +23,7 @@
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- BEGIN VENDOR CSS-->
 
@@ -42,6 +43,20 @@
             href="{{ asset('backend/app-assets/css-rtl/core/colors/palette-gradient.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/style-rtl.css') }}">
         <style>
+            body {
+                font-family: 'Tajawal', sans-serif;
+            }
+
+            span,
+            p,
+            h1,
+            h2,
+            h3,
+            ul,
+            li {
+                font-family: 'Tajawal', sans-serif !important;
+            }
+
             .margin-right {
                 margin-right: 60%
             }
@@ -49,15 +64,32 @@
             .required {
                 color: red;
             }
-            #clientResults a {
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-    }
 
-    #clientResults a:hover {
-        background-color: #f0f0f0;
-    }
+            #clientResults a {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+            }
+
+            #clientResults a:hover {
+                background-color: #f0f0f0;
+            }
+
+            /* تغيير مربع البحث */
+            .dataTables_filter input {
+                font-size: 14px !important;
+                font-family: 'Tahoma', Arial, sans-serif !important;
+            }
+
+            /* تغيير عناصر التصفية */
+            .dataTables_length select {
+                font-size: 14px !important;
+            }
+
+            /* تغيير أرقام الصفحات */
+            .dataTables_paginate .paginate_button {
+                font-size: 14px !important;
+            }
         </style>
     @else
         <link rel="stylesheet" type="text/css" href="{{ asset('backend/app-assets/css/vendors.css') }}">
@@ -129,9 +161,73 @@
         .select2-container {
             width: 100% !important;
         }
-        .cke_notifications_area{
+
+        .cke_notifications_area {
             display: none !important;
         }
+        .search-label {
+    font-size: 1.2rem;  /* حجم الخط */
+    font-weight: bold;  /* سماكة الخط */
+}
+
+.search-label i.la.la-search {
+    font-size: 1.4rem;  /* حجم الأيقونة */
+    margin-left: 5px;   /* مسافة بين الأيقونة والنص */
+    vertical-align: middle;
+}
+
+/* تعديل مربع البحث نفسه */
+.dataTables_filter input {
+    font-size: 1.1rem;  /* حجم نص البحث المدخل */
+    padding: 0.4rem 0.8rem;
+}
+/* تنسيق متكامل */
+.dataTables_filter label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-label {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+}
+
+.search-label i.la.la-search {
+    font-size: 1.6rem;
+    color: #3498db;
+    transition: all 0.3s ease;
+}
+
+.dataTables_filter input {
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.dataTables_filter input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+}
+
+.dataTables_filter:hover .la-search {
+    transform: scale(1.1);
+    color: #2980b9;
+}
+/* تعديلات RTL */
+.rtl .dataTables_filter label {
+    flex-direction: row-reverse;
+}
+
+.rtl .search-label i {
+    margin-left: 0;
+    margin-right: 8px;
+}
     </style>
     @yield('style')
     @livewireStyles

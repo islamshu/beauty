@@ -161,16 +161,7 @@
             size: 'small'
         });
     });
-    $(document).ready(function() {
-        $('.table').DataTable({
-            // scrollX: true, // Enable horizontal scrolling
-            scrollY: '400px', // Enable vertical scrolling with a fixed height
-            paging: true, // Enable pagination
-            searching: true, // Enable search
-            ordering: true, // Enable sorting
-            info: true, // Show table information
-        });
-    });
+   
 </script>
 
 @yield('script')
@@ -271,6 +262,32 @@ fetchNotifications();
         });
     });
 </script>
+<script>
+    $(document).ready(function() {
+        $('table').DataTable({
+            language: {
+                "sProcessing":   "جاري التحميل...",
+                "sLengthMenu":   "أظهر _MENU_ مدخلات",
+                "sZeroRecords":  "لم يعثر على أية سجلات",
+                "sInfo":         "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+                "sInfoEmpty":    "يعرض 0 إلى 0 من أصل 0 سجل",
+                "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+                "sInfoPostFix":  "",
+                "search": "<span class='search-label'><i class='la la-search'></i> ابحث</span>:",
+                "sUrl":          "",
+                "oPaginate": {
+                    "sFirst":    "الأول",
+                    "sPrevious": "السابق",
+                    "sNext":     "التالي",
+                    "sLast":     "الأخير"
+                },
+              
+            },
+        
+            direction: 'ltr'
+        });
+    });
+    </script>
 
 <!-- END PAGE LEVEL JS-->
 </body>

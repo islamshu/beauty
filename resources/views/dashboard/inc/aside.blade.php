@@ -1,230 +1,168 @@
 <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow"
-        role="navigation" data-menu="menu-wrapper">
-        <div class="navbar-container main-menu-content" data-menu="menu-container">
-            <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
+    role="navigation" data-menu="menu-wrapper">
+    <div class="navbar-container main-menu-content" data-menu="menu-container">
+        <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="dropdown nav-item" data-menu="dropdown">
+                <a class=" nav-link" href="{{ route('dashboard') }}"><i class="la la-home"></i>
+                    <span>{{ __('الرئيسية') }}</span>
+                </a>
+
+            </li>
+
+            @can('الإعدادات')
                 <li class="dropdown nav-item" data-menu="dropdown">
-                    <a class=" nav-link" href="{{ route('dashboard') }}" ><i
-                            class="la la-home"></i>
-                        <span>{{ __('الرئيسية') }}</span>
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-magic"></i><span>{{ __('الإعدادات') }}</span>
                     </a>
-                 
-                </li>
-                
-                
-                 <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-magic"></i><span>{{ __('الإعدادات') }}</span></a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('setting') }}"
-                                >{{ __('الإعدادات الاساسية للنظام') }}</a>
-                         
+                        <li><a class="dropdown-item" href="{{ route('setting') }}">{{ __('الإعدادات الاساسية للنظام') }}</a>
                         </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('social_media') }}"
-                                >{{ __('الإعدادات بيانات السوشل ميديا ') }}</a>
-                         
+                        <li><a class="dropdown-item"
+                                href="{{ route('social_media') }}">{{ __('الإعدادات بيانات السوشل ميديا ') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('sliders.index') }}">{{ __('السلاديرات') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('aboutus.index') }}">{{ __('من نحن') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('galleries.index') }}">{{ __('قائمة الصور') }}</a>
                         </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('sliders.index') }}"
-                                >{{ __('السلاديرات') }}</a>                      
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('aboutus.index') }}"
-                                >{{ __('من نحن') }}</a>                      
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('galleries.index') }}"
-                                >{{ __('قائمة الصور') }}</a>                      
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('partners.index') }}"
-                                >{{ __('شركائنا') }}</a>                      
-                        </li>
-                  
-                       
-                       
+                        <li><a class="dropdown-item" href="{{ route('partners.index') }}">{{ __('شركائنا') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-users"></i><span>{{ __('الموظفين') }}</span></a>
+            @endcan
+            @can('الادوار والاذونات')
+                <li class="nav-item" data-menu="dropdown">
+                    <a class="nav-link" href="{{ route('roles.index') }}">
+                        <i class="la la-user-secret"></i><span>{{ __('الادوار والاذونات') }}</span>
+                    </a>
+                </li>
+            @endcan
+            @can('الموظفين')
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-users"></i><span>{{ __('الموظفين') }}</span>
+                    </a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('users.index') }}"
-                                >{{ __('جميع الموظفين') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('users.create') }}"
-                                >{{ __('اضف موظف جديد') }}</a>
-                        </li>
-                       
-                       
-                       
+                        <li><a class="dropdown-item" href="{{ route('users.index') }}">{{ __('جميع الموظفين') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('users.create') }}">{{ __('اضف موظف جديد') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-server"></i><span>{{ __('الباقات') }}</span></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('packages.index') }}"
-                                >{{ __('جميع الباقات') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('packages.create') }}"
-                                >{{ __('اضف باقة جديدة') }}</a>
-                        </li>
-                       
-                       
-                       
-                    </ul>
-                </li>
+            @endcan
 
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-bars"></i><span>{{ __('التصنيفات والخدمات') }}</span></a>
+            @can('الباقات')
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-server"></i><span>{{ __('الباقات') }}</span>
+                    </a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('categories.index') }}"
-                                >{{ __('التصنيفات') }}</a>
+                        <li><a class="dropdown-item" href="{{ route('packages.index') }}">{{ __('جميع الباقات') }}</a>
                         </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('services.index') }}"
-                                >{{ __('الخدمات') }}</a>
+                        <li><a class="dropdown-item" href="{{ route('packages.create') }}">{{ __('اضف باقة جديدة') }}</a>
                         </li>
-                       
-                       
-                       
-                       
                     </ul>
                 </li>
-                <li class="= nav-item" data-menu="dropdown"><a class=" nav-link"
-                        href="{{ route('courses.index') }}" ><i
-                            class="la la-book"></i><span>{{ __('الدورات') }}</span></a>
-                   
-                </li>
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-user-plus"></i><span>{{ __('العملاء') }}</span></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('clients.index') }}"
-                                >{{ __('جميع العملاء') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('clients.active') }}"
-                                >{{ __('العملاء الفعالين') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('clients.notactive') }}"
-                                >{{ __('العملاء الغير فعالة') }}</a>
-                        </li>
+            @endcan
 
-                        
-                        
-                       
-                       
-                       
-                       
-                    </ul>
-                </li>
-                <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-calendar"></i><span>{{ __('الحجوزات') }}</span></a>
+            @can('التصنيفات والخدمات')
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-bars"></i><span>{{ __('التصنيفات والخدمات') }}</span>
+                    </a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('reservations.index') }}"
-                                >{{ __('الحجوزات') }}</a>
-                        </li> 
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('reservations.create') }}"
-                                >{{ __('حجز جديد') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('calender') }}"
-                                >{{ __('التقويم') }}</a>
-                        </li> 
+                        <li><a class="dropdown-item" href="{{ route('categories.index') }}">{{ __('التصنيفات') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('services.index') }}">{{ __('الخدمات') }}</a></li>
                     </ul>
                 </li>
+            @endcan
+
+            @can('الدورات')
+                <li class="nav-item" data-menu="dropdown">
+                    <a class="nav-link" href="{{ route('courses.index') }}">
+                        <i class="la la-book"></i><span>{{ __('الدورات') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('العملاء')
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-user-plus"></i><span>{{ __('العملاء') }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('clients.index') }}">{{ __('جميع العملاء') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('clients.active') }}">{{ __('العملاء الفعالين') }}</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="{{ route('clients.notactive') }}">{{ __('العملاء الغير فعالة') }}</a></li>
+                    </ul>
+                </li>
+            @endcan
+
+            @can('الحجوزات')
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-calendar"></i><span>{{ __('الحجوزات') }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('reservations.index') }}">{{ __('الحجوزات') }}</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('reservations.create') }}">{{ __('حجز جديد') }}</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('calender') }}">{{ __('التقويم') }}</a></li>
+                    </ul>
+                </li>
+            @endcan
+
+            @can('الطلبات')
                 @php
-                $totalPendingOrders = App\Models\Order::where('status', 0)->count();
-                $totalPendingContacts = App\Models\Contact::where('show', 0)->count();
-                $totalcourst = App\Models\Enrollment::where('status', 0)->count();
-                $totalPendingRequests = $totalPendingOrders + $totalPendingContacts;
+                    $totalPendingOrders = App\Models\Order::where('status', 0)->count();
+                    $totalPendingContacts = App\Models\Contact::where('show', 0)->count();
+                    $totalcourst = App\Models\Enrollment::where('status', 0)->count();
+                    $totalPendingRequests = $totalPendingOrders + $totalPendingContacts;
                 @endphp
                 <li class="dropdown nav-item" data-menu="dropdown">
-                        <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
-                            <i class="la la-reorder"></i>
-                            <span>{{ __('الطلبات') }}</span>
-                            <span class="badge badge-danger badge-pill ml-1">
-                                {{ $totalPendingRequests }}
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown" data-menu="">
-                                <a class="dropdown-item" href="{{ route('packge_order') }}">
-                                    <i class="fas fa-box-open"></i> {{ __('طلبات الباقات') }}
-                                    <span class="badge badge-danger badge-pill float-right">
-                                        {{ App\Models\Order::where('status', 0)->count() }}
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="dropdown" data-menu="">
-                                <a class="dropdown-item" href="{{ route('contact_order') }}">
-                                    <i class="fas fa-envelope"></i> {{ __('طلبات التواصل') }}
-                                    <span class="badge badge-danger badge-pill float-right">
-                                        {{ App\Models\Contact::where('show', 0)->count() }}
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="dropdown" data-menu="">
-                                <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                    <i class="fas fa-envelope"></i> {{ __('طلبات المتجر') }}
-                                    <span class="badge badge-danger badge-pill float-right">
-                                        {{ App\Models\Order::count() }}
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="dropdown" data-menu="">
-                                <a class="dropdown-item" href="{{ route('courses_order') }}">
-                                    <i class="fas fa-envelope"></i> {{ __('طلبات الدورات') }}
-                                    <span class="badge badge-danger badge-pill float-right">
-                                        {{ App\Models\Enrollment::count() }}
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
-                        href="#" data-toggle="dropdown"><i
-                            class="la la-book"></i><span>{{ __('التقارير') }}</span></a>
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-reorder"></i><span>{{ __('الطلبات') }}</span>
+                        <span class="badge badge-danger badge-pill ml-1">{{ $totalPendingRequests }}</span>
+                    </a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('reports.subsciption') }}"
-                                >{{ __('الاشتراكات') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('reports.payments') }}"
-                                >{{ __('المدفوعات') }}</a>
-                        </li>
-                        <li class="dropdown " data-menu=""><a
-                                class="dropdown-item " href="{{ route('reports.visits') }}"
-                                >{{ __('الزيارات') }}</a>
-                        </li>
-                  
-                  
-                        
-                        
-                       
-                       
-                       
-                       
+                        <li><a class="dropdown-item" href="{{ route('packge_order') }}">
+                                {{ __('طلبات الباقات') }}
+                                <span class="badge badge-danger badge-pill float-right">{{ $totalPendingOrders }}</span>
+                            </a></li>
+                        <li><a class="dropdown-item" href="{{ route('contact_order') }}">
+                                {{ __('طلبات التواصل') }}
+                                <span class="badge badge-danger badge-pill float-right">{{ $totalPendingContacts }}</span>
+                            </a></li>
+                        <li><a class="dropdown-item" href="{{ route('orders.index') }}">
+                                {{ __('طلبات المتجر') }}
+                                <span
+                                    class="badge badge-danger badge-pill float-right">{{ App\Models\Order::count() }}</span>
+                            </a></li>
+                        <li><a class="dropdown-item" href="{{ route('courses_order') }}">
+                                {{ __('طلبات الدورات') }}
+                                <span
+                                    class="badge badge-danger badge-pill float-right">{{ App\Models\Enrollment::count() }}</span>
+                            </a></li>
                     </ul>
                 </li>
-              
-              
-              {{--  <li class=" nav-item" ><a class=" nav-link"
+            @endcan
+
+            @can('التقارير')
+                <li class="dropdown nav-item" data-menu="dropdown">
+                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                        <i class="la la-book"></i><span>{{ __('التقارير') }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                                href="{{ route('reports.subsciption') }}">{{ __('الاشتراكات') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('reports.payments') }}">{{ __('المدفوعات') }}</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('reports.visits') }}">{{ __('الزيارات') }}</a></li>
+                    </ul>
+                </li>
+            @endcan
+
+
+
+            {{--  <li class=" nav-item" ><a class=" nav-link"
                         href="{{route('edit_section')}}" ><i
                             class="la la-television"></i><span>{{ __('تعديل القسم اسفل الفيديو') }}</span></a>
                  
@@ -295,7 +233,7 @@
                        
                     </ul>
                 </li> --}}
-                {{-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
+            {{-- <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"
                         href="#" data-toggle="dropdown"><i
                             class="la la-folder-open"></i><span>General</span></a>
                     <ul class="dropdown-menu">
@@ -1516,6 +1454,6 @@
                         </li>
                     </ul>
                 </li> --}}
-            </ul>
-        </div>
+        </ul>
     </div>
+</div>
