@@ -26,10 +26,12 @@ use Spatie\Permission\Models\Role;
 class HomeController extends Controller
 {
     public function add_perm(){
-        $permissions = Permission::firstOrCreate(['name' =>'المتجر' ]);
+        Permission::firstOrCreate(['name' =>'المتجر' ]);
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $permissions = Permission::all();
         $adminRole->syncPermissions($permissions);
         dd('done');
+
     }
     public function contact_us()
     {
