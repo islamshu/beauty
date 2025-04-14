@@ -186,7 +186,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Subscription payments
     Route::post('/dashboard/subscription-payments', [SubscriptionPaymentController::class, 'store'])->name('subscription-payments.store');
-    Route::delete('/dashboard/subscription-payments/{payment}', [SubscriptionPaymentController::class, 'destroy'])->name('subscription-payments.destroy');
+    Route::delete('/dashboard/subscription-payments/{id}', [SubscriptionPaymentController::class, 'destroy'])->name('subscription-payments.destroy');
     
     // Notifications
     Route::get('/dashboard/notifications', [NotificationController::class, 'getNotifications']);
