@@ -195,4 +195,8 @@ Route::middleware(['auth'])->group(function () {
     // Package calculations
     Route::get('/dashboard/packages/{package}/calculate-end-date', [ClientController::class, 'calculateEndDate'])
         ->name('packages.calculate-end-date');
+        Route::get('add_perm', [HomeController::class, 'add_perm']);
+        
+
+        
 });
