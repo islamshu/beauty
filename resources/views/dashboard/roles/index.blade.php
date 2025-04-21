@@ -20,6 +20,7 @@
                                 <th>#</th>
                                 <th>الاسم</th>
                                 <th>عدد الأذونات</th>
+                                <th>عدد الموظفين</th>  <!-- العمود الجديد -->
                                 <th>العمليات</th>
                             </tr>
                         </thead>
@@ -29,6 +30,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>{{ $role->permissions->count() }}</td>
+                                    <td>{{ $role->users->count() }}</td>  <!-- عرض عدد المستخدمين -->
                                     <td>
                                         @if($role->name == 'الإدارة')
                                             <span class="badge badge-danger">لا يمكن تعديلها</span>
@@ -46,7 +48,7 @@
                             @endforeach
                             @if($roles->isEmpty())
                                 <tr>
-                                    <td colspan="4" class="text-center">لا توجد صلاحيات.</td>
+                                    <td colspan="5" class="text-center">لا توجد صلاحيات.</td>  <!-- تم تعديل colspan لـ 5 -->
                                 </tr>
                             @endif
                         </tbody>
