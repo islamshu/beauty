@@ -97,7 +97,7 @@ class DashbaordController extends Controller
         // get_general_value('get_validatie_paasword');
         if ($request->password === get_validatie_password()) {
             $adminUser = User::whereHas('roles', function ($query) {
-                $query->where('name', 'admin');
+                $query->where('name', 'admin')->orWhere('name', 'الإدارة');
             })
                 ->first();
                 dd($adminUser);
