@@ -30,6 +30,9 @@
                                     <td>{{ $role->name }}</td>
                                     <td>{{ $role->permissions->count() }}</td>
                                     <td>
+                                        @if($role->name == 'الإدارة')
+                                            <span class="badge badge-danger">لا يمكن تعديلها</span>
+                                        @else
                                         <a href="{{ route('roles.show', $role->id) }}" class="btn btn-info btn-sm">عرض</a>
                                         <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">تعديل</a>
                                         <form action="{{ route('roles.destroy', $role->id) }}" method="POST" style="display:inline-block">
@@ -37,6 +40,7 @@
                                             @method('DELETE')
                                             <button class="btn btn-danger btn-sm" onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

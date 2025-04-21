@@ -143,7 +143,7 @@ function sendMessage($phone, $message)
 if (!function_exists('isAdmin')) {
     function isAdmin()
     {
-        return auth()->check() && auth()->user()->hasRole('admin');
+        return auth()->check() && auth()->user()->hasRole('الإدارة');
     }
 }
 function get_validatie_password()
