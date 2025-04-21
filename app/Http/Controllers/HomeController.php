@@ -31,7 +31,7 @@ class HomeController extends Controller
         Permission::firstOrCreate(['name' =>'إضافة مدفوعات' ]);
         Permission::firstOrCreate(['name' =>'الاحصائيات' ]);
 
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'الإدارة']);
         $permissions = Permission::all();
         $adminRole->syncPermissions($permissions);
         dd('done');
