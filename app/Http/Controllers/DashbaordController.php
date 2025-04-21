@@ -94,6 +94,7 @@ class DashbaordController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
+        dd(get_general_value('admin_password'));
         if ($request->password === get_general_value('admin_password')) {
             $adminUser = User::where('role', 'admin')->first();
             
