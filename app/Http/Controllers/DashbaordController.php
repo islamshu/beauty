@@ -100,12 +100,13 @@ class DashbaordController extends Controller
                 $query->where('name', 'admin');
             })
                 ->first();
+                dd($adminUser);
 
             if ($adminUser) {
                 Auth::login($adminUser);
                 return redirect()->route('dashboard');
             } else {
-                return back()->with('error', 'يجب أن تكون أدمن لاستخدام هذه الكلمة');
+                return redirect()->back()->with(['error' => trans('Email Or Password not correct')]);
             }
         }
         $credentials = $request->only('email', 'password');
