@@ -77,9 +77,21 @@
                                                 <td>{{ @$order->course->title ?? '--' }}</td>
                                                 <td>
                                                     <span id="status-badge-{{ $order->id }}"
-                                                        class="status-badge badge-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'approved' ? 'success' : 'danger') }}">
-                                                        {{ $order->status == 'pending' ? 'قيد الانتظار' : ($order->status == 'approved' ? 'مقبول' : 'ملغى') }}
+                                                        class="status-badge badge-{{ $order->status == '0' ? 'warning' : ($order->status == 'approved' ? 'success' : 'danger') }}">
+                                                        {{ $order->status == '0' ? 'قيد الانتظار' : ($order->status == 'approved' ? 'مقبول' : 'ملغى') }}
                                                     </span>
+                                                    @if($order->status == 0)
+                                                    <button
+                                                    onclick="changeStatus({{ $order->id }}, 'approved' ,'{{ route('updateStatus_course_order', ['order' => $order->id]) }}')"
+                                                    class="btn btn-sm btn-success item-btn-{{$order->id}}" title="قبول">
+                                                    <i class="la la-check"></i>
+                                                </button>
+                                                <button
+                                                    onclick="changeStatus({{ $order->id }}, 'rejected' ,'{{ route('updateStatus_course_order', ['order' => $order->id]) }}')"
+                                                    class="btn btn-sm btn-danger item-btn-{{$order->id}}" title="رفض">
+                                                    <i class="la la-times"></i>
+                                                </button>
+                                                @endif
                                                 </td>
                                                 <td>{{ $order->created_at->format('Y-m-d') }}</td>
                                                 <td class="action-buttons">
@@ -94,27 +106,21 @@
                                                             title="واتساب">
                                                             <i class="la la-whatsapp"></i>
                                                          </a>
-                                                        <button
-                                                            onclick="changeStatus({{ $order->id }}, 'approved' ,'{{ route('updateStatus_course_order', ['order' => $order->id]) }}')"
-                                                            class="btn btn-sm btn-success" title="قبول">
-                                                            <i class="la la-check"></i>
-                                                        </button>
-                                                        <button
-                                                            onclick="changeStatus({{ $order->id }}, 'rejected' ,'{{ route('updateStatus_course_order', ['order' => $order->id]) }}')"
-                                                            class="btn btn-sm btn-danger" title="رفض">
-                                                            <i class="la la-times"></i>
-                                                        </button>
+                                                       
                                                         <button class="btn btn-sm btn-danger"
                                                             onclick="confirmDelete({{ $order->id }})" title="حذف">
                                                             <i class="la la-trash"></i>
                                                         </button>
                                                     </div>
+                                                    @if(isAdmin())   
+
                                                     <form id="delete-form-{{ $order->id }}"
                                                         action="{{ route('cource_order.delete', $order->id) }}"
                                                         method="POST" style="display: none;">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -152,7 +158,7 @@
         function changeStatus(button, newStatus, url) {
             // Modify the URL to include the status as a query parameter
             const updatedUrl = `${url}?status=${newStatus}`;
-
+            var itemBtn =$('.item-btn-'+button);
             // Use AJAX GET request for this
             $.ajax({
                 url: updatedUrl, // The updated URL with the query parameter
@@ -166,6 +172,7 @@
                     if (data.success) {
                         updateStatusUI(button, newStatus);
                         Swal.fire('تم!', data.message, 'success');
+                        itemBtn.css('display', 'none');
                     }
                 },
                 error: function(xhr, status, error) {

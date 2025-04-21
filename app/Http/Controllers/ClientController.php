@@ -124,7 +124,20 @@ class ClientController extends Controller
             'notes' => $request->notes,
             'received_by' => auth()->id(),
         ]);
+        $client = $subscription->client;
+        $paymentMethodText = $subscription->payment_method === 'cash' ? 'كاش' : 'تقسيط';
 
+        sendMessage(
+            $client->phone,
+            'تم إضافة اشتراك جديد بنجاح. تفاصيل الاشتراك: ' .
+            $subscription->package->name .
+            '، عدد الزيارات: ' . $subscription->package_visit .
+            '، تاريخ البدء: ' . $subscription->start_at .
+            '، تاريخ الانتهاء: ' . $subscription->end_at .
+            '، المبلغ الإجمالي: ' . $subscription->total_amount .
+            '، المبلغ المدفوع: ' . $subscription->paid_amount .
+            '، طريقة الدفع: ' . $paymentMethodText
+        );
 
         return response()->json([
             'success' => true,
@@ -258,6 +271,20 @@ class ClientController extends Controller
                 'notes' => $request->notes,
                 'received_by' => auth()->id(),
             ]);
+
+            $paymentMethodText = $subscription->payment_method === 'cash' ? 'كاش' : 'تقسيط';
+            sendMessage(
+                $client->phone,
+                'تم إضافة اشتراك جديد بنجاح. تفاصيل الاشتراك: ' .
+                $subscription->package->name .
+                '، عدد الزيارات: ' . $subscription->package_visit .
+                '، تاريخ البدء: ' . $subscription->start_at .
+                '، تاريخ الانتهاء: ' . $subscription->end_at .
+                '، المبلغ الإجمالي: ' . $subscription->total_amount .
+                '، المبلغ المدفوع: ' . $subscription->paid_amount .
+                '، طريقة الدفع: ' . $paymentMethodText
+            );
+          
         }
 
         $qrCodePath = "uploads/qrcodes/client_{$client->id}.svg";
@@ -384,6 +411,10 @@ class ClientController extends Controller
     public function cancel(Subscription $subscription)
     {
         $subscription->cancel();
+        sendMessage(
+            $subscription->client->phone,
+            'تم إلغاء اشتراكك في الباقة: ' . $subscription->package->name
+        );
         return redirect()->back()->with('success', 'تم إلغاء الاشتراك بنجاح');
     }
 }

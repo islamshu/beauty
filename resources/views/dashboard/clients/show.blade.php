@@ -47,8 +47,7 @@
                                             <th>{{ __('حالة العميل') }}</th>
                                             <td>
                                                 @if ($client->activeSubscription)
-                                                    <div class="shadow-sm border rounded px-2 py-2 text-center"
-                                                        >
+                                                    <div class="shadow-sm border rounded px-2 py-2 text-center">
                                                         <div class="text-muted small mb-1">
                                                             حالة الاشتراك:
                                                             <span
@@ -152,6 +151,8 @@
                                                             {{ $subscription->end_at ?? __('غير محدد') }}
                                                         </span>
                                                         @if ($subscription->isActive())
+
+                                                        @can('إضافة زيارة')
                                                             <button type="button"
                                                                 class="btn btn-sm btn-success add-visit-btn"
                                                                 data-subscription-id="{{ $subscription->id }}"
@@ -161,6 +162,8 @@
                                                                 data-total-visits="{{ $subscription->package_visit }}">
                                                                 <i class="ft-plus"></i> {{ __('إضافة زيارة') }}
                                                             </button>
+                                                            @endcan
+                                                            @can('إضافة مدفوعات')
                                                             <button class="btn btn-sm btn-primary add-payment-btn"
                                                                 data-subscription-id="{{ $subscription->id }}"
                                                                 data-total-amount="{{ $subscription->total_amount }}"
@@ -168,7 +171,9 @@
                                                                 data-remaining-amount="{{ $subscription->total_amount - $subscription->paid_amount }}">
                                                                 <i class="ft-plus"></i> {{ __('إضافة دفعة') }}
                                                             </button>
+                                                        @endcan
                                                         @endif
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -298,12 +303,14 @@
                                                                                     <td>{{ $payment->receiver->name }}</td>
                                                                                     <td>{{ $payment->notes ?? '--' }}</td>
                                                                                     <td>
-                                                                                        <button
-                                                                                            class="btn btn-sm btn-danger delete-payment-btn"
-                                                                                            data-payment-id="{{ $payment->id }}"
-                                                                                            data-amount="{{ $payment->amount }}">
-                                                                                            <i class="ft-trash"></i>
-                                                                                        </button>
+                                                                                        @if (isAdmin())
+                                                                                            <button
+                                                                                                class="btn btn-sm btn-danger delete-payment-btn"
+                                                                                                data-payment-id="{{ $payment->id }}"
+                                                                                                data-amount="{{ $payment->amount }}">
+                                                                                                <i class="ft-trash"></i>
+                                                                                            </button>
+                                                                                        @endif
                                                                                     </td>
                                                                                 </tr>
                                                                             @endforeach
@@ -407,7 +414,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="deletePaymentForm" method="POST">
+                <form id="deletePaymentForm" me hod="POST">
                     @csrf
                     @method('DELETE')
                     <div class="modal-body">
@@ -546,12 +553,13 @@
             </div>
         </div>
 </div>@endsection
+@include('dashboard.clients._addpackge')
 
 @section('script')
     <!-- Toastr Notifications -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function() {
             // فتح مودال إضافة دفعة
@@ -737,4 +745,6 @@
             });
         });
     </script>
+    @include('dashboard.clients._scirpt')
+
 @endsection

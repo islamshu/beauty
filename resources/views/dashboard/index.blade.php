@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('title','الرئيسية')
 @section('content')
+@can('الاحصائيات')
     <div class="row">
 
         <div class="mt-2 col-xl-3 col-lg-6 col-12">
@@ -204,6 +205,6 @@
 
         
     </div>
-
+@endcan
   
 @endsection

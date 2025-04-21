@@ -78,6 +78,7 @@
                                                             class="btn btn-info btn-sm" title="{{ __('عرض') }}">
                                                             <i class="ft-eye"></i>
                                                         </a>
+                                                        @if(isAdmin())   
                                                         <form action="{{ route('pacgkeorders.delete', $order->id) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf
@@ -88,6 +89,7 @@
                                                                 <i class="ft-trash"></i>
                                                             </button>
                                                         </form>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>

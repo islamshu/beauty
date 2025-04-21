@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title','الباقات')
+@section('title', 'الباقات')
 
 @section('content')
     <div class="app-content content">
@@ -41,24 +41,26 @@
 
                                             <td>{{ $package->name }}</td>
                                             <td>{{ $package->price }}</td>
-                                            <td>{{format_package_duration($package->id) }}</td>
+                                            <td>{{ format_package_duration($package->id) }}</td>
 
                                             <td>
 
-                                                <input type="checkbox" data-id="{{ $package->id }}" name="status" class="js-switch allssee"
-                                                {{ $package->status == 1 ? 'checked' : '' }}>
+                                                <input type="checkbox" data-id="{{ $package->id }}" name="status"
+                                                    class="js-switch allssee" {{ $package->status == 1 ? 'checked' : '' }}>
 
                                             </td>
                                             <td>
                                                 <a href="{{ route('packages.edit', $package->id) }}"
                                                     class="btn btn-warning">{{ __('تعديل') }}</a>
-                                                <form action="{{ route('packages.destroy', $package->id) }}" method="POST"
-                                                    style="display: inline-block;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger"
-                                                        onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
-                                                </form>
+                                                @if (isAdmin())
+                                                    <form action="{{ route('packages.destroy', $package->id) }}"
+                                                        method="POST" style="display: inline-block;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
+                                                    </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -72,22 +74,22 @@
     </div>
 @endsection
 @section('script')
-<script>
-    $("#storestable").on("change", ".js-switch", function() {
-                let status = $(this).prop('checked') === true ? 1 : 0;
-                let package_id = $(this).data('id');
-                $.ajax({
-                    type: "get",
-                    dataType: "json",
-                    url: '{{ route('update_status_package') }}',
-                    data: {
-                        'status': status,
-                        'package_id': package_id
-                    },
-                    success: function(data) {
-                        toastr.success("تم تعديل الحالة بنجاح");
-                    }
-                });
+    <script>
+        $("#storestable").on("change", ".js-switch", function() {
+            let status = $(this).prop('checked') === true ? 1 : 0;
+            let package_id = $(this).data('id');
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: '{{ route('update_status_package') }}',
+                data: {
+                    'status': status,
+                    'package_id': package_id
+                },
+                success: function(data) {
+                    toastr.success("تم تعديل الحالة بنجاح");
+                }
             });
-</script>
+        });
+    </script>
 @endsection

@@ -45,11 +45,13 @@
                                             </td>
                                             <td>
                                                 <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-warning">{{ __('تعديل') }}</a>
+                                                @if (isAdmin())
                                                 <form action="{{ route('courses.destroy', $course->id) }}" method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
                                                 </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

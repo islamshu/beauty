@@ -43,11 +43,14 @@
                                         @endforeach</td>
                                         <td>
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">{{ __('تعديل') }}</a>
+                                            @if(isAdmin())
+
                                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
                                             </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

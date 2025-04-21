@@ -38,6 +38,8 @@
                                             <td>
                                                 <a href="{{ route('contact_order_edit', $order->id) }}"
                                                     class="btn btn-info">{{ __('مشاهدة') }}</a>
+                                                    @if(isAdmin())   
+
                                                 <form action="{{ route('contact_order_delete', $order->id) }}" method="POST"
                                                     style="display: inline-block;">
                                                     @csrf
@@ -45,6 +47,7 @@
                                                     <button type="submit" class="btn btn-danger"
                                                         onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
                                                 </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

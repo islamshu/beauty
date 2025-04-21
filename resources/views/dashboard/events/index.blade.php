@@ -50,13 +50,15 @@
                                             <td>
                                                 <a href="{{ route('reservations.edit', $reservation->id) }}"
                                                     class="btn btn-warning">{{ __('تعديل') }}</a>
-                                                <form action="{{ route('reservations.destroy', $reservation->id) }}"
+                                                    @if(isAdmin())   
+                                                    <form action="{{ route('reservations.destroy', $reservation->id) }}"
                                                     method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger"
                                                         onclick="return confirm('{{ __('هل أنت متأكد؟') }}')">{{ __('حذف') }}</button>
                                                 </form>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

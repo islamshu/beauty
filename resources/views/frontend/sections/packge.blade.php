@@ -77,9 +77,9 @@
             }
 
             .package-price {
-                background: #e83e8c;
+                background: #706369;
                 color: white;
-                font-size: 18px;
+                font-size: 14px;
                 font-weight: bold;
                 padding: 10px;
                 border-radius: 5px;

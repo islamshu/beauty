@@ -26,7 +26,10 @@ use Spatie\Permission\Models\Role;
 class HomeController extends Controller
 {
     public function add_perm(){
-        Permission::firstOrCreate(['name' =>'المتجر' ]);
+        Permission::firstOrCreate(['name' =>'إضافة زيارة' ]);
+        Permission::firstOrCreate(['name' =>'إضافة مدفوعات' ]);
+        Permission::firstOrCreate(['name' =>'الاحصائيات' ]);
+
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $permissions = Permission::all();
         $adminRole->syncPermissions($permissions);
@@ -301,7 +304,10 @@ class HomeController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new PackgeNotification($order));
         }
-
+        sendMessage($phone, "مرحباً {$request->full_name}، شكراً لتسجيلك في باقتنا. سنتواصل معك قريباً لتأكيد الحجز!");
+        $message ="لديك طلب باقة جديد , انقر على الرابط لمشاهدته \n";
+        $message .=  route('packge_order', $order->id) . "\n\n";
+        sendMessage(get_general_value('whatsapp_number'),$message);
         return response()->json(['success' => true]);
     }
     public function enroll(Request $request)

@@ -55,7 +55,10 @@ class VisitController extends Controller
     
         // Increment subscription visits
         $subscription->increment('total_visit');
-    
+        $total =  $subscription->package_visit - $subscription->total_visit;
+        $message = 'تم إضافة زيارة جديدة ، وتبقى عدد  الزيارات '. $total .' . وشكرا لثقتكم بنا';
+        sendMessage($visit->client->phone, $message );
+        
         return response()->json([
             'success' => true,
             'visit' => $visit->load(['package', 'supervisor'])

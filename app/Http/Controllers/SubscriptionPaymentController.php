@@ -32,6 +32,11 @@ class SubscriptionPaymentController extends Controller
         $subscription->update([
             'paid_amount' => $subscription->paid_amount + $request->amount
         ]);
+        // إرسال رسالة تأكيد
+        $customerPhone = $subscription->client->phone; // Assuming the subscription has a related customer with a phone number
+        $message = "عزيزي العميل، تم استلام دفعة بقيمة {$payment->amount} شيكل  بتاريخ {$payment->payment_date}. شكراً لتعاملكم معنا.";
+        // استدعاء وظيفة إرسال الرسائل
+        sendMessage($customerPhone, $message);
 
         return response()->json([
             'success' => true,

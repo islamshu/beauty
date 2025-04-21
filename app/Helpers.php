@@ -4,6 +4,7 @@ use App\Models\Client;
 use App\Models\GeneralInfo;
 use App\Models\Package;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\Http;
 
 function get_general_value($key)
 {
@@ -45,11 +46,12 @@ if (!function_exists('get_social_value')) {
     }
 }
 if (!function_exists('format_package_duration')) {
-    function format_package_duration($packge_id) {
+    function format_package_duration($packge_id)
+    {
         $package = Package::find($packge_id);
         $number = $package->number_date; // مثال: 10
         $type = $package->type_date; // مثال: "day", "week", "month", "year"
-        
+
         $types = [
             'day' => ['يوم', 'يومين', 'أيام', 'يوم'],
             'week' => ['أسبوع', 'أسبوعين', 'أسابيع', 'أسبوع'],
@@ -80,40 +82,67 @@ if (!function_exists('format_package_duration')) {
 if (!function_exists('get_sum_total_paid')) {
     function get_sum_total_paid()
     {
-       $total_paid =Subscription::sum('paid_amount');
-       return $total_paid;
+        $total_paid = Subscription::sum('paid_amount');
+        return $total_paid;
     }
 }
 
 if (!function_exists('get_sum_total_remaning')) {
     function get_sum_total_remaning()
     {
-       $total_paid =Subscription::sum('paid_amount');
-       $main_paid =Subscription::sum('total_amount');
+        $total_paid = Subscription::sum('paid_amount');
+        $main_paid = Subscription::sum('total_amount');
 
-       $remain = $main_paid - $total_paid;
-       return $remain;
+        $remain = $main_paid - $total_paid;
+        return $remain;
     }
 }
 if (!function_exists('get_sum_main_paid')) {
     function get_sum_main_paid()
     {
-       $main_paid =Subscription::sum('total_amount');
+        $main_paid = Subscription::sum('total_amount');
 
-       return $main_paid;
+        return $main_paid;
     }
 }
 if (!function_exists('calculate_percentage')) {
-    function calculate_percentage($partial, $total, $precision = 0) {
+    function calculate_percentage($partial, $total, $precision = 0)
+    {
         if ($total == 0) {
             return 0;
         }
-        
+
         $percentage = ($partial / $total) * 100;
-        
+
         // تحديد عدد المنازل العشرية (افتراضيًا 0)
         return round($percentage, $precision);
     }
 }
+function sendMessage($phone, $message)
+{
 
+    $response = Http::withHeaders([
+        'Content-Type' => 'application/json',
+    ])->post('https://noti-fire.com/api/send/message', [
+        'device_id' => 'fa2ff9ee-0d6a-4fb2-8ec1-90b22d0e056c',
+        'to' => $phone,
+        'message' => $message,
+    ]);
+    // dd($response->json());
+    // Optional: Handle the response
+    if ($response->successful()) {
+        return $response->json();
+    } else {
+        return response()->json([
+            'error' => 'Failed to send message',
+            'details' => $response->body(),
+        ], $response->status());
+    }
+}
 
+if (!function_exists('isAdmin')) {
+    function isAdmin()
+    {
+        return auth()->check() && auth()->user()->hasRole('admin');
+    }
+}
