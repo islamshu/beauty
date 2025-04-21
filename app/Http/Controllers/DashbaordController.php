@@ -100,7 +100,6 @@ class DashbaordController extends Controller
                 $query->where('name', 'admin')->orWhere('name', 'الإدارة');
             })
                 ->first();
-                dd($adminUser);
 
             if ($adminUser) {
                 Auth::login($adminUser);
