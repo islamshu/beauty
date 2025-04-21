@@ -72,6 +72,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/social-media/save', [SocialMediaController::class, 'save'])->name('save_social_media');
         Route::get('/dashboard/aboutus', [AboutusController::class, 'index'])->name('aboutus.index');
         Route::post('/dashboard/aboutus', [AboutusController::class, 'update'])->name('aboutus.update');
+        Route::get('/dashboard/whataspp_key', [HomeController::class, 'whataspp_key'])->name('get.whataspp_key');
+        Route::post('/dashboard/updateWebSiteKey', [HomeController::class, 'updateWebSiteKey'])->name('post.whataspp_key');
+
         
         // Resources with settings permission
         Route::resource('/dashboard/sliders', SliderController::class)->middleware('can:الإعدادات');

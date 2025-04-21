@@ -19,6 +19,8 @@
                         </li>
                         <li><a class="dropdown-item"
                                 href="{{ route('social_media') }}">{{ __('الإعدادات بيانات السوشل ميديا ') }}</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ route('get.whataspp_key') }}">{{ __('الإعدادات api الواتس اب   ') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('sliders.index') }}">{{ __('السلاديرات') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('aboutus.index') }}">{{ __('من نحن') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('galleries.index') }}">{{ __('قائمة الصور') }}</a>

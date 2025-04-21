@@ -22,7 +22,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 class HomeController extends Controller
 {
     public function add_perm(){
@@ -399,4 +400,41 @@ class HomeController extends Controller
             'image' => asset('uploads/' . $service->image), // Ensure the image path is correct
         ]);
     }
+    public function whataspp_key(){
+        return view('dashboard.whatsapp_key');
+    }
+    public function updateWebSiteKey(Request $request)
+    {
+        
+
+        $envPath = base_path('.env');
+
+        // التحقق من وجود ملف .env
+        if (!File::exists($envPath)) {
+            return response()->json(['error' => 'ملف .env غير موجود'], 404);
+        }
+
+        // قراءة محتوى الملف
+        $envContent = File::get($envPath);
+
+        // استبدال القيمة القديمة أو إضافة جديدة إذا لم تكن موجودة
+        if (str_contains($envContent, 'whatassp_key=')) {
+            $envContent = preg_replace(
+                '/whatassp_key=.*/',
+                'whatassp_key=' . $request->whatassp_key,
+                $envContent
+            );
+        } else {
+            $envContent .= "\nwhatassp_key=" . $request->whatassp_key;
+        }
+
+        // حفظ التعديلات
+        File::put($envPath, $envContent);
+
+        // مسح الكاش للتأكد من قراءة القيم الجديدة
+        // Artisan::call('config:clear');
+
+        return redirect()->back()->with('toastr_success', 'تم تحديث المفتاح بنجاح!');
+    }
+
 }
