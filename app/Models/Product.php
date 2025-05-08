@@ -30,11 +30,22 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
     public function relatedProducts()
-{
-    return $this->hasMany(Product::class, 'category_id', 'category_id')
-                ->where('status',1)
-                ->where('id', '!=', $this->id) // استثناء المنتج الحالي
-                ->inRandomOrder() // ترتيب عشوائي
-                ->limit(4); // عدد المنتجات المراد عرضها
-}
+    {
+        $related = $this->hasMany(Product::class, 'category_id', 'category_id')
+            ->where('status', 1)
+            ->where('id', '!=', $this->id) // استثناء المنتج الحالي
+            ->inRandomOrder() // ترتيب عشوائي
+            ->limit(4); // عدد المنتجات المراد عرضها
+    
+        if ($related->count() === 0) {
+            // إذا لم يوجد أي منتجات ذات صلة، جلب 4 منتجات عشوائية باستثناء المنتج الحالي
+            return Product::where('status', 1)
+                ->where('id', '!=', $this->id)
+                ->inRandomOrder()
+                ->limit(4);
+        }
+    
+        return $related;
+    }
+    
 }

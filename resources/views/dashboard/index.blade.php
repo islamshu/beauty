@@ -167,13 +167,7 @@
             <div class="card pull-up">
                 <div class="card-content">
                     <div class="card-body">
-                        <div class="media d-flex align-items-center">
-                            <!-- Icon on the right -->
-                            <div class="ml-auto">
-                                <i class="la la-server danger font-large-2"></i>
-                            </div>
-                        </div>
-                        
+                       
                         <!-- Stats Row -->
                         <div class="row text-center pt-2">
                             <!-- المستحق للدفع -->

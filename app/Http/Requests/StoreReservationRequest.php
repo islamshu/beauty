@@ -15,27 +15,29 @@ class StoreReservationRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
             'nots' => 'nullable|string',
             'client_id' => 'required|exists:clients,id',
             'user_id' => 'required|exists:users,id',
             'reason' => 'nullable|string',
-            'services' => 'nullable|array', // تأكد من أن services هي مصفوفة
-            'services.*' => 'exists:services,id', // تأكد من أن كل service_id موجود في جدول services
+            'services' => 'nullable|array',
+            'services.*' => 'exists:services,id',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ];
     }
-
+    
     public function messages()
     {
         return [
             'title.required' => 'حقل العنوان مطلوب.',
-            'start.required' => 'حقل تاريخ البداية مطلوب.',
-            'end.required' => 'حقل تاريخ النهاية مطلوب.',
+      
             'end.after' => 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية.',
+            'start_time.required' => 'حقل وقت البداية مطلوب.',
+            'end_time.required' => 'حقل وقت النهاية مطلوب.',
+            'end_time.after' => 'وقت النهاية يجب أن يكون بعد وقت البداية.',
             'client_id.required' => 'حقل العميل مطلوب.',
             'user_id.required' => 'حقل المستخدم مطلوب.',
-            'phone_number.required' => 'حقل رقم الهاتف مطلوب.',
         ];
     }
+    
 }

@@ -39,11 +39,20 @@
                                                     <label>اسم العميل *</label>
                                                     <input type="text" class="form-control" name="name" required>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <label>رقم الهاتف *</label>
-                                                    <input type="text" class="form-control" name="phone" id="phone"
-                                                        required>
-                                                    <small id="phone-error" class="text-danger"></small>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="phoneNumber">رقم الهاتف *</label>
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="tel" class="form-control" id="phoneNumber"
+                                                                placeholder="592412365" name="phone" required pattern="[0-9]{9}"
+                                                                title="يجب إدخال 9 أرقام بالضبط" maxlength="9" required>
+                                                            <select class="form-control country-code-select" required name="country_code"
+                                                                id="countryCode" style="max-width: 80px;">
+                                                                <option value="+970">970</option>
+                                                                <option value="+972">972</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label>عنوان العميل *</label>

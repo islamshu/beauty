@@ -195,6 +195,7 @@ class ClientController extends Controller
     }
     public function storeFromOrder(Request $request)
     {
+        dd($request->all());
         $validated = $request->validate([
             'order_id' => 'required|exists:orders,id',
             'name' => 'required|string|max:255',
@@ -216,9 +217,10 @@ class ClientController extends Controller
         }
 
         // إنشاء العميل
+
         $client = Client::create([
             'name' => $validated['name'],
-            'phone' => $validated['phone'],
+            'phone' =>$request->country_code.$request->phone,
             'address' => $validated['address'],
             'added_by' => auth()->id(),
             'id_number' => rand(1000000000, 9999999999)
@@ -316,12 +318,12 @@ class ClientController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'phone' => 'required|unique:clients,phone',
             'address' => 'required'
         ]);
         $request_all = $request->all();
         $request_all['id_number'] = rand(1000000000, 9999999999);
         $request_all['added_by'] = auth()->id();
+        $request_all['phone'] =$request->country_code . $request->phone;
         $qrCodeDir = public_path('uploads/qrcodes');
         if (!File::exists($qrCodeDir)) {
             File::makeDirectory($qrCodeDir, 0755, true);

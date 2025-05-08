@@ -35,8 +35,8 @@ class EventController extends Controller
         // التحقق من البيانات وحفظها
         $reservation = Reservation::create([
             'title' => $request->title,
-            'start' => $request->start,
-            'end' => $request->end,
+            'start' => $request->date .' '. $request->start_time,
+            'end' => $request->date .' '.$request->end_time,
             'nots' => $request->nots,
             'client_id' => $request->client_id,
             'user_id' => $request->user_id,
@@ -45,7 +45,7 @@ class EventController extends Controller
         $reservation->services()->sync($request->services);
 
         // إعادة توجيه مع رسالة نجاح
-        return redirect()->route('reservations.index')->with('toastr_success', 'تم إضافة الحجز بنجاح.');
+        return redirect()->back()->with('toastr_success', 'تم إضافة الحجز بنجاح.');
     }
 
     /**

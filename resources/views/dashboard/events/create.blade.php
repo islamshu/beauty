@@ -111,7 +111,7 @@
                                             <select name="services[]" id="services" class="form-control select2" multiple>
                                                 @foreach ($services as $service)
                                                     <option value="{{ $service->id }}">{{ $service->title }} -
-                                                        {{ $service->price }} ريال</option>
+                                                        {{ $service->price }} شيكل</option>
                                                 @endforeach
                                             </select>
                                             @error('services')

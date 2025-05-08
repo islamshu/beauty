@@ -7345,13 +7345,13 @@ input[type=number]::-webkit-inner-spin-button {
 
 @media (min-width:320px) {
     .produtSingle {
-        margin-bottom: 25px
+        /* margin-bottom: 25px */
     }
 }
 
 @media (min-width:768px) {
     .produtSingle {
-        margin-bottom: 50px
+        /* margin-bottom: 50px */
     }
 }
 
@@ -7375,10 +7375,10 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .produtImage {
-    width: 100%;
-    height: 319px;
+    width: 96%;
+    height: 200px;
     text-align: center;
-    line-height: 319px;
+    line-height: 200px;
     position: relative;
     margin-bottom: 20px;
     overflow: hidden

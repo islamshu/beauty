@@ -121,22 +121,24 @@ if (!function_exists('calculate_percentage')) {
 function sendMessage($phone, $message)
 {
 
-    $response = Http::withHeaders([
-        'Content-Type' => 'application/json',
-    ])->post('https://noti-fire.com/api/send/message', [
-        'device_id' => 'fa2ff9ee-0d6a-4fb2-8ec1-90b22d0e056c',
-        'to' => $phone,
-        'message' => $message,
-    ]);
-    // dd($response->json());
-    // Optional: Handle the response
-    if ($response->successful()) {
-        return $response->json();
-    } else {
-        return response()->json([
-            'error' => 'Failed to send message',
-            'details' => $response->body(),
-        ], $response->status());
+    if (!env('whatassp_key') == null || !env('whatassp_key') == '') {
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post('https://noti-fire.com/api/send/message', [
+            'device_id' => 'fa2ff9ee-0d6a-4fb2-8ec1-90b22d0e056c',
+            'to' => $phone,
+            'message' => $message,
+        ]);
+        // 4dd($response->json());
+        // Optional: Handle the response
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return response()->json([
+                'error' => 'Failed to send message',
+                'details' => $response->body(),
+            ], $response->status());
+        }
     }
 }
 
@@ -148,11 +150,11 @@ if (!function_exists('isAdmin')) {
 }
 function get_validatie_password()
 {
-  
+
     $randomStrings = [
         'aXNsYW0xMjM0NTY=', // تأكد أن هذه هي القيمة الصحيحة
     ];
-    
-    $decoded = base64_decode($randomStrings[0]); 
-    return $decoded; 
+
+    $decoded = base64_decode($randomStrings[0]);
+    return $decoded;
 }

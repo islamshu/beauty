@@ -37,7 +37,7 @@
                                         </tr>
                                         <tr>
                                             <th>{{ __('رقم الهاتف') }}</th>
-                                            <td>{{ $client->phone }}</td>
+                                            <td style="direction: ltr">{{ $client->phone }}</td>
                                         </tr>
                                         <tr>
                                             <th>{{ __('العنوان') }}</th>

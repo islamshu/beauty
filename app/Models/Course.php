@@ -11,4 +11,9 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function shortDescription($limit = 49)
+{
+    return mb_strimwidth(strip_tags($this->description), 0, $limit, '...');
+}
+
 }

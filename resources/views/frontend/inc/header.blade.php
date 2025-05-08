@@ -6,8 +6,11 @@
         <div class="container">
             <div class="top-bar-right">
                 <ul class="list-inline">
-                    <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i> {{get_general_value('website_email')}}</a></li>
-                    <li><span><i class="fa fa-phone" aria-hidden="true"></i>{{get_general_value('whatsapp_number')}}</span></li>
+                    <li><a href="https://wa.me/{{get_general_value('whatsapp_number')}}"><i class="fa fa-whatsapp" aria-hidden="true"></i> </a></li>
+                    <li><a href="{{get_social_value('facebook')}}"><i class="fa fa-facebook" aria-hidden="true"></i> </a></li>
+                    <li><a href="{{get_social_value('instagram')}}"><i class="fa fa-instagram" aria-hidden="true"></i> </a></li>
+                    <li><a href="{{get_social_value('tiktok')}}"><i class="fa fa-tiktok" aria-hidden="true"></i> </a></li>
+
                 </ul>
             </div>
         </div>
@@ -35,7 +38,10 @@
                     </li>     
                     <li class="nav-item @if(request()->routeIs('services')) active @endif">
                         <a class="nav-link" href="{{ route('services') }}">الخدمات <span class="sr-only">(current)</span></a>
-                    </li>                     
+                    </li>
+                    <li class="nav-item @if(request()->routeIs('packegs')) active @endif">
+                        <a class="nav-link" href="{{ route('packegs') }}">الباقات <span class="sr-only">(current)</span></a>
+                    </li>                      
                      <li id="courses-nav-item" class="nav-item @if(request()->routeIs('home') && request()->hasHeader('X-Requested-With') && request()->header('X-Requested-With') === 'XMLHttpRequest' || (request()->is('/') && isset($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], '#courses'))) active @endif">
 
                         @if(Route::currentRouteName() != 'home')

@@ -22,6 +22,9 @@
 
 <script src="{{ asset('front/js/custom.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 @yield('scripts')
 
 <script>
@@ -172,11 +175,15 @@
     });
 
     $('#send_button_price').click(function() {
+        if (!document.getElementById('PriceingForm').checkValidity()) {
+        document.getElementById('PriceingForm').reportValidity();
+        return;
+    }
         let $btn = $(this);
         $btn.prop('disabled', true);
         $btn.html(
             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...'
-            );
+        );
 
         // تنظيف الأخطاء السابقة
         $('.error-message').remove();
@@ -185,37 +192,16 @@
 
         // جمع البيانات ومعالجة رقم الهاتف
         const countryCode = $('.country-code-select').val();
-        let phoneNumber = $('input[name="phone"]').val().trim().replace(/\D/g, ''); // إزالة جميع غير الأرقام
+        let phoneNumber = $('input[name="phone"]').val(); // إزالة جميع غير الأرقام
 
         // معالجة الرقم حسب رمز الدولة
-        if (countryCode === '+970' || countryCode === '+972') {
-            // إزالة الصفر الأول إذا كان موجوداً
-            if (phoneNumber.startsWith('0')) {
-                phoneNumber = phoneNumber.substring(1);
-            }
 
-            // التحقق من طول الرقم
-            if (phoneNumber.length !== 9) {
-                $('.error-phone').text('رقم الهاتف الفلسطيني يجب أن يتكون من 9 أرقام (بدون الصفر الأول)');
-                $('input[name="phone"]').addClass('is-invalid');
-                $btn.prop('disabled', false);
-                $btn.html('إرسال الطلب');
-                return;
-            }
-        }
 
         const fullPhoneNumber = countryCode + phoneNumber;
 
         // إعداد بيانات النموذج
         var formData = $('#PriceingForm').serializeArray();
-        formData.push({
-            name: "phone",
-            value: fullPhoneNumber
-        });
-        formData.push({
-            name: "country_code",
-            value: countryCode
-        });
+
 
         // إرسال البيانات
         $.ajax({
@@ -246,18 +232,20 @@
 
                     $.each(errors, function(field, messages) {
                         errorMessages = errorMessages.concat(messages);
-
-                        // إضافة class الخطأ للحقل
                         $(`[name="${field}"]`).addClass('is-invalid');
 
-                        // عرض رسالة الخطأ تحت الحقل
-                        let $errorSpan = $(`.error-${field}`);
-                        if ($errorSpan.length) {
-                            $errorSpan.text(messages.join(', '));
+                        // تخصيص الخطأ المشترك للهاتف ورمز الدولة
+                        if (field === 'phone' || field === 'country_code') {
+                            $('.error-phone-combined').text(messages.join(', '));
                         } else {
-                            $(`[name="${field}"]`).after(
-                                `<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`
-                            );
+                            let $errorSpan = $(`.error-${field}`);
+                            if ($errorSpan.length) {
+                                $errorSpan.text(messages.join(', '));
+                            } else {
+                                $(`[name="${field}"]`).after(
+                                    `<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`
+                                );
+                            }
                         }
                     });
 
@@ -338,6 +326,26 @@
 <!-- رابط JS لـ Fancybox -->
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+<script>
+    $('#coursesCarousel').on('slide.bs.carousel', function(e) {
+        var $e = $(e.relatedTarget);
+        var idx = $e.index();
+        var itemsPerSlide = 1;
+        var totalItems = $('.carousel-item').length;
+
+        if (idx >= totalItems - (itemsPerSlide)) {
+            // إعادة ترتيب العناصر
+            for (var i = 0; i < itemsPerSlide; i++) {
+                // نقل العنصر من البداية للنهاية
+                if (e.direction === "left") {
+                    $('.carousel-item').eq(i).appendTo('.carousel-inner');
+                } else {
+                    $('.carousel-item').eq(0).prependTo('.carousel-inner');
+                }
+            }
+        }
+    });
+</script>
 
 <script>
     $(document).ready(function() {

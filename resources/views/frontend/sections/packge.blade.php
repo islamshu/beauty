@@ -211,8 +211,7 @@
                                 </ul>
                                 <div class="visits-container">
                                     <div class="visits-title">تشمل عدد الزيارات : <span
-                                            style="    font-size: 23px;
-    color: #e83e8c;">
+                                            style="    font-size: 23px;color: #e83e8c;">
                                             {{ $item->number_of_visits }} زيارات</Span></div>
                                 </div>
                                 <div class="package-price">{{ $item->price }} شيكل لمدة
@@ -226,6 +225,9 @@
                 @endforeach
             </div>
         </div>
+    </div>
+    <div class="more-services">
+        <a href="{{route('packegs')}}" class="more-services-btn">المزيد من الباقات</a>
     </div>
 </section>
 <!-- بوابة الشراء -->
@@ -256,32 +258,29 @@
                                     <span class="text-danger error-full_name"></span>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
+
                                 <div class="form-group">
-                                    <label>رقم الواتساب</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <select class="form-control country-code-select" style="width: 100px;">
-                                                <option value="+970">+970 (فلسطين)</option>
-                                                <option value="+972">+972 (إسرائيل)</option>
-                                                <option value="+966">+966 (السعودية)</option>
-                                                <option value="+20">+20 (مصر)</option>
-                                            </select>
-                                        </div>
-                                        <input type="text" name="phone" class="form-control"
-                                            placeholder="أدخل رقم الهاتف" required>
+                                    <label for="phoneNumber">رقم الهاتف</label>
+                                    <div class="input-group input-group-sm">
+                                        <input type="tel" class="form-control" id="phoneNumber"
+                                            placeholder="590000000" name="phone" pattern="[0-9]{9}"
+                                            title="يجب إدخال 9 أرقام بالضبط" maxlength="9" required>
+                                        <select class="form-control country-code-select" name="country_code"
+                                            id="countryCode" style="max-width: 80px;" required>
+                                            <option value="+970">970</option>
+                                            <option value="+972">972</option>
+                                        </select>
                                     </div>
-                                    <small class="form-text text-muted">لرموز فلسطين وإسرائيل، أدخل 9 أرقام (بدون الصفر
-                                        الأول)</small>
-                                    <span class="text-danger error-phone"></span>
+                                    <span class="text-danger error-phone-combined"></span>
                                 </div>
                             </div>
-                            <input type="hidden" name="country_code" id="country-code-hidden">
                         </div>
 
                         <!-- الصف الثاني - حقل العنوان كامل العرض -->
+
                         <div class="row">
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>العنوان</label>
@@ -319,16 +318,6 @@
         $('#PriceModal').modal('show');
     }
     // تحديث الحقل المخفي عند تغيير رمز الدولة
-    $('.country-code-select').change(function() {
-        $('#country-code-hidden').val($(this).val());
-
-        // تغيير النص الإرشادي حسب الدولة
-        if ($(this).val() === '+970' || $(this).val() === '+972') {
-            $('input[name="phone"]').attr('placeholder', 'أدخل 9 أرقام (بدون الصفر الأول)');
-        } else {
-            $('input[name="phone"]').attr('placeholder', 'أدخل رقم الهاتف');
-        }
-    });
 
     // التأكد من تعيين القيمة الافتراضية عند التحميل
     $(document).ready(function() {

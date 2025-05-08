@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutusController;
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PartnerController;
@@ -40,9 +42,12 @@ Route::prefix('frontend')->group(function () {
     Route::post('/enroll', [HomeController::class, 'enroll'])->name('course.enroll');
     Route::get('/course/{course}', [HomeController::class, 'single_course'])->name('single_course');
     Route::get('/products', [HomeController::class, 'products'])->name('products');
+    Route::get('/packegs', [HomeController::class, 'packegs'])->name('packegs');
+
+    
     Route::get('/services', [HomeController::class, 'services'])->name('services');
     Route::get('/contact-us', [HomeController::class, 'contact_us'])->name('contact-us');
-    Route::get('/product.details/{id}', [HomeController::class, 'single_products'])->name('product.details');
+    Route::get('/product-details/{id}', [HomeController::class, 'single_products'])->name('product.details');
     Route::post('/contact', [HomeController::class, 'store_contact'])->name('contact.store');
 
     // Cart routes
@@ -52,6 +57,8 @@ Route::prefix('frontend')->group(function () {
     Route::post('/cart_remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::post('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update.status');
+
     Route::get('/order-success', function () {
         return view('frontend.order_success');
     })->name('orders.success');
@@ -63,10 +70,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/logout', [DashbaordController::class, 'logout'])->name('logout');
     Route::get('/dashboard/edit_profile', [DashbaordController::class, 'edit_profile'])->name('edit_profile');
     Route::post('/dashboard/edit_profile', [DashbaordController::class, 'edit_profile_post'])->name('edit_profile_post');
-    
+    Route::get('/orders/{id}', [OrderController::class, 'fetchOrder'])->name('orders.fetch');
+    Route::resource('dashboard/areas', AreaController::class)->except(['show', 'create', 'edit']);
     // Settings routes
     Route::middleware(['can:الإعدادات'])->group(function () {
         Route::get('/dashboard/setting', [DashbaordController::class, 'setting'])->name('setting');
+        Route::get('/dashboard/messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::get('/dashboard/messages/{key}/edit', [MessageController::class, 'edit'])->name('messages.edit');
+        Route::put('/dashboard/messages/{key}', [MessageController::class, 'update'])->name('messages.update');
+        
         Route::post('/dashboard/add_general', [DashbaordController::class, 'add_general'])->name('add_general');
         Route::get('/dashboard/social-media', [SocialMediaController::class, 'index'])->name('social_media');
         Route::post('/dashboard/social-media/save', [SocialMediaController::class, 'save'])->name('save_social_media');

@@ -41,7 +41,7 @@
 
                                             <td>{{ $client->name }}</td>
                                             <td>{{ $client->id_number }}</td>
-                                            <td>{{ $client->phone }}</td>
+                                            <td style="direction: ltr">{{ $client->phone }}</td>
                                             <td>
                                                 @if ($client->activeSubscription)
                                                     <div class="shadow-sm border rounded px-2 py-2 text-center"

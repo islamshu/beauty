@@ -25,6 +25,8 @@
                         <li><a class="dropdown-item" href="{{ route('aboutus.index') }}">{{ __('من نحن') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('galleries.index') }}">{{ __('قائمة الصور') }}</a>
                         </li>
+                        <li><a class="dropdown-item" href="{{ route('areas.index') }}">{{ __('مناطق التوصيل') }}</a>
+                        </li>
                         <li><a class="dropdown-item" href="{{ route('partners.index') }}">{{ __('شركائنا') }}</a></li>
                     </ul>
                 </li>

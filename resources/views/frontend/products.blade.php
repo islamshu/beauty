@@ -63,7 +63,7 @@
             border-radius: 5px;
             overflow: hidden;
             transition: transform 0.3s ease;
-            height: 100%;
+            /* height: 100%; */
             display: flex;
             flex-direction: column;
         }

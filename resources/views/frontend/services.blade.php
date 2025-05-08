@@ -1,7 +1,35 @@
 @extends('layouts.frontend')
 
 @section('style')
-    <style>
+<style>
+    .pagination {
+        margin-bottom: 0;
+    }
+    
+    .page-item .page-link {
+        color: #0d6efd;
+        border: 1px solid #dee2e6;
+        padding: 8px 14px;
+        margin: 0 3px;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: white;
+    }
+    
+    .page-item.disabled .page-link {
+        color: #aaa;
+    }
+    
+    .page-link:hover {
+        background-color: #f0f0f0;
+        text-decoration: none;
+    }
+
         .search-section {
             margin-bottom: 30px;
         }
@@ -205,6 +233,101 @@
             }
         }
     </style>
+    <style>
+        /* Flip Card Container */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 100px;
+            perspective: 1000px; /* تعطي تأثير العمق */
+        }
+    
+        /* Inner Flip Card */
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+    
+        /* عند التحويم تتحول البطاقة */
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+    
+        /* وجه البطاقة الأمامي والخلفي */
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    
+        /* الوجه الأمامي */
+        .flip-card-front {
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+        .flip-card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    
+        /* الوجه الخلفي */
+        .flip-card-back {
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transform: rotateY(180deg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+        .flip-card-back p {
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+    
+        /* زر الحجز */
+        .book-service-btn {
+            padding: 8px 20px;
+            font-size: 14px;
+            background-color: #ffc107;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .book-service-btn:hover {
+            background-color: #e0a800;
+            transform: translateY(-2px);
+        }
+    </style>
+    
 @endsection
 @section('content')
     <section class="container-fluid varietySection mb-5">
@@ -250,73 +373,54 @@
         // WhatsApp Function
         function openWhatsApp(serviceName) {
             const phoneNumber = `{{ get_general_value('whatsapp_number') }}`;
-            const message = `مرحباً، أنا مهتم بخدمة ~${serviceName}~، هل يمكنكم تقديم المزيد من المعلومات؟`;
+            const message = `مرحباً، أنا مهتم بخدمة "${serviceName}"، هل يمكنكم تقديم المزيد من المعلومات؟`;
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
 
         // Infinite Scroll Implementation
-        $(document).ready(function() {
-            let loading = false;
-            let currentPage = 1;
-            let lastPage = {{ $services->lastPage() }};
-            let searchQuery = '';
+    $(document).ready(function () {
+        let currentPage = 1;
+        let searchQuery = '';
 
-            // Function to fetch services
-            function fetchServices(page = 1, search = '', reset = false) {
-                if (loading) return;
-
-                loading = true;
-                $('#loadingSpinner').show();
-
-                $.ajax({
-                    url: "{{ route('services') }}",
-                    method: "GET",
-                    data: {
-                        page: page,
-                        search: search
-                    },
-                    success: function(response) {
-                        if (reset) {
-                            $('#ajaxContainer').html(response);
-                            currentPage = 1;
-                            lastPage = parseInt($('#servicesContainer').data('last-page'));
-                        } else {
-                            $('#ajaxContainer').append(response);
-                        }
-
-                        loading = false;
-                        $('#loadingSpinner').hide();
-                    },
-                    error: function() {
-                        loading = false;
-                        $('#loadingSpinner').hide();
-                        alert('حدث خطأ أثناء تحميل البيانات.');
-                    }
-                });
-            }
-
-            // Search functionality
-            $('#serviceInput').on('input', function() {
-                searchQuery = $(this).val();
-                fetchServices(1, searchQuery, true);
-            });
-
-            $('#searchForm').on('submit', function(e) {
-                e.preventDefault();
-                searchQuery = $('#serviceInput').val();
-                fetchServices(1, searchQuery, true);
-            });
-
-            // Infinite scroll
-            $(window).scroll(function() {
-                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200) {
-                    if (currentPage < lastPage && !loading) {
-                        currentPage++;
-                        fetchServices(currentPage, searchQuery);
-                    }
+        // Function to fetch services by AJAX
+        function fetchServices(page = 1, search = '') {
+            $.ajax({
+                url: "{{ route('services') }}",
+                method: "GET",
+                data: {
+                    page: page,
+                    search: search
+                },
+                success: function (response) {
+                    $('#ajaxContainer').html(response);
+                    currentPage = page;
+                },
+                error: function () {
+                    alert('حدث خطأ أثناء تحميل البيانات.');
                 }
             });
+        }
+
+        // Search
+        $('#serviceInput').on('input', function () {
+            searchQuery = $(this).val();
+            fetchServices(1, searchQuery);
         });
+
+        $('#searchForm').on('submit', function (e) {
+            e.preventDefault();
+            searchQuery = $('#serviceInput').val();
+            fetchServices(1, searchQuery);
+        });
+
+        // Pagination click event
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            const page = $(this).attr('href').split('page=')[1];
+            fetchServices(page, searchQuery);
+        });
+    });
+
     </script>
 @endsection

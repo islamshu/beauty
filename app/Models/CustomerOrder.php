@@ -10,10 +10,21 @@ class CustomerOrder extends Model
 
     protected $table = 'customer_orders'; // تحديد اسم الجدول
 
-    protected $fillable = ['customer_name', 'customer_phone','customer_id','customer_id','customer_address', 'total_price'];
+    protected $fillable = ['area_id','area','customer_name', 'customer_phone','customer_id','customer_id','customer_address', 'total_price'];
 
     public function items()
     {
         return $this->hasMany(CustomerOrderItem::class);
+    }
+    protected static function booted()
+    {
+        static::creating(function ($order) {
+            $order->customer_id = 1;
+        });
+    }
+   
+    public function area_price()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
     }
 }

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Aboutus;
 use App\Models\Appointment;
+use App\Models\Area;
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\Contact;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Gallery;
+use App\Models\Message;
 use App\Models\Order;
 use App\Models\Package;
 use App\Models\Partner;
@@ -27,13 +30,14 @@ use Illuminate\Support\Facades\Artisan;
 class HomeController extends Controller
 {
     public function add_perm(){
-        Permission::firstOrCreate(['name' =>'إضافة زيارة' ]);
-        Permission::firstOrCreate(['name' =>'إضافة مدفوعات' ]);
-        Permission::firstOrCreate(['name' =>'الاحصائيات' ]);
+        // Permission::firstOrCreate(['name' =>'إضافة زيارة' ]);
+        // Permission::firstOrCreate(['name' =>'إضافة مدفوعات' ]);
+        // Permission::firstOrCreate(['name' =>'الاحصائيات' ]);
 
         $adminRole = Role::firstOrCreate(['name' => 'الإدارة']);
         $permissions = Permission::all();
         $adminRole->syncPermissions($permissions);
+        auth()->user()->assignRole($adminRole);
         dd('done');
 
     }
@@ -203,6 +207,10 @@ class HomeController extends Controller
 
         return view('frontend.products', compact('products'));
     }
+    public function packegs()
+    {
+        return view('frontend.packegs')->with('packages', Package::orderby('id', 'desc')->get());
+    }
     public function services(Request $request)
     {
         $query = Service::query()->where('status', 1);
@@ -212,7 +220,7 @@ class HomeController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $perPage = 8; // Number of items per load
+        $perPage = 12; // Number of items per load
         $page = $request->get('page', 1); // Get current page or default to 1
 
         $services = $query->orderBy('id', 'desc')
@@ -238,7 +246,7 @@ class HomeController extends Controller
         $services = Service::where('status', 1)->take(8)->get();
         $first_service = Service::first();
         $courses = Course::where('status', 1)->get();
-        $packages = Package::where('status', 1)->get();
+        $packages = Package::where('status', 1)->take(3)->orderby('id', 'desc')->get();
         $galleries = Gallery::orderby('id', 'desc')->get();
         $categoriesgal = Category::has('gallery')->with('gallery')->get();
         $partners = Partner::get();
@@ -250,66 +258,40 @@ class HomeController extends Controller
         $request->validate([
             'package_id' => 'required|exists:packages,id',
             'full_name' => 'required|string|max:255',
-            'phone' => [
-                'required',
-                'string',
-                'max:20',
-                function ($attribute, $value, $fail) use ($request) {
-                    $countryCode = $request->input('country_code', '+970');
-                    $number = substr($value, strlen($countryCode));
-                    
-                    // التحقق العام
-                    if (!preg_match('/^\+[0-9]{8,15}$/', $value)) {
-                        $fail('صيغة رقم الهاتف غير صالحة');
-                    }
-                    
-                    // تحويلات خاصة لرموز دول محددة
-                    if (in_array($countryCode, ['+970', '+972'])) {
-                        // التأكد من عدم وجود صفر في البداية
-                        if (strlen($number) > 0 && $number[0] === '0') {
-                            $number = substr($number, 1);
-                        }
-                        
-                        // التحقق من طول الرقم
-                        if (strlen($number) !== 9) {
-                            $fail('رقم الهاتف يجب أن يتكون من 9 أرقام لرمز الدولة ' . $countryCode);
-                        }
-                    }
-                    
-                    // يمكن إضافة شروط أخرى لرموز دول أخرى هنا
-                },
-            ],
+            'phone' => 'required|digits:9',
+            'country_code'=> 'required',
             'address' => 'required|string',
         ]);
     
         // معالجة نهائية لرقم الهاتف
         $phone = $request->phone;
         $countryCode = $request->input('country_code', '+970');
-        $numberPart = substr($phone, strlen($countryCode));
+        $numberPart = $phone;
         
-        if (in_array($countryCode, ['+970', '+972'])) {
-            if (strlen($numberPart) > 0 && $numberPart[0] === '0') {
-                $numberPart = substr($numberPart, 1);
-            }
-            $phone = $countryCode . $numberPart;
-        }
-    
+        $phone = $countryCode . $numberPart;
         $order = Order::create([
             'package_id' => $request->package_id,
             'full_name' => $request->full_name,
             'phone' => $phone,
             'address' => $request->address,
+            'country_code' => $countryCode,
+            'phone_number' => $numberPart,
         ]);
 
-        $admins = User::role('admin')->get();
+        $admins = User::role('الإدارة')->get();
         foreach ($admins as $admin) {
             $admin->notify(new PackgeNotification($order));
         }
-        sendMessage($phone, "مرحباً {$request->full_name}، شكراً لتسجيلك في باقتنا. سنتواصل معك قريباً لتأكيد الحجز!");
-        $message ="لديك طلب باقة جديد , انقر على الرابط لمشاهدته \n";
+        $template = Message::where('key', 'welcome_message')->first()?->content ?? '';
+        $message_register = str_replace('{full_name}', $request->full_name, $template);
+        
+        sendMessage($phone, $message_register);
+       
+        $message =Message::where('key', 'admin_message')->first()?->content ?? '';
         $message .=  route('packge_order', $order->id) . "\n\n";
         sendMessage(get_general_value('whatsapp_number'),$message);
         return response()->json(['success' => true]);
+       
     }
     public function enroll(Request $request)
     {
@@ -375,7 +357,8 @@ class HomeController extends Controller
 
     public function calender()
     {
-        return view('dashboard.calender');
+
+        return view('dashboard.calender')->with('clients',Client::all())->with('users',User::all())->with('services',Service::all());
     }
 
 

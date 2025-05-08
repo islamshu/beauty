@@ -123,28 +123,53 @@
                 <div class="modal-body">
                     <form id="checkoutForm">
                         @csrf
-                        <div class="mb-3">
-                            <label for="customer_name" class="form-label">الاسم الكامل</label>
-                            <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                    
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="customer_name" class="form-label">الاسم الكامل</label>
+                                <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                            </div>
+                    
+                            <div class="col-md-6 mb-3">
+                                <label for="customer_phone">رقم الهاتف</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone"
+                                        placeholder="590000000" pattern="[0-9]{9}" title="يجب إدخال 9 أرقام بالضبط"
+                                        maxlength="9" required>
+                                    <select class="form-control" name="country_code" id="country_code" style="max-width: 80px;" required>
+                                        <option value="+970">970</option>
+                                        <option value="+972">972</option>
+                                    </select>
+                                </div>
+                                <span class="text-danger error-customer_phone"></span>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="customer_phone" class="form-label">رقم الهاتف</label>
-                            <input type="text" class="form-control" id="customer_phone" name="customer_phone" required>
+                    
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="customer_area" class="form-label">المنطقة والتوصيل</label>
+                                <select name="area" class="form-control" required id="customer_area">
+                                    <option value="" disabled selected>اختر المنطقة</option>
+                                    @foreach (App\Models\Area::get() as $item)
+                                        <option data-price="{{$item->price}}" value="{{ $item->id }}">{{ $item->name }} - ({{ $item->price }} شيكل)</option>
+                                    @endforeach
+                                </select>
+                                <div id="delivery_note" class="mt-2 text-info" style="display:none;"></div>
+                                <p><strong>السعر الإجمالي:</strong> <span id="total_price_display">{{ $total }}</span> شيكل</p>
+                                <input type="hidden" id="original_total" value="{{ $total }}">
+                            </div>
+                    
+                            <div class="col-md-12 mb-3">
+                                <label for="customer_address" class="form-label">العنوان بالتفصيل</label>
+                                <input type="text" class="form-control" id="customer_address" name="customer_address" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="customer_id" class="form-label">رقم الهوية</label>
-                            <input type="text" class="form-control" id="customer_id" name="customer_id" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="customer_address" class="form-label">العنوان </label>
-                            <input type="text" class="form-control" id="customer_address" name="customer_address"
-                                required>
-                        </div>
-                        <button style="width: 100%" class="btn btn-primary cart-btn " style="padding: 20px"
-                            data-toggle="modal" data-target="#cartModal">
+                    
+                        <button style="width: 100%" id="submitOrderBtn" class="btn btn-primary cart-btn">
                             <i class="fa fa-user-plus"></i> اتمام الطلب
                         </button>
                     </form>
+                    
                 </div>
             </div>
         </div>
@@ -154,7 +179,22 @@
 @endsection
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+        $(document).ready(function() {
+            $('#customer_area').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                var deliveryPrice = parseFloat(selectedOption.data('price')) || 0;
+                var originalTotal = parseFloat($('#original_total').val()) || 0;
+        
+                // إظهار الملاحظة
+                $('#delivery_note').text('ملاحظة: سيتم زيادة سعر التوصيل بقيمة ' + deliveryPrice + ' شيكل.').show();
+        
+                // تحديث السعر الإجمالي الظاهر
+                var newTotal = originalTotal + deliveryPrice;
+                $('#total_price_display').text(newTotal.toFixed(2));
+            });
+        });
+        </script>
     <script>
         $(document).ready(function() {
             // زيادة الكمية

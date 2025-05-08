@@ -37,6 +37,9 @@ class DashbaordController extends Controller
                     continue;
                 }
                 GeneralInfo::setValue($name, $value);
+                if($name == 'country_code' || $name== 'whataspp'){
+                    GeneralInfo::setValue('whatsapp_number', get_general_value('country_code').get_general_value('whataspp'));
+                }
             }
         }
 

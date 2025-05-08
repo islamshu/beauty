@@ -264,6 +264,8 @@ fetchNotifications();
 </script>
 <script>
     $(document).ready(function() {
+        @if (!Route::is('calender'))
+
         $('table').DataTable({
             language: {
                 "sProcessing":   "جاري التحميل...",
@@ -286,6 +288,8 @@ fetchNotifications();
         
             direction: 'ltr'
         });
+        @endif
+
     });
     </script>
 

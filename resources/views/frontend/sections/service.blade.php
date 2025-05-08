@@ -43,7 +43,7 @@
 <script>
     function openWhatsApp(serviceName) {
         const phoneNumber = `{{ get_general_value('whatsapp_number')}}`;
-        const message = `مرحباً، أنا مهتم بخدمة ~${serviceName}~، هل يمكنكم تقديم المزيد من المعلومات؟`;
+        const message = `مرحباً، أنا مهتم بخدمة "${serviceName}"، هل يمكنكم تقديم المزيد من المعلومات؟`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
         window.open(whatsappUrl, '_blank');

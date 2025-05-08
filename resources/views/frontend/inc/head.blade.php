@@ -10,12 +10,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&amp;family=Montserrat:wght@400;700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap"
         rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <!-- PLUGINS CSS STYLE -->
     {{-- <link href="{{ asset('front/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('front/plugins/bootrtl.min.css') }}" rel="stylesheet" id="bootstrap-rtl">
-    <link href="{{ asset('front/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('front/plugins/animate/animate.css" rel="stylesheet') }}">
 
     <link href="{{ asset('front/plugins/selectbox/select_option1.css') }}" rel='stylesheet'>
@@ -25,6 +24,7 @@
     <link href="{{ asset('front/plugins/datepicker/datepicker.min.css') }}" rel='stylesheet'>
     <!-- Fancybox CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.1/dist/fancybox.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <!-- Fancybox JS -->
 
@@ -221,6 +221,49 @@
                 padding: 15px 10px;
                 width: 98%;
             }
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            background-color: #d63384;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 1;
+        }
+
+        .carousel-control-prev {
+            left: 15px;
+            right: auto;
+        }
+
+        .carousel-control-next {
+            right: 15px;
+            left: auto;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 20px;
+            height: 20px;
+            background-size: 100%, 100%;
+            background-repeat: no-repeat;
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e");
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e");
+        }
+        .angle-right{
+            margin-right: 17px;
+        }
+        .angle-left{
+            margin-left: 17px
         }
     </style>
 

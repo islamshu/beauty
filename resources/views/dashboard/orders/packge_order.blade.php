@@ -70,17 +70,11 @@
                                                                         @endif
                                                                     </a>
                                                                 @else
-                                                                    <button type="button" class="btn btn-sm btn-primary"
-                                                                        data-toggle="modal" data-target="#addClientModal"
-                                                                        data-order-id="{{ $order->id }}"
-                                                                        data-order-phone="{{ $order->phone }}"
-                                                                        data-order-name="{{ $order->full_name }}"
-                                                                        data-order-package="{{ @$order->package->name ?? 'تم حذف الباقة' }}"
-                                                                        data-order-price="{{ @$order->package->price ?? 0 }}"
-                                                                        data-order-visit="{{ @$order->package->number_of_visits ?? 0 }}"
-                                                                        data-order-price="{{ @$order->package->price ?? 'تم حذف الباقة' }}">
-                                                                        <i class="ft-plus"></i> إضافة عميل
-                                                                    </button>
+                                                                <button type="button"
+                                                                class="btn btn-sm btn-primary show-add-client-modal"
+                                                                data-order-id="{{ $order->id }}">
+                                                                <i class="ft-plus"></i> إضافة عميل
+                                                            </button>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -89,8 +83,8 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label class="label-control">{{ __('رقم الهاتف') }}</label>
-                                                            <div class="form-control-static">
-                                                                <a href="tel:{{ $order->phone }}">{{ $order->phone }}</a>
+                                                            <div class="form-control-static" style="direction: ltr">
+                                                                <a href="tel:{{ $order->phone }}" ><span style="direction: ltr">{{ $order->phone }}</span></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -127,146 +121,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog"
-                        aria-labelledby="addClientModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="addClientModalLabel">{{ __('إضافة عميل جديد من الطلب') }}
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form id="addClientForm" action="{{ route('clients.storeFromOrder') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="order_id" id="orderIdInput">
-                                    <input type="hidden" name="package_id" id="packageIdInput"
-                                        value="{{ @$order->package->id }}">
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h4 class="card-title">{{ __('بيانات الطلب') }}</h4>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label>{{ __('اسم العميل') }}</label>
-                                                            <input type="text" class="form-control"
-                                                                id="displayOrderName" readonly>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>{{ __('رقم الهاتف') }}</label>
-                                                            <input type="text" class="form-control"
-                                                                id="displayOrderPhone" readonly>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>{{ __('الباقة المطلوبة') }}</label>
-                                                            <input type="text" class="form-control"
-                                                                id="displayOrderPackage" readonly>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>{{ __('سعر الباقة') }}</label>
-                                                            <input type="text" class="form-control"
-                                                                id="displayOrderPrice" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h4 class="card-title">{{ __('بيانات العميل الجديد') }}</h4>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="form-group">
-                                                            <label for="clientName">{{ __('اسم العميل') }} <span
-                                                                    class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control" id="clientName"
-                                                                name="name" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="clientPhone">{{ __('رقم الهاتف') }} <span
-                                                                    class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control" id="clientPhone"
-                                                                name="phone" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="clientAddress">{{ __('العنوان') }}</label>
-                                                            <input type="text" class="form-control" id="clientAddress"
-                                                                name="address">
-                                                        </div>
-
-                                                        <!-- إضافة خيارات الاشتراك -->
-                                                        <div class="form-group">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input"
-                                                                    id="addSubscription" name="add_subscription"
-                                                                    value="1" checked>
-                                                                <label class="custom-control-label"
-                                                                    for="addSubscription">{{ __('إضافة اشتراك بالباقة المطلوبة') }}</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div id="subscriptionFields">
-                                                            <div class="form-group">
-                                                                <label for="start_date">{{ __('تاريخ البدء') }}</label>
-                                                                <input type="date" class="form-control"
-                                                                    name="start_date" id="startDate">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>{{ __('تاريخ الانتهاء') }}</label>
-                                                                <input type="text" class="form-control" id="endDate"
-                                                                    readonly>
-                                                                <small id="durationInfo"
-                                                                    class="form-text text-muted"></small>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label
-                                                                    for="payment_method">{{ __('طريقة الدفع') }}</label>
-                                                                <select class="form-control" name="payment_method"
-                                                                    required>
-                                                                    <option value="full">نقدي</option>
-                                                                    <option value="installments">تقسيط</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label
-                                                                    for="total_amount">{{ __('المبلغ الإجمالي') }}</label>
-                                                                <input type="number" id="total_amount" step="0.01"
-                                                                    class="form-control" name="total_amount" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label
-                                                                    for="packgevisit">{{ __('عدد الزيارات للباقة') }}</label>
-                                                                <input type="number" id="packgevisit" step="1"
-                                                                    class="form-control" name="package_visit" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label
-                                                                    for="paid_amount">{{ __('المبلغ المدفوع') }}</label>
-                                                                <input type="number" step="0.01" id="paid_amount"
-                                                                    class="form-control" name="paid_amount">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">{{ __('إلغاء') }}</button>
-                                        <button type="submit" class="btn btn-primary" id="saveClientBtn">
-                                            <i class="ft-save"></i> {{ __('حفظ العميل والاشتراك') }}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    @include('dashboard.orders.modals.add_client')
                     <!-- معلومات الباقة -->
                     <div class="row mt-1">
                         <div class="col-12">
@@ -360,6 +215,47 @@
 @endsection
 
 @section('script')
+<script>
+    const fetchOrderUrl = "{{ route('orders.fetch', ':id') }}";
+
+    $(document).on('click', '.show-add-client-modal', function() {
+        let orderId = $(this).data('order-id');
+        let url = fetchOrderUrl.replace(':id', orderId);
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                // ضع القيم في الحقول داخل المودال
+                $('#displayOrderName').val(response.full_name);
+                $('#clientName').val(response.full_name);
+                $('#displayOrderPhone').val(response.country_code + response.phone_number);
+                $('#displayOrderPackage').val(response.package_name);
+                $('#displayOrderPrice').val(response.price);
+                $('#clientAddress').val(response.address);
+
+
+                // تعبئة الحقول الخاصة بالاشتراك
+                $('#packgevisit').val(response.number_of_visits);
+                $('#total_amount').val(response.price);
+
+                // تعبئة الحقول الخفية
+                $('#orderIdInput').val(response.id);
+                $('#packageIdInput').val(response.package_id);
+
+                // تعبئة رقم الهاتف في الحقول المخصصة له
+                $('#phoneNumber').val(response.phone_number);
+                $('#countryCode').val(response.country_code);
+
+                // فتح المودال
+                $('#addClientModal').modal('show');
+            },
+            error: function() {
+                alert('حدث خطأ أثناء جلب البيانات');
+            }
+        });
+    });
+</script>
     <script>
         // استدعاء عند تغيير تاريخ البدء أو تغيير الباقة
         $('#startDate, #packageIdInput').on('change', calculateEndDate);
@@ -417,26 +313,7 @@
                 $('#paid_amount').removeAttr('required');
             }
             // When add client button is clicked
-            $('#addClientModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var modal = $(this);
-
-                // Set order data in the form
-                modal.find('#orderIdInput').val(button.data('order-id'));
-                modal.find('#displayOrderName').val(button.data('order-name'));
-                modal.find('#displayOrderPhone').val(button.data('order-phone'));
-                modal.find('#displayOrderPackage').val(button.data('order-package'));
-                modal.find('#displayOrderPrice').val(button.data('order-price') + ' شيكل');
-
-                // Pre-fill client data from order
-
-                modal.find('#clientName').val(button.data('order-name'));
-                modal.find('#clientPhone').val(button.data('order-phone'));
-                modal.find('#total_amount').val(button.data('order-price'));
-                modal.find('#packgevisit').val(button.data('order-visit'));
-
-
-            });
+          
 
             // Toggle subscription fields
             $('#addSubscription').change(function() {

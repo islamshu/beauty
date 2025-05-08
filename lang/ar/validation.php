@@ -116,6 +116,7 @@ return [
     */
 
     'attributes' => [
+        'area'=>'المنطقة',
         'name' => 'الاسم',
         'fullname'=>'الاسم رباعي',
         'persionID'=>'رقم الهوية',
