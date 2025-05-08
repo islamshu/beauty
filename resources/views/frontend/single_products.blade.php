@@ -203,11 +203,11 @@ img.lazyestload {
             </div>
 
             <!-- المنتجات ذات الصلة -->
-            @if ($product->relatedProducts->count() > 0)
-                <div class="related-products mt-4">
-                    <h3>منتجات ذات صلة</h3>
-                    <div class="row">
-                        @foreach ($product->relatedProducts as $related)
+            @if ($relatedProducts->count() > 0)
+            <div class="related-products mt-4">
+                <h3>منتجات ذات صلة</h3>
+                <div class="row">
+                    @foreach ($relatedProducts as $related)
                         <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4">
                             <div class="produtSingle">
                                 <div class="produtImage">
@@ -230,10 +230,11 @@ img.lazyestload {
                                 </div>
                             </div>
                         </div>
-                        @endforeach
-                    </div>
+                    @endforeach
                 </div>
-            @endif
+            </div>
+        @endif
+        
         </div>
     </section>
 @endsection

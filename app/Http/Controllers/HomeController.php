@@ -124,8 +124,27 @@ class HomeController extends Controller
     }
     public function single_products($id)
     {
-        return view('frontend.single_products')->with('product', Product::find($id));
-    }
+        
+            $product = Product::findOrFail($id);
+        
+            $relatedProducts = $product->relatedProducts()
+                ->where('status', 1)
+                ->where('id', '!=', $product->id)
+                ->inRandomOrder()
+                ->limit(4)
+                ->get();
+        
+            if ($relatedProducts->isEmpty()) {
+                $relatedProducts = Product::where('status', 1)
+                    ->where('id', '!=', $product->id)
+                    ->inRandomOrder()
+                    ->limit(4)
+                    ->get();
+            }
+        
+            return view('frontend.single_products', compact('product', 'relatedProducts'));
+        
+            }
 
     public function store_contact(Request $request)
     {
