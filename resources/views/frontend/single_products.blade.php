@@ -94,11 +94,12 @@
 
 .produtImage img {
     max-width: 90%; /* تقليل حجم الصورة */
-    max-height: 70%
+    max-height: 70%;
     border-radius: 3px;
     transition: transform 0.3s ease;
     display: block;
-    margin: 0 auto; /* توسيط الصورة */
+    margin: 0 auto;
+    padding-top: 30% /* توسيط الصورة */
 }
 
 .produtImage img:hover {
