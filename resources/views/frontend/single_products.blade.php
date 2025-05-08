@@ -207,28 +207,28 @@ img.lazyestload {
                     <h3>منتجات ذات صلة</h3>
                     <div class="row">
                         @foreach ($product->relatedProducts as $related)
-                            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                                <div class="produtSingle">
-                                    <div class="produtImage">
-                                        <img src="{{ asset('uploads/' . $related->image) }}" alt="{{ $related->title }}" class="img-fluid">
-                                        <div class="productMask">
-                                            <ul class="list-inline productOption">
-                                                <li>
-                                                    <a href="{{ route('cart.add', $related->id) }}">
-                                                        <i class="fas fa-shopping-cart"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="productCaption">
-                                        <h2 class="product-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                            <a href="{{ route('product.details', $related->id) }}">{{ $related->title }}</a>
-                                        </h2>
-                                        <h2 class="price">₪{{ $related->price_after_discount }}</h2>
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4">
+                            <div class="produtSingle">
+                                <div class="produtImage">
+                                    <img src="{{ asset('uploads/' . $related->image) }}" alt="{{ $related->title }}" class="img-fluid">
+                                    <div class="productMask">
+                                        <ul class="list-inline productOption">
+                                            <li>
+                                                <a href="{{ route('cart.add', $related->id) }}">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
+                                <div class="productCaption">
+                                    <h2 class="productTitle">
+                                        <a href="{{ route('product.details', $related->id) }}">{{ $related->title }}</a>
+                                    </h2>
+                                    <h2 class="price"><small>₪</small> {{ $related->price_after_discount }}</h2>
+                                </div>
                             </div>
+                        </div>
                         @endforeach
                     </div>
                 </div>
