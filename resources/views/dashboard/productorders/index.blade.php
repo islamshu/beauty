@@ -39,7 +39,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $order->customer_name }}</td>
-                                        <td>{{ $order->customer_phone }}</td>
+                                        <td style="direction: ltr">{{ $order->customer_phone }}</td>
 
                                         <td>{{ $order->area_price->name }} </td>
                                         <td>{{ $order->total_price +  $order->area_price->price   }} شيكل</td>

@@ -55,23 +55,25 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="start">{{ __('تاريخ البداية') }} <span class="required">*</span></label>
-                                            <input type="datetime-local" name="start" id="start" class="form-control" value="{{ old('start', $reservation->start) }}" required>
-                                            @error('start')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
+                                <div class="form-group border rounded p-3 bg-white shadow-sm">
+                                    <label class="font-weight-bold mb-2">🗓️ تاريخ الحجز</label>
+
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="d-flex align-items-center mr-3 mb-2">
+                                            <i class="far fa-clock mr-2 text-muted"></i>
+                                            <input type="date" value="{{$date}}"
+                                                class="form-control rounded-pill bg-light border-0 px-3 py-2"
+                                                name="date" required>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="end">{{ __('تاريخ النهاية') }} <span class="required">*</span></label>
-                                            <input type="datetime-local" name="end" id="end" class="form-control" value="{{ old('end', $reservation->end) }}" required>
-                                            @error('end')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
+
+                                        <div class="d-flex align-items-center mb-2">
+                                            <input type="time"
+                                                class="form-control rounded-pill bg-light border-0 px-3 py-2 mr-2"
+                                                name="start_time" value="{{$start}}" required>
+                                            <span class="mx-1">–</span>
+                                            <input type="time" value="{{$end}}"
+                                                class="form-control rounded-pill bg-light border-0 px-3 py-2"
+                                                name="end_time" required>
                                         </div>
                                     </div>
                                 </div>

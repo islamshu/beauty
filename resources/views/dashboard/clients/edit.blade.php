@@ -43,13 +43,25 @@
 
                                 <!-- رقم الهاتف -->
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="phone">{{ __('رقم الهاتف') }} <span class="required">*</span></label>
-                                        <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone', $client->phone) }}" required>
-                                        @error('phone')
-                                        <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
+                                      <div class="form-group">
+                                                        <label for="phoneNumber">رقم الهاتف *</label>
+                                                        <div class="input-group input-group-sm">
+                                                         <input type="tel" class="form-control" id="phoneNumber"
+                                                            name="phone"
+                                                            value="{{ old('phone', $phone) }}"
+                                                            placeholder="0592412365"
+                                                            pattern="^0[0-9]{9}$"
+                                                            title="يجب إدخال 10 أرقام بالضبط" maxlength="10" required>
+
+                                                        <select class="form-control country-code-select" name="country_code" id="countryCode" required style="max-width: 80px;">
+                                                            <option value="+970" {{ old('country_code', $country_code) == '+970' ? 'selected' : '' }}>970</option>
+                                                            <option value="+972" {{ old('country_code', $country_code) == '+972' ? 'selected' : '' }}>972</option>
+                                                        </select>
+                                                        </div>
+                                                         <span class="text-danger d-block mt-1" id="phone_error"></span>
+                                                        <span class="text-danger d-block mt-1"
+                                                            id="country_code_error"></span>
+                                                    </div>
                                 </div>
                             </div>
 

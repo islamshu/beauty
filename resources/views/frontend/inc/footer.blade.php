@@ -3,7 +3,7 @@
     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.6);"></div>
 
     <!-- BACK TO TOP BUTTON -->
-    <a onclick="topFunction()" class="backToTop"><i class="fa fa-angle-up" aria-hidden="true"></i></a>
+    <a onclick="topFunction()" class="backToTop"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
 
     <!-- FOOTER INFO -->
     <div class="clearfix footerInfo" style="position: relative; z-index: 1;">
@@ -29,7 +29,9 @@
                         'facebook' => ['icon' => 'facebook', 'color' => '#4267B2', 'name' => 'Facebook'],
                         'instagram' => ['icon' => 'instagram', 'color' => '#E1306C', 'name' => 'Instagram'],
                         'snapchat' => ['icon' => 'snapchat', 'color' => '#FFFC00', 'name' => 'Snapchat'],
-                        'tiktok' => ['icon' => 'music', 'color' => '#000000', 'name' => 'TikTok'],
+                        'tiktok' => ['icon' => 'tiktok', 'color' => '#000000', 'name' => 'TikTok'],
+                        'twitter' => ['icon' => 'twitter', 'color' => '#1DA1F2', 'name' => 'Twitter'],
+
                     ];
                 @endphp
 
@@ -45,7 +47,7 @@
                                                 style="color: #fff; text-decoration: none; display: flex; align-items: center; transition: all 0.3s;">
                                                 <div class="social-icon"
                                                     style="width: 40px; height: 40px; background: {{ $network['color'] }}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                                    <i class="fa fa-{{ $network['icon'] }}" aria-hidden="true"></i>
+                                                    <i class="fab fa-{{ $network['icon'] }}" aria-hidden="true"></i>
                                                 </div>
                                             </a>
                                         </li>

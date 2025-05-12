@@ -97,43 +97,11 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- لينكد إن -->
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="linkedin_url">{{ __('لينكد إن') }}</label>
-                                                            <div class="input-group">
-                                                                <div class="input-group-prepend">
-                                                                    <span class="input-group-text bg-primary text-white" style="background-color: #0077B5 !important;">
-                                                                        <i class="la la-linkedin"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <input type="url" class="form-control" id="linkedin_url" 
-                                                                       name="social[linkedin]" 
-                                                                       value="{{ get_social_value('linkedin') }}"
-                                                                       placeholder="https://linkedin.com/company/username">
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                  
                                                 </div>
 
                                                 <div class="row">
-                                                    <!-- يوتيوب -->
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="youtube_url">{{ __('يوتيوب') }}</label>
-                                                            <div class="input-group">
-                                                                <div class="input-group-prepend">
-                                                                    <span class="input-group-text bg-danger text-white">
-                                                                        <i class="la la-youtube"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <input type="url" class="form-control" id="youtube_url" 
-                                                                       name="social[youtube]" 
-                                                                       value="{{ get_social_value('youtube') }}"
-                                                                       placeholder="https://youtube.com/channel/username">
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                              
 
                                                     <!-- سناب شات -->
                                                     <div class="col-md-6">
@@ -185,25 +153,7 @@
                                             </div>
                                         </form>
 
-                                        <!-- معاينة الروابط -->
-                                        <div class="row mt-3">
-                                            <div class="col-12">
-                                                <h4 class="card-title">{{ __('معاينة الروابط') }}</h4>
-                                                <div class="social-media-preview">
-                                                    <div class="row">
-                                                        @foreach(['facebook', 'instagram', 'snapchat', 'tiktok', 'whatsapp'] as $social)
-                                                            @if(get_social_value($social))
-                                                            <div class="col-md-3 col-sm-6 mb-2">
-                                                                <a href="{{ get_social_value($social) }}" target="_blank" class="btn btn-social btn-{{ $social }}">
-                                                                    <i class="la la-{{ $social }}"></i> {{ ucfirst($social) }}
-                                                                </a>
-                                                            </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    
                                     </div>
                                 </div>
                             </div>

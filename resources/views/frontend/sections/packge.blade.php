@@ -227,7 +227,7 @@
         </div>
     </div>
     <div class="more-services">
-        <a href="{{route('packegs')}}" class="more-services-btn">المزيد من الباقات</a>
+        <a href="{{ route('packegs') }}" class="more-services-btn">المزيد من الباقات</a>
     </div>
 </section>
 <!-- بوابة الشراء -->
@@ -264,8 +264,9 @@
                                     <label for="phoneNumber">رقم الهاتف</label>
                                     <div class="input-group input-group-sm">
                                         <input type="tel" class="form-control" id="phoneNumber"
-                                            placeholder="590000000" name="phone" pattern="[0-9]{9}"
-                                            title="يجب إدخال 9 أرقام بالضبط" maxlength="9" required>
+                                            placeholder="0590000000" name="phone" pattern="^0[0-9]{9}$"
+                                            title="يجب أن يبدأ رقم الهاتف بـ 0 ويتكون من 10 أرقام" maxlength="10"
+                                            required>
                                         <select class="form-control country-code-select" name="country_code"
                                             id="countryCode" style="max-width: 80px;" required>
                                             <option value="+970">970</option>

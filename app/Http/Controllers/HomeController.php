@@ -204,7 +204,7 @@ class HomeController extends Controller
             ], 500);
         }
     }
-    public function products(Request $request)
+    public function products_old(Request $request)
     {
         $query = Product::query();
 
@@ -251,6 +251,27 @@ class HomeController extends Controller
 
         return view('frontend.services', compact('services'));
     }
+    public function products(Request $request)
+    {
+        $query = Product::query();
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        $perPage = 12; // Number of items per load
+        $page = $request->get('page', 1); // Get current page or default to 1
+
+        $products = $query->orderBy('id', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        if ($request->ajax()) {
+            return view('frontend.partials._products', compact('products'))->render();
+        }
+
+        return view('frontend.products', compact('products'));
+    }
 
 
     public function single_course($id)
@@ -277,7 +298,7 @@ class HomeController extends Controller
         $request->validate([
             'package_id' => 'required|exists:packages,id',
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|digits:9',
+            'phone' => 'required|digits:10',
             'country_code'=> 'required',
             'address' => 'required|string',
         ]);
@@ -285,7 +306,7 @@ class HomeController extends Controller
         // معالجة نهائية لرقم الهاتف
         $phone = $request->phone;
         $countryCode = $request->input('country_code', '+970');
-        $numberPart = $phone;
+        $numberPart = substr($phone, 1);
         
         $phone = $countryCode . $numberPart;
         $order = Order::create([

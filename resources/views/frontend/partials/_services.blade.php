@@ -13,7 +13,7 @@
                     </div>
                     <!-- Back Face -->
                     <div class="flip-card-back">
-                        <p>{{$item->description}}</p>
+                        {!! str_replace(['<p>', '</p>'], '', $item->description) !!}
                         <button class="btn btn-warning book-service-btn" 
                            onclick="openWhatsApp('{{ $item->title }}')">
                            احجز الخدمة

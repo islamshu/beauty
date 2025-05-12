@@ -87,8 +87,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="editor">الوصف <span class="required">*</span></label>
-                                <textarea name="description" id="editor" class="form-control" required>{{ old('description') }}</textarea>
+                                <label for="">الوصف <span class="required">*</span></label>
+                                <input type="text" name="description"class="form-control" value="{{ old('description') }}" required>
                                 <small id="editor-error" class="text-danger" style="display: none;">هذا الحقل مطلوب!</small>
                             </div>
                             

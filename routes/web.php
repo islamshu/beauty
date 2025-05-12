@@ -57,6 +57,8 @@ Route::prefix('frontend')->group(function () {
     Route::post('/cart_remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout_single', [CartController::class, 'checkout_single'])->name('checkout_single');
+
     Route::post('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update.status');
 
     Route::get('/order-success', function () {
@@ -158,6 +160,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/events', [ReservationController::class, 'store'])->name('events.store');
         Route::get('/dashboard/events/{id}', [ReservationController::class, 'destroy'])->name('events.destroy');
         Route::get('/dashboard/update_status_reservation', [EventController::class, 'updateStatus'])->name('update_status_reservation');
+        Route::get('/dashboard/event/search', [EventController::class, 'search'])->name('events.search');
+        Route::post('/dashboard/reservations/check-conflict', [EventController::class, 'checkConflict'])->name('reservations.checkConflict');
+        Route::get('/reservations/{reservation}/edit', [EventController::class, 'edit'])->name('reservations.edit');
+
     });
     
     // Orders routes

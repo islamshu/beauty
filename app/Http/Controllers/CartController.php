@@ -148,5 +148,62 @@ class CartController extends Controller
             'success' => true,
             'message' => 'تم إتمام الطلب بنجاح!',
         ]);
+    }public function checkout_single(Request $request)
+    {
+        
+
+
+        // إنشاء الطلب
+        $validator = Validator::make($request->all(), [
+            'customer_name' => 'required|string|max:255',
+            'product_id'=>'required|integer',
+            'customer_phone' => [
+                'required',
+                'string',
+                'regex:/^\+97[0-9]{8,10}$/', // يتحقق من +970 أو +972 ويتبعها 8–10 أرقام
+            ],
+            'customer_address' => 'required|string|max:500',
+            'area' => 'required'
+        ], [
+            'customer_phone.required' => 'الرجاء إدخال رقم الهاتف.',
+            'customer_phone.regex' => 'رقم الهاتف غير صالح. تأكد من إدخال رمز الدولة و9 أرقام.',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+        $product = Product::find($request->product_id);
+        $area = Area::find($request->area);
+
+        $totalPrice =$product->price_after_discount  ;
+        // ✅ إنشاء الطلب
+        $order = CustomerOrder::create([
+            'customer_name' => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            // 'customer_id' => $request->customer_id,
+            'customer_address' => $request->customer_address,
+            'total_price' => $totalPrice,
+            'area' => $area->name  . ' '. $area->price,
+            'area_id'=>$area->id,
+        ]);
+
+        // إضافة المنتجات إلى الطلب
+            CustomerOrderItem::create([
+                'customer_order_id' => $order->id,
+                'product_name' =>$product->title,
+                'product_id' =>$product->id,
+                'quantity' =>1,
+                'price' =>$product->price_after_discount,
+            ]);
+        
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم إتمام الطلب بنجاح!',
+        ]);
     }
 }

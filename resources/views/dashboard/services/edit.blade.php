@@ -87,7 +87,7 @@
 
                             <div class="form-group">
                                 <label for="editor">الوصف <span class="required">*</span></label>
-                                <textarea name="description" id="editor" class="form-control" required>{{ old('description', $service->description) }}</textarea>
+                                <input type="text" name="description"class="form-control" value="{{ $service->description }}" required>
                                 <small id="editor-error" class="text-danger" style="display: none;">هذا الحقل مطلوب!</small>
                             </div>
 

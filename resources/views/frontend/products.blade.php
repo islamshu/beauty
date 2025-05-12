@@ -204,76 +204,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <script>
-        $(document).ready(function() {
-            let loading = false;
-            let currentPage = 1;
-            let lastPage = {{ $products->lastPage() }};
-            let searchQuery = '';
-            const $loadingSpinner = $('#loadingSpinner');
+        $(document).ready(function () {
+        let currentPage = 1;
+        let searchQuery = '';
 
-            // Function to fetch products
-            function fetchProducts(page = 1, search = '', reset = false) {
-                if (loading) return;
-
-                loading = true;
-                $loadingSpinner.show();
-
-                $.ajax({
-                    url: "{{ route('products') }}",
-                    method: "GET",
-                    data: {
-                        page: page,
-                        search: search
-                    },
-                    success: function(response) {
-                        if (reset) {
-                            $('#ajaxContainer').html(response);
-                            currentPage = 1;
-                            lastPage = parseInt($('#productsContainer').data('last-page'));
-                        } else {
-                            $('#ajaxContainer').append(response);
-                        }
-
-                        loading = false;
-                        $loadingSpinner.hide();
-                    },
-                    error: function() {
-                        loading = false;
-                        $loadingSpinner.hide();
-                        alert('حدث خطأ أثناء تحميل البيانات.');
-                    }
-                });
-            }
-
-            // Search functionality
-            $('#searchInput').on('input', function() {
-                searchQuery = $(this).val();
-                fetchProducts(1, searchQuery, true);
-            });
-
-            $('#searchForm').on('submit', function(e) {
-                e.preventDefault();
-                searchQuery = $('#searchInput').val();
-                fetchProducts(1, searchQuery, true);
-            });
-
-            // Infinite scroll
-            $(window).scroll(function() {
-                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200) {
-                    if (currentPage < lastPage && !loading) {
-                        currentPage++;
-                        fetchProducts(currentPage, searchQuery);
-                    }
+        // Function to fetch services by AJAX
+        function fetchServices(page = 1, search = '') {
+            $.ajax({
+                url: "{{ route('products') }}",
+                method: "GET",
+                data: {
+                    page: page,
+                    search: search
+                },
+                success: function (response) {
+                    $('#ajaxContainer').html(response);
+                    currentPage = page;
+                },
+                error: function () {
+                    alert('حدث خطأ أثناء تحميل البيانات.');
                 }
             });
+        }
 
-            // Optional: Load more button click handler
-            $(document).on('click', '#loadMoreBtn', function() {
-                if (currentPage < lastPage && !loading) {
-                    currentPage++;
-                    fetchProducts(currentPage, searchQuery);
-                }
-            });
+        // Search
+        $('#searchInput').on('input', function () {
+            searchQuery = $(this).val();
+            fetchServices(1, searchQuery);
         });
+
+        $('#searchForm').on('submit', function (e) {
+            e.preventDefault();
+            searchQuery = $('#searchInput').val();
+            fetchServices(1, searchQuery);
+        });
+
+        // Pagination click event
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            const page = $(this).attr('href').split('page=')[1];
+            fetchServices(page, searchQuery);
+        });
+    });
     </script>
 @endsection

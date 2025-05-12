@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
@@ -195,14 +196,17 @@ class ClientController extends Controller
     }
     public function storeFromOrder(Request $request)
     {
-        dd($request->all());
         $validated = $request->validate([
             'order_id' => 'required|exists:orders,id',
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20|unique:clients,phone',
+        'phone' => ['required', 'regex:/^0[0-9]{9}$/'],
             'address' => 'nullable|string',
-
-        ]);
+            'country_code' => 'required',
+        ], [
+        'phone.required' => 'رقم الهاتف مطلوب.',
+        'phone.regex' => 'يجب أن يبدأ رقم الهاتف بـ 0 ويحتوي على 10 أرقام مثل: 0591234567.',
+        'country_code.required' => 'رمز الدولة مطلوب.',
+    ]);
         if ($request->boolean('add_subscription')) {
             $subscriptionRules = [
                 'package_id' => 'required|exists:packages,id',
@@ -220,7 +224,7 @@ class ClientController extends Controller
 
         $client = Client::create([
             'name' => $validated['name'],
-            'phone' =>$request->country_code.$request->phone,
+            'phone' =>$request->country_code. ltrim($request->phone, '0'),
             'address' => $validated['address'],
             'added_by' => auth()->id(),
             'id_number' => rand(1000000000, 9999999999)
@@ -314,37 +318,53 @@ class ClientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required'
-        ]);
-        $request_all = $request->all();
-        $request_all['id_number'] = rand(1000000000, 9999999999);
-        $request_all['added_by'] = auth()->id();
-        $request_all['phone'] =$request->country_code . $request->phone;
-        $qrCodeDir = public_path('uploads/qrcodes');
-        if (!File::exists($qrCodeDir)) {
-            File::makeDirectory($qrCodeDir, 0755, true);
-        }
+   public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'phone' => ['required', 'regex:/^0[0-9]{9}$/'],
+        'address' => 'required',
+        'country_code' => 'required',
+    ], [
+        'phone.required' => 'رقم الهاتف مطلوب.',
+        'phone.regex' => 'يجب أن يبدأ رقم الهاتف بـ 0 ويحتوي على 10 أرقام مثل: 0591234567.',
+        'country_code.required' => 'رمز الدولة مطلوب.',
+    ]);
 
-        // تحديد مسار حفظ الصورة
+    // دمج رمز الدولة مع رقم الهاتف بعد إزالة الصفر الأول
+    $fullPhone = $request->country_code . ltrim($request->phone, '0');
 
-
-        $client =  Client::create($request_all);
-        $qrCodePath = "uploads/qrcodes/client_{$client->id}.svg";
-        $clientUrl = route('clients.show', $client->id);
-
-        // توليد رمز QR وحفظه كصورة PNG
-        QrCode::format('svg')->size(300)->generate($clientUrl, public_path($qrCodePath));
-        $client->update(['qr_code' => $qrCodePath]);
-
-        return response()->json([
-            'message' => 'تم إنشاء العميل بنجاح!',
-            'client_id' => $client->id, // ✅ تأكد من إرجاع client_id
+    // التحقق من التكرار
+    $exists = Client::where('phone', $fullPhone)->exists();
+    if ($exists) {
+        throw ValidationException::withMessages([
+            'phone' => ['رقم الهاتف هذا مستخدم مسبقًا.'],
         ]);
     }
+
+    $request_all = $request->all();
+    $request_all['phone'] = $fullPhone;
+    $request_all['id_number'] = rand(1000000000, 9999999999);
+    $request_all['added_by'] = auth()->id();
+
+    // إنشاء مجلد QR إن لم يكن موجودًا
+    $qrCodeDir = public_path('uploads/qrcodes');
+    if (!File::exists($qrCodeDir)) {
+        File::makeDirectory($qrCodeDir, 0755, true);
+    }
+
+    $client = Client::create($request_all);
+    $qrCodePath = "uploads/qrcodes/client_{$client->id}.svg";
+    $clientUrl = route('clients.show', $client->id);
+
+    QrCode::format('svg')->size(300)->generate($clientUrl, public_path($qrCodePath));
+    $client->update(['qr_code' => $qrCodePath]);
+
+    return response()->json([
+        'message' => 'تم إنشاء العميل بنجاح!',
+        'client_id' => $client->id,
+    ]);
+}
 
     /**
      * Check if the phone number exists for any client.
@@ -368,23 +388,57 @@ class ClientController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Client $client)
-    {
-        return view('dashboard.clients.edit')->with('client', $client);
+    { 
+        $fullPhone = $client->phone; // +972565541575
+
+// استخراج رمز الدولة (أول 4 أحرف)
+        $country_code = substr($fullPhone, 0, 4); // +972
+
+        // استخراج باقي الرقم بدون المقدمة
+        $raw_phone = substr($fullPhone, 4); // 565541575
+
+        // إعادة الصفر إلى بداية الرقم
+        $phone = '0' . $raw_phone;
+        return view('dashboard.clients.edit', compact('client', 'country_code', 'phone'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Client $client)
-    {
-        $request->validate([
-            'name' => 'required',
-            'phone' => 'required|unique:clients,phone,' . $client->id,
-            'address' => 'required'
+{
+    $request->validate([
+        'name' => 'required',
+        'phone' => ['required', 'regex:/^0[0-9]{9}$/'],
+        'address' => 'required',
+        'country_code' => 'required',
+    ], [
+        'phone.required' => 'رقم الهاتف مطلوب.',
+        'phone.regex' => 'يجب أن يبدأ رقم الهاتف بـ 0 ويحتوي على 10 أرقام مثل: 0591234567.',
+        'country_code.required' => 'رمز الدولة مطلوب.',
+    ]);
+
+    $fullPhone = $request->country_code . ltrim($request->phone, '0');
+
+    // التحقق من التكرار مع استثناء العميل الحالي
+    $exists = Client::where('phone', $fullPhone)
+        ->where('id', '!=', $client->id)
+        ->exists();
+
+    if ($exists) {
+        throw ValidationException::withMessages([
+            'phone' => ['رقم الهاتف هذا مستخدم مسبقًا.'],
         ]);
-        $client->update($request->all());
-        return redirect()->route('clients.index')->with('toastr_success', 'تم تعديل العميل بنجاح');
     }
+
+    $request_all = $request->all();
+    $request_all['phone'] = $fullPhone;
+
+    $client->update($request_all);
+
+   return redirect()->route('clients.index')->with('toastr_success','تم التعديل بنجاح');
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -399,7 +453,7 @@ class ClientController extends Controller
         // يمكن تفعيل فقط إذا كانت الحالة التلقائية تسمح بذلك
         if ($subscription->determineStatus() === Subscription::STATUS_ACTIVE) {
             $subscription->activate();
-            return redirect()->back()->with('success', 'تم تفعيل الاشتراك بنجاح');
+            return redirect()->back()->with('toastr_success', 'تم تفعيل الاشتراك بنجاح');
         }
         return redirect()->back()->with('error', 'لا يمكن تفعيل الاشتراك بسبب انتهاء الصلاحية أو اكتمال الزيارات');
     }
@@ -417,6 +471,6 @@ class ClientController extends Controller
             $subscription->client->phone,
             'تم إلغاء اشتراكك في الباقة: ' . $subscription->package->name
         );
-        return redirect()->back()->with('success', 'تم إلغاء الاشتراك بنجاح');
+        return redirect()->back()->with('toastr_success', 'تم إلغاء الاشتراك بنجاح');
     }
 }

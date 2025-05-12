@@ -55,9 +55,9 @@ aria-hidden="true">
                                     <label for="phoneNumber">رقم الهاتف</label>
                                     <div class="input-group input-group-sm">
                                         <input type="tel" class="form-control" id="phoneNumber"
-                                            placeholder="592412365" name="phone" pattern="[0-9]{9}"
-                                            title="يجب إدخال 9 أرقام بالضبط" maxlength="9" required>
-                                        <select class="form-control country-code-select" name="country_code"
+                                            placeholder="0592412365" readonly name="phone" pattern="^0[0-9]{9}$"
+                                            title="يجب إدخال 10 أرقام بالضبط" maxlength="10" required>
+                                        <select readonly class="form-control country-code-select" name="country_code"
                                             id="countryCode" style="max-width: 80px;">
                                             <option value="+970">970</option>
                                             <option value="+972">972</option>

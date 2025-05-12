@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title','اضافة عميل')
+@section('title', 'اضافة عميل')
 
 @section('content')
     <div class="app-content content">
@@ -44,14 +44,19 @@
                                                         <label for="phoneNumber">رقم الهاتف *</label>
                                                         <div class="input-group input-group-sm">
                                                             <input type="tel" class="form-control" id="phoneNumber"
-                                                                placeholder="592412365" name="phone" required pattern="[0-9]{9}"
-                                                                title="يجب إدخال 9 أرقام بالضبط" maxlength="9" required>
-                                                            <select class="form-control country-code-select" required name="country_code"
-                                                                id="countryCode" style="max-width: 80px;">
+                                                                placeholder="0592412365" name="phone" required
+                                                                pattern="^0[0-9]{9}$" title="يجب إدخال 10 أرقام بالضبط"
+                                                                maxlength="10" required>
+                                                            <select class="form-control country-code-select" required
+                                                                name="country_code" id="countryCode"
+                                                                style="max-width: 80px;">
                                                                 <option value="+970">970</option>
                                                                 <option value="+972">972</option>
                                                             </select>
                                                         </div>
+                                                        <span class="text-danger d-block mt-1" id="phone_error"></span>
+                                                        <span class="text-danger d-block mt-1"
+                                                            id="country_code_error"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
@@ -179,14 +184,20 @@
                             // إكمال الاشتراك بعد الحفظ
                             completeSubscription(response.client_id);
                         } else {
-                            // الانتقال إلى قائمة العملاء بعد الحفظ فقط
+                            toastr.success(response.message, "نجاح");
                             setTimeout(function() {
                                 window.location.href = "{{ route('clients.index') }}";
                             }, 1500);
                         }
                     },
                     error: function(xhr) {
-                        handleValidationErrors(xhr);
+                        let errors = xhr.responseJSON.errors;
+                        if (errors.phone) {
+                            $('#phone_error').text(errors.phone[0]);
+                        }
+                        if (errors.country_code) {
+                            $('#country_code_error').text(errors.country_code[0]);
+                        }
                     }
                 });
             }

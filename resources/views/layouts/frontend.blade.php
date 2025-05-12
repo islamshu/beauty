@@ -67,7 +67,7 @@
                 $btn.prop('disabled', true);
                 $btn.html(
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري الإرسال...'
-                    );
+                );
 
                 // مسح رسائل الخطأ السابقة
                 $('.error-message').remove();
@@ -110,7 +110,7 @@
                                 $field.addClass('is-invalid');
                                 $field.after(
                                     `<div class="error-message text-danger mt-2">${messages.join('<br>')}</div>`
-                                    );
+                                );
                             });
 
                             // عرض جميع الأخطاء في SweetAlert
@@ -138,101 +138,200 @@
             });
         });
     </script>
-   <script>
-    $('#submitOrderBtn').on('click', function () {
-        // مسح الأخطاء السابقة
-        $('.text-danger').remove();
-        $('.is-invalid').removeClass('is-invalid');
-        $('.error-customer_phone').text('');
+    <script>
+        $('#submitOrderBtn').on('click', function() {
+            event.preventDefault(); // 👈 هذا السطر مهم جدًا لمنع الفورم من الإرسال التلقائي
 
-        // تحقق يدوي من القيم
-        let name = $('#customer_name').val().trim();
-        let phone = $('#customer_phone').val().trim();
-        let country = $('#country_code').val();
-        let fullPhone = country + phone;
-        let address = $('#customer_address').val().trim();
-        let area = $('#customer_area').val();
+            $('.text-danger').remove();
+            $('.is-invalid').removeClass('is-invalid');
+            $('.error-customer_phone').text('');
 
-        let hasError = false;
+            // تحقق يدوي من القيم
+            let name = $('#customer_name').val().trim();
+            let phone = $('#phoneNumber').val().trim();
+            let country = $('#country_code').val();
+            let fullPhone = country + phone.replace(/^0/, '');
+            let address = $('#customer_address').val().trim();
+            let area = $('#customer_area').val();
+            let hasError = false;
 
-        // التحقق من الاسم
-        if (name === "") {
-            $('#customer_name').addClass('is-invalid').after('<div class="text-danger">الاسم مطلوب</div>');
-            hasError = true;
-        }
-
-        // التحقق من الهاتف
-        if (!/^\d{9}$/.test(phone)) {
-            $('#customer_phone').addClass('is-invalid');
-            $('.error-customer_phone').text("يجب إدخال 9 أرقام بالضبط");
-            hasError = true;
-        }
-
-        // التحقق من العنوان
-        if (address === "") {
-            $('#customer_address').addClass('is-invalid').after('<div class="text-danger">العنوان مطلوب</div>');
-            hasError = true;
-        }
-
-        // التحقق من المنطقة
-        if (!area) {
-            $('#customer_area').addClass('is-invalid').after('<div class="text-danger">يرجى اختيار المنطقة</div>');
-            hasError = true;
-        }
-
-        if (hasError) return;
-
-        // إرسال البيانات عبر AJAX
-        $.ajax({
-            url: "{{ route('checkout') }}",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                customer_name: name,
-                customer_phone: fullPhone,
-                customer_address: address,
-                area: area,
-            },
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "تم بنجاح!",
-                        text: "تم إتمام الطلب بنجاح، سيتم تحويلك إلى صفحة النجاح بعد قليل...",
-                        confirmButtonText: "حسنًا",
-                        timer: 3000,
-                        didClose: () => {
-                            window.location.href = "{{ route('orders.success') }}";
-                        }
-                    });
-                }
-            },
-            error: function (xhr) {
-                if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-
-                    $.each(errors, function (field, messages) {
-                        let input = $('[name="' + field + '"]');
-                        input.addClass('is-invalid');
-
-                        if (field === 'customer_phone') {
-                            $('.error-customer_phone').text(messages[0]);
-                        } else {
-                            input.after('<div class="text-danger">' + messages[0] + '</div>');
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "خطأ!",
-                        text: "حدث خطأ غير متوقع، يرجى المحاولة لاحقًا.",
-                        confirmButtonText: "حسنًا"
-                    });
-                }
+            // التحقق من الاسم
+            if (name === "") {
+                $('#customer_name').addClass('is-invalid').after('<div class="text-danger">الاسم مطلوب</div>');
+                hasError = true;
             }
+
+            // التحقق من الهاتف
+            // التحقق من الهاتف
+            if (!/^0\d{9}$/.test(phone)) {
+                $('#phoneNumber').addClass('is-invalid');
+                $('.error-customer_phone').text("يجب أن يبدأ الرقم بـ 0 ويحتوي على 10 أرقام");
+                hasError = true;
+            }
+
+
+            // التحقق من العنوان
+            if (address === "") {
+                $('#customer_address').addClass('is-invalid').after('<div class="text-danger">العنوان مطلوب</div>');
+                hasError = true;
+            }
+
+            // التحقق من المنطقة
+            if (!area) {
+                $('#customer_area').addClass('is-invalid').after(
+                    '<div class="text-danger">يرجى اختيار المنطقة</div>');
+                hasError = true;
+            }
+
+            if (hasError) return;
+            // إرسال البيانات عبر AJAX
+            $.ajax({
+                url: "{{ route('checkout') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    customer_name: name,
+                    customer_phone: fullPhone,
+                    customer_address: address,
+                    area: area,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "تم بنجاح!",
+                            text: "تم إتمام الطلب بنجاح، سيتم تحويلك إلى صفحة النجاح بعد قليل...",
+                            confirmButtonText: "حسنًا",
+                            timer: 3000,
+                            didClose: () => {
+                                window.location.href = "{{ route('orders.success') }}";
+                            }
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(field, messages) {
+                            let input = $('[name="' + field + '"]');
+                            input.addClass('is-invalid');
+
+                            if (field === 'customer_phone') {
+                                $('.error-customer_phone').text(messages[0]);
+                            } else {
+                                input.after('<div class="text-danger">' + messages[0] +
+                                    '</div>');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "خطأ!",
+                            text: "حدث خطأ غير متوقع، يرجى المحاولة لاحقًا.",
+                            confirmButtonText: "حسنًا"
+                        });
+                    }
+                }
+            });
         });
-    });
-</script>
+        $('#submitProductBtn').on('click', function() {
+            event.preventDefault(); // 👈 هذا السطر مهم جدًا لمنع الفورم من الإرسال التلقائي
+
+            $('.text-danger').remove();
+            $('.is-invalid').removeClass('is-invalid');
+            $('.error-customer_phone').text('');
+
+            // تحقق يدوي من القيم
+            let name = $('#customer_name').val().trim();
+            let phone = $('#phoneNumber').val().trim();
+            let country = $('#country_code').val();
+            let fullPhone = country + phone.replace(/^0/, '');
+            let address = $('#customer_address').val().trim();
+            let area = $('#customer_area').val();
+            let hasError = false;
+            let product_id = $('#product_single').val();
+            // التحقق من الاسم
+            if (name === "") {
+                $('#customer_name').addClass('is-invalid').after('<div class="text-danger">الاسم مطلوب</div>');
+                hasError = true;
+            }
+
+            // التحقق من الهاتف
+            // التحقق من الهاتف
+            if (!/^0\d{9}$/.test(phone)) {
+                $('#phoneNumber').addClass('is-invalid');
+                $('.error-customer_phone').text("يجب أن يبدأ الرقم بـ 0 ويحتوي على 10 أرقام");
+                hasError = true;
+            }
+
+
+            // التحقق من العنوان
+            if (address === "") {
+                $('#customer_address').addClass('is-invalid').after('<div class="text-danger">العنوان مطلوب</div>');
+                hasError = true;
+            }
+
+            // التحقق من المنطقة
+            if (!area) {
+                $('#customer_area').addClass('is-invalid').after(
+                    '<div class="text-danger">يرجى اختيار المنطقة</div>');
+                hasError = true;
+            }
+
+            if (hasError) return;
+            // إرسال البيانات عبر AJAX
+            $.ajax({
+                url: "{{ route('checkout_single') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    customer_name: name,
+                    customer_phone: fullPhone,
+                    customer_address: address,
+                    area: area,
+                    product_id:product_id
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "تم بنجاح!",
+                            text: "تم إتمام الطلب بنجاح، سيتم تحويلك إلى صفحة النجاح بعد قليل...",
+                            confirmButtonText: "حسنًا",
+                            timer: 3000,
+                            didClose: () => {
+                                window.location.href = "{{ route('orders.success') }}";
+                            }
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(field, messages) {
+                            let input = $('[name="' + field + '"]');
+                            input.addClass('is-invalid');
+
+                            if (field === 'customer_phone') {
+                                $('.error-customer_phone').text(messages[0]);
+                            } else {
+                                input.after('<div class="text-danger">' + messages[0] +
+                                    '</div>');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "خطأ!",
+                            text: "حدث خطأ غير متوقع، يرجى المحاولة لاحقًا.",
+                            confirmButtonText: "حسنًا"
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
 
 
 </body>

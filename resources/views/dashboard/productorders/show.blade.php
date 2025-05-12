@@ -29,7 +29,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <p><strong>الاسم:</strong> {{ $order->customer_name }}</p>
-                                    <p><strong>الهاتف:</strong> {{ $order->customer_phone }}</p>
+                                    <p><strong >الهاتف:</strong> {{ $order->customer_phone }}</p>
+                                    <p><strong>منطقة التوصيل:</strong> {{ $order->area_price->name }}</p>
+
                                     <p><strong>تغير الحالة:</strong></p>
 
                                     <select id="status-select" class="form-control" style="max-width: 200px;">

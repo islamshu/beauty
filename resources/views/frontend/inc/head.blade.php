@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&amp;family=Montserrat:wght@400;700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap"
         rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"  />
 
     <!-- PLUGINS CSS STYLE -->
     {{-- <link href="{{ asset('front/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"> --}}

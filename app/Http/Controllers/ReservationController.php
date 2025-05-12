@@ -24,6 +24,7 @@ class ReservationController extends Controller
                     'phone_number' => $reservation->client->phone,
                     'address' => $reservation->client->address,
                     'title' => $reservation->title,
+                    'client_name' => $reservation->client->name,
                     'services' => $reservation->services, // إضافة الخدمات
                 ];
             }

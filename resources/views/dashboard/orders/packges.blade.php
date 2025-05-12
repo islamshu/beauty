@@ -130,7 +130,7 @@
                     $('#packageIdInput').val(response.package_id);
 
                     // تعبئة رقم الهاتف في الحقول المخصصة له
-                    $('#phoneNumber').val(response.phone_number);
+                    $('#phoneNumber').val('0' + response.phone_number);
                     $('#countryCode').val(response.country_code);
 
                     // فتح المودال

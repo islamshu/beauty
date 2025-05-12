@@ -36,3 +36,8 @@
         <button id="loadMoreBtn" class="btn btn-primary">تحميل المزيد</button>
     </div>
 @endif --}}
+<div class="col-12 mt-4">
+    <div class="d-flex justify-content-center">
+        {!! $products->withQueryString()->links('pagination::bootstrap-4') !!}
+    </div>
+</div>

@@ -8,6 +8,12 @@
             align-items: center;
             gap: 5px;
         }
+        .total_price_display{
+            text-align: center;
+        }
+        .total_price_display p{
+            color: red;
+        }
 
         .btn-quantity {
             background-color: #f8f9fa;
@@ -133,9 +139,10 @@
                             <div class="col-md-6 mb-3">
                                 <label for="customer_phone">رقم الهاتف</label>
                                 <div class="input-group input-group-sm">
-                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone"
-                                        placeholder="590000000" pattern="[0-9]{9}" title="يجب إدخال 9 أرقام بالضبط"
-                                        maxlength="9" required>
+                                    <input type="tel" class="form-control" id="phoneNumber"
+                                    placeholder="0590000000" name="phone" pattern="^0[0-9]{9}$"
+                                    title="يجب أن يبدأ رقم الهاتف بـ 0 ويتكون من 10 أرقام" maxlength="10"
+                                    required>
                                     <select class="form-control" name="country_code" id="country_code" style="max-width: 80px;" required>
                                         <option value="+970">970</option>
                                         <option value="+972">972</option>
@@ -154,9 +161,11 @@
                                         <option data-price="{{$item->price}}" value="{{ $item->id }}">{{ $item->name }} - ({{ $item->price }} شيكل)</option>
                                     @endforeach
                                 </select>
-                                <div id="delivery_note" class="mt-2 text-info" style="display:none;"></div>
-                                <p><strong>السعر الإجمالي:</strong> <span id="total_price_display">{{ $total }}</span> شيكل</p>
+                                <div id="delivery_note" class="mt-2 text-dark" style="display:none;"></div>
+                                <div class="total_price_display">
+                                <p><strong>السعر الإجمالي: <span id="total_price_display">{{ $total }} شيكل</span></strong> </p>
                                 <input type="hidden" id="original_total" value="{{ $total }}">
+                                </div>
                             </div>
                     
                             <div class="col-md-12 mb-3">
@@ -187,11 +196,11 @@
                 var originalTotal = parseFloat($('#original_total').val()) || 0;
         
                 // إظهار الملاحظة
-                $('#delivery_note').text('ملاحظة: سيتم زيادة سعر التوصيل بقيمة ' + deliveryPrice + ' شيكل.').show();
+                $('#delivery_note').text(' ملاحظة: سيتم إضافة سعر التوصيل بقيمة ' + deliveryPrice + ' شيكل.').show();
         
                 // تحديث السعر الإجمالي الظاهر
                 var newTotal = originalTotal + deliveryPrice;
-                $('#total_price_display').text(newTotal.toFixed(2));
+                $('#total_price_display').text(newTotal.toFixed(2) + ' شيكل');
             });
         });
         </script>
@@ -262,4 +271,5 @@
             }
         });
     </script>
+      
 @endsection
