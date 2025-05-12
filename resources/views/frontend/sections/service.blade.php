@@ -19,13 +19,13 @@
                                     <div class="overlay">{{ $item->title }}</div>
                                 </div>
                                 <!-- Back Face -->
-                                <div class="flip-card-back">
-                                    <p>{!! $item->description !!}</p>
-                                    <button class="btn btn-warning book-service-btn" 
-                                       onclick="openWhatsApp('{{ $item->title }}')">
-                                       احجز الخدمة
-                                    </button>
-                                </div>
+                                 <div class="flip-card-back">
+                        {!! str_replace(['<p>', '</p>'], '', $item->description) !!}
+                        <button class="btn btn-warning book-service-btn" 
+                           onclick="openWhatsApp('{{ $item->title }}')">
+                           احجز الخدمة
+                        </button>
+                    </div>
                             </div>
                         </div>
                     </div>
