@@ -115,8 +115,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('reservations.index') }}">{{ __('الحجوزات') }}</a>
                         </li>
-                        <li><a class="dropdown-item" href="{{ route('reservations.create') }}">{{ __('حجز جديد') }}</a>
-                        </li>
+                      
                         <li><a class="dropdown-item" href="{{ route('calender') }}">{{ __('التقويم') }}</a></li>
                     </ul>
                 </li>

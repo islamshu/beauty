@@ -5,46 +5,48 @@
         <div class="container">
             <div class="top-bar-right">
                 <ul class="list-inline">
-                    @if(get_general_value('whatsapp_number'))
+                    @if (get_general_value('whatsapp_number'))
                         <li>
-                            <a href="https://wa.me/{{ get_general_value('whatsapp_number') }}">
+                            <a href="https://wa.me/{{ get_general_value('whatsapp_number') }}" class="social-icon">
                                 <i class="fab fa-whatsapp" aria-hidden="true"></i>
                             </a>
                         </li>
                     @endif
-                
-                    @if(get_social_value('facebook'))
+
+                    @if (get_social_value('facebook'))
                         <li>
-                            <a href="{{ get_social_value('facebook') }}">
+                            <a href="{{ get_social_value('facebook') }}" class="social-icon">
                                 <i class="fab fa-facebook" aria-hidden="true"></i>
                             </a>
                         </li>
                     @endif
-                
-                    @if(get_social_value('instagram'))
+
+                    @if (get_social_value('instagram'))
                         <li>
-                            <a href="{{ get_social_value('instagram') }}">
+                            <a href="{{ get_social_value('instagram') }}" class="social-icon">
                                 <i class="fab fa-instagram" aria-hidden="true"></i>
                             </a>
                         </li>
                     @endif
-                
-                    @if(get_social_value('tiktok'))
+
+                    @if (get_social_value('tiktok'))
                         <li>
-                            <a href="{{ get_social_value('tiktok') }}">
+                            <a href="{{ get_social_value('tiktok') }}" class="social-icon">
                                 <i class="fab fa-tiktok" aria-hidden="true"></i>
                             </a>
                         </li>
                     @endif
-                    @if(get_social_value('twitter'))
-                    <li>
-                        <a href="{{ get_social_value('twitter') }}">
-                            <i class="fab fa-twitter" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                @endif
+
+                    @if (get_social_value('twitter'))
+                        <li>
+                            <a href="{{ get_social_value('twitter') }}" class="social-icon">
+                                <i class="fab fa-twitter" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
-                
+
+
             </div>
         </div>
     </div>

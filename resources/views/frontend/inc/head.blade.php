@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&amp;family=Montserrat:wght@400;700&amp;family=Open+Sans:wght@300;400;600;700&amp;display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- PLUGINS CSS STYLE -->
     {{-- <link href="{{ asset('front/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"> --}}
@@ -259,12 +259,47 @@
         .carousel-control-next-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e");
         }
-        .angle-right{
+
+        .angle-right {
             margin-right: 17px;
         }
-        .angle-left{
+
+        .angle-left {
             margin-left: 17px
         }
+
+    .social-icon i {
+    font-size: 20px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    margin: 0 8px;
+}
+
+/* تأثير Hover مع لون مخصص لكل أيقونة */
+.social-icon:hover .fa-whatsapp {
+    color: #25D366;
+    transform: scale(1.3);
+}
+
+.social-icon:hover .fa-facebook {
+    color: #1877F2;
+    transform: scale(1.3);
+}
+
+.social-icon:hover .fa-instagram {
+    color: #E4405F;
+    transform: scale(1.3);
+}
+
+.social-icon:hover .fa-tiktok {
+    color: #000000;
+    transform: scale(1.3);
+}
+
+.social-icon:hover .fa-twitter {
+    color: #1DA1F2;
+    transform: scale(1.3);
+}
+
     </style>
 
 </head>

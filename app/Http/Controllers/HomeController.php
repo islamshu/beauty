@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderNotification;
 use App\Models\Aboutus;
 use App\Models\Appointment;
 use App\Models\Area;
@@ -319,6 +320,7 @@ class HomeController extends Controller
         ]);
 
         $admins = User::role('الإدارة')->get();
+
         foreach ($admins as $admin) {
             $admin->notify(new PackgeNotification($order));
         }

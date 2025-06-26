@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="loading" lang="en" data-textdirection="rtl">
+<html class="loading" lang="en-GB" data-textdirection="rtl">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -42,6 +42,7 @@
         <link rel="stylesheet" type="text/css"
             href="{{ asset('backend/app-assets/css-rtl/core/colors/palette-gradient.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/style-rtl.css') }}">
+    
         <style>
             body {
                 font-family: 'Tajawal', sans-serif;

@@ -35,6 +35,9 @@
         .modal-dialog {
             max-width: 90%;
         }
+        .model_add{
+            max-width: 50% !important;
+        }
 
         .select2-container {
             z-index: 1055;
@@ -221,107 +224,8 @@
             </div>
 
             <!-- مودال الحجز -->
-            <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="reservationModalLabel">إضافة حجز</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
-                        </div>
-                        <form action="{{ route('reservations.store') }}" method="POST">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="row">
-                                    <!-- اسم الزبون -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="client_id" class="form-label">اسم الزبون <span
-                                                class="text-danger">*</span></label>
-                                        <select name="client_id" id="client_id" class="form-control" required>
-                                            <option value="" disabled selected>اختر العميل</option>
-                                            @foreach ($clients as $client)
-                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+            @include('dashboard.events._model_create')
 
-                                    <!-- عنوان الحجز -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="title" class="form-label">عنوان الحجز <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="title" id="title" class="form-control"
-                                            value="{{ old('title') }}" required>
-                                    </div>
-
-                                    <!-- التاريخ -->
-                                    <div class="form-group border rounded p-3 bg-white shadow-sm">
-                                        <label class="font-weight-bold mb-2">🗓️ تاريخ الحجز</label>
-
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <div class="d-flex align-items-center mr-3 mb-2">
-                                                <i class="far fa-clock mr-2 text-muted"></i>
-                                                <input type="date"
-                                                    class="form-control rounded-pill bg-light border-0 px-3 py-2"
-                                                    name="date" required>
-                                            </div>
-
-                                            <div class="d-flex align-items-center mb-2">
-                                                <input type="time"
-                                                    class="form-control rounded-pill bg-light border-0 px-3 py-2 mr-2"
-                                                    name="start_time" required>
-                                                <span class="mx-1">–</span>
-                                                <input type="time"
-                                                    class="form-control rounded-pill bg-light border-0 px-3 py-2"
-                                                    name="end_time" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- اسم الموظف -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="user_id" class="form-label">اسم الموظف <span
-                                                class="text-danger">*</span></label>
-                                        <select name="user_id" id="user_id" class="form-control" required>
-                                            <option value="" disabled selected>اختر المستخدم</option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <!-- الخدمات -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="services" class="form-label">الخدمات <span
-                                                class="text-danger">*</span></label>
-                                        <select name="services[]" id="services" class="form-control select2" multiple>
-                                            @foreach ($services as $service)
-                                                <option value="{{ $service->id }}">{{ $service->title }} -
-                                                    {{ $service->price }} شيكل</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <!-- الملاحظات -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="nots" class="form-label">الملاحظات</label>
-                                        <textarea name="nots" id="nots" class="form-control">{{ old('nots') }}</textarea>
-                                    </div>
-
-                                    <!-- السبب -->
-                                    <div class="col-md-6 mb-3">
-                                        <label for="reason" class="form-label">السبب</label>
-                                        <textarea name="reason" id="reason" class="form-control">{{ old('reason') }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">حفظ الحجز</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 @endsection
@@ -333,78 +237,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('form').on('submit', function(e) {
-                e.preventDefault();
-
-                let form = this;
-                let data = {
-                    date: $('input[name="date"]').val(),
-                    start_time: $('input[name="start_time"]').val(),
-                    end_time: $('input[name="end_time"]').val(),
-                    user_id: $('#user_id').val(),
-                    _token: '{{ csrf_token() }}'
-                };
-
-                $.post('{{ route('reservations.checkConflict') }}', data, function(response) {
-                    if (response.status === 'conflict') {
-                        const formattedStart = formatDateTime(response.start);
-                        const formattedEnd = formatDateTime(response.end);
-
-                        alert(
-                            `⚠️ يوجد تعارض مع الحجز: "${response.title}" من ${formattedStart} إلى ${formattedEnd}`
-                        );
-                    } else {
-                        form.submit(); // لا يوجد تعارض → أرسل النموذج
-                    }
-                }).fail(function() {
-                    alert('حدث خطأ أثناء التحقق من التعارض');
-                });
-            });
-
-            function formatDateTime(datetimeStr) {
-                const date = new Date(datetimeStr);
-                const options = {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                };
-                return date.toLocaleString('ar-EG', options).replace(',', '');
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // التحقق عند تغيير حقل وقت النهاية
-            const endTimeInput = document.querySelector('[name="end_time"]');
-            endTimeInput.addEventListener('change', function() {
-                const startDate = document.querySelector('[name="date"]').value;
-                const startTime = document.querySelector('[name="start_time"]').value;
-                const endTime = endTimeInput.value;
-
-                const startDateTime = new Date(startDate + 'T' + startTime);
-                const endDateTime = new Date(startDate + 'T' + endTime);
-
-                if (endDateTime <= startDateTime) {
-                    alert('تاريخ ووقت النهاية يجب أن يكون بعد تاريخ ووقت البداية');
-                    endTimeInput.value = '';
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#services').select2({
-                dropdownParent: $('#reservationModal')
-            });
-        });
-    </script>
+  
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

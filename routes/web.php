@@ -163,7 +163,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard/event/search', [EventController::class, 'search'])->name('events.search');
         Route::post('/dashboard/reservations/check-conflict', [EventController::class, 'checkConflict'])->name('reservations.checkConflict');
         Route::get('/reservations/{reservation}/edit', [EventController::class, 'edit'])->name('reservations.edit');
-
+        Route::get('/reservations/getLastByUser', [EventController::class, 'getLastByUser'])->name('reservations.getLastByUser');
+        Route::get('/reservations/getLastReservation', [EventController::class, 'getLastReservation'])->name('reservations.getLastReservation');
+        Route::post('/reservations/checkConflict', [EventController::class, 'checkConflict']);
+   
     });
     
     // Orders routes
